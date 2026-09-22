@@ -72,9 +72,9 @@ class Client:
                 or "blocked" in body.lower()
             ):
                 raise GuruHTTPError(
-                    "Yo — this chat can't peek at the wind charts (gated). "
+                    "Yo -- this chat can't peek at the wind charts (gated). "
                     "Run guru unlock on the laptop or ask in Cursor for a live "
-                    "SEND IT. (Sandbox ate the packets — not your quiver.)",
+                    "SEND IT. (Sandbox ate the packets -- not your quiver.)",
                     status_code=resp.status_code,
                 )
             raise GuruHTTPError(

@@ -1,9 +1,11 @@
-"""First-pass rider intake — one efficient ask for agents/Cursor."""
+"""First-pass rider intake -- one efficient ask for agents/Cursor."""
 
 from __future__ import annotations
 
 import re
 from typing import Any
+
+from guru.rider.voice import AGENT_PROMPT_TO_USER
 
 # Fields the agent must collect in ONE message (not drip-fed).
 # Level is required: GO thresholds and kite sizing depend on it.
@@ -21,11 +23,11 @@ INTAKE_FIELDS: list[dict[str, str]] = [
     {
         "key": "level",
         "ask": "Level (required)",
-        "hint": "beginner | intermediate | advanced — changes SEND IT wind and sizing",
+        "hint": "beginner | intermediate | advanced -- changes SEND IT wind and sizing",
     },
     {
         "key": "kites_m2",
-        "ask": "Kite quiver (m²)",
+        "ask": "Kite quiver (m2)",
         "hint": "comma sizes you own, e.g. 7,9,12",
     },
     {
@@ -56,36 +58,15 @@ INTAKE_FIELDS: list[dict[str, str]] = [
     {
         "key": "range_label",
         "ask": "Drive corridor label",
-        "hint": 'e.g. "Trabucador → Leucate"',
+        "hint": 'e.g. "Trabucador -> Leucate"',
     },
 ]
 
-# Compact reply the user can paste in one message
 REPLY_TEMPLATE = (
     "sport=kitefoil weight=78 level=intermediate kites=7,9,12 "
     "wetsuits=3/2,4/3 boards=foil 1300,TT 138 session=3 "
-    "home=41.39,2.17 drive_km=200 range=Trabucador → Leucate"
+    "home=41.39,2.17 drive_km=200 range=Trabucador -> Leucate"
 )
-
-AGENT_PROMPT_TO_USER = """\
-Yo — before I call a session I need your quiver (one reply, paste or fill).
-Level matters: it changes the SEND IT wind and which kite you rig.
-(Onboarding > debugging a session with the wrong kite.)
-
-• sport: kitesurf / kitefoil / surfkite
-• weight_kg
-• level: beginner | intermediate | advanced  ← required
-• kites m² you own (e.g. 7,9,12)
-• boards (optional)
-• wetsuits you own (e.g. 3/2,4/3)
-• session hours (2–4)
-• home lat,lon · max drive_km · range label (e.g. Trabucador → Leucate)
-
-Paste format (edit numbers):
-sport=kitefoil weight=78 level=intermediate kites=7,9,12 \\
-wetsuits=3/2,4/3 session=3 home=41.39,2.17 drive_km=200 \\
-range=Trabucador → Leucate
-"""
 
 
 def intake_payload(*, needed: bool = True) -> dict[str, Any]:

@@ -413,7 +413,7 @@ def unlock_cmd(
     Skips writes when the probe already reaches Windguru (unless --force).
     Agent runs this — not the human.
     """
-    from guru.core.wire import unlock_wind_charts
+    from guru.core.unlock import unlock_wind_charts
 
     try:
         payload = unlock_wind_charts(force=force)

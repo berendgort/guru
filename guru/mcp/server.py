@@ -225,7 +225,7 @@ def unlock_tool(force: bool = False) -> dict[str, Any]:
     Call ONLY when network.reachable is false / charts are gated. Skips when
     already reachable unless force=true. Speaks kite-bro via say_to_rider.
     """
-    from guru.core.wire import unlock_wind_charts
+    from guru.core.unlock import unlock_wind_charts
 
     try:
         return _ok(unlock_wind_charts(force=force))

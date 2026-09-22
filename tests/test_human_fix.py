@@ -9,7 +9,7 @@ def test_human_fix_recipes_have_clear_steps() -> None:
     payload = human_fix_payload()
     assert "Automate everything first" in payload["policy"]
     recipes = payload["recipes"]
-    assert "Settings → Data controls → Work network access" in recipes[
+    assert "Settings -> Data controls -> Work network access" in recipes[
         "chatgpt_work_network"
     ]["say_to_rider"]
     assert "Agent internet" in recipes["codex_cloud_environment"]["say_to_rider"]

@@ -1,4 +1,4 @@
-"""Claude + Codex/ChatGPT Work unlock — only when blocked."""
+"""Claude + Codex/ChatGPT Work unlock -- only when blocked."""
 
 from __future__ import annotations
 
@@ -8,19 +8,22 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from guru.cli.main import app
+from guru.core import config_io
+from guru.core import unlock as unlock_mod
 from guru.core import wire as wire_mod
-from guru.core.wire import (
+from guru.core.unlock import (
     unlock_claude_network,
     unlock_codex_network,
     unlock_wind_charts,
-    wire_codex,
 )
+from guru.core.wire import wire_codex
 
 
 def test_unlock_skips_when_reachable(monkeypatch, tmp_path: Path) -> None:
     home = tmp_path / "home"
     home.mkdir()
-    monkeypatch.setattr(wire_mod, "_home", lambda: home)
+    monkeypatch.setattr(config_io, "home", lambda: home)
+    monkeypatch.setattr(unlock_mod, "home", lambda: home)
     monkeypatch.setattr(
         "guru.core.path.probe_windguru",
         lambda: {"ok": True, "reachable": True, "host": "www.windguru.cz"},
@@ -38,7 +41,9 @@ def test_unlock_writes_claude_and_codex_when_blocked(monkeypatch, tmp_path: Path
         'model = "gpt-5.4"\n\n[features]\nnetwork_proxy = true\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr(wire_mod, "_home", lambda: home)
+    monkeypatch.setattr(config_io, "home", lambda: home)
+    monkeypatch.setattr(unlock_mod, "home", lambda: home)
+    monkeypatch.setattr(wire_mod, "home", lambda: home)
     monkeypatch.setattr(
         "guru.core.path.probe_windguru",
         lambda: {
@@ -55,6 +60,7 @@ def test_unlock_writes_claude_and_codex_when_blocked(monkeypatch, tmp_path: Path
     assert result["ok"] is True
     assert result["human_fix"]["id"] == "restart_after_unlock"
     assert "new chat" in result["say_to_rider"].lower()
+    assert "human_fix_catalog" not in result
 
     settings = json.loads((home / ".claude" / "settings.json").read_text())
     domains = settings["sandbox"]["network"]["allowedDomains"]
@@ -69,7 +75,8 @@ def test_unlock_writes_claude_and_codex_when_blocked(monkeypatch, tmp_path: Path
 def test_codex_unlock_skips_without_codex_home(monkeypatch, tmp_path: Path) -> None:
     home = tmp_path / "home"
     home.mkdir()
-    monkeypatch.setattr(wire_mod, "_home", lambda: home)
+    monkeypatch.setattr(config_io, "home", lambda: home)
+    monkeypatch.setattr(unlock_mod, "home", lambda: home)
     out = unlock_codex_network()
     assert out["skipped"] is True
     assert out["reason"] == "no_codex_home"
@@ -77,7 +84,8 @@ def test_codex_unlock_skips_without_codex_home(monkeypatch, tmp_path: Path) -> N
 
 def test_claude_unlock_idempotent(monkeypatch, tmp_path: Path) -> None:
     home = tmp_path / "home"
-    monkeypatch.setattr(wire_mod, "_home", lambda: home)
+    monkeypatch.setattr(config_io, "home", lambda: home)
+    monkeypatch.setattr(unlock_mod, "home", lambda: home)
     first = unlock_claude_network()
     second = unlock_claude_network()
     assert first["changed"] is True
@@ -87,7 +95,8 @@ def test_claude_unlock_idempotent(monkeypatch, tmp_path: Path) -> None:
 def test_wire_codex(monkeypatch, tmp_path: Path) -> None:
     home = tmp_path / "home"
     (home / ".codex").mkdir(parents=True)
-    monkeypatch.setattr(wire_mod, "_home", lambda: home)
+    monkeypatch.setattr(config_io, "home", lambda: home)
+    monkeypatch.setattr(wire_mod, "home", lambda: home)
     out = wire_codex("/tmp/guru-mcp")
     assert out["changed"] is True
     text = (home / ".codex" / "config.toml").read_text()
@@ -98,7 +107,8 @@ def test_wire_codex(monkeypatch, tmp_path: Path) -> None:
 def test_cli_unlock_skip_json(monkeypatch, tmp_path: Path) -> None:
     home = tmp_path / "home"
     home.mkdir()
-    monkeypatch.setattr(wire_mod, "_home", lambda: home)
+    monkeypatch.setattr(config_io, "home", lambda: home)
+    monkeypatch.setattr(unlock_mod, "home", lambda: home)
     monkeypatch.setattr(
         "guru.core.path.probe_windguru",
         lambda: {"ok": True, "reachable": True, "host": "www.windguru.cz"},

@@ -8,6 +8,7 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from guru.cli.main import app
+from guru.core import config_io
 from guru.core import wire as wire_mod
 from guru.core.wire import wire_all, wire_status
 
@@ -16,7 +17,8 @@ def test_wire_writes_configs(tmp_path: Path, monkeypatch) -> None:
     home = tmp_path / "home"
     (home / ".cursor").mkdir(parents=True)
     (home / ".config" / "Claude").mkdir(parents=True)
-    monkeypatch.setattr(wire_mod, "_home", lambda: home)
+    monkeypatch.setattr(config_io, "home", lambda: home)
+    monkeypatch.setattr(wire_mod, "home", lambda: home)
 
     mcp_bin = tmp_path / "guru-mcp"
     mcp_bin.write_text("#!/bin/sh\n", encoding="utf-8")
@@ -44,7 +46,8 @@ def test_wire_writes_configs(tmp_path: Path, monkeypatch) -> None:
 def test_cli_wire_status(monkeypatch, tmp_path: Path) -> None:
     home = tmp_path / "home"
     home.mkdir()
-    monkeypatch.setattr(wire_mod, "_home", lambda: home)
+    monkeypatch.setattr(config_io, "home", lambda: home)
+    monkeypatch.setattr(wire_mod, "home", lambda: home)
     monkeypatch.setattr(wire_mod, "resolve_guru_mcp", lambda: None)
     runner = CliRunner()
     result = runner.invoke(app, ["wire", "--status", "--json"])

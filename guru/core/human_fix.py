@@ -1,4 +1,4 @@
-"""Rare human UI fixes — only when the agent cannot automate.
+"""Rare human UI fixes -- only when the agent cannot automate.
 
 Agents must run ``guru unlock`` / wire themselves first. Paste a
 ``say_to_rider`` block only when local writes are impossible or still
@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from guru.core.wire import WINDGURU_CLOUD_DOMAINS, WINDGURU_HOSTS
+from guru.core.hosts import WINDGURU_CLOUD_DOMAINS, WINDGURU_HOSTS
+
+__all__ = ("human_fix_payload", "pick_human_fix")
 
 _DOMAINS_CSV = ", ".join(WINDGURU_CLOUD_DOMAINS)
 _CLAUDE_CSV = ", ".join(WINDGURU_HOSTS)
@@ -21,7 +23,7 @@ def human_fix_payload() -> dict[str, Any]:
         "policy": (
             "Automate everything first (upgrade, unlock, setup, weekend). "
             "Ask the human ONLY when this process cannot write their app "
-            "settings — then paste the matching say_to_rider block EXACTLY. "
+            "settings -- then paste the matching say_to_rider block EXACTLY. "
             "Never ask for pipx, shell guru, MCP JSON, or tunnels."
         ),
         "ask_human_only_when": [
@@ -42,23 +44,23 @@ def human_fix_payload() -> dict[str, Any]:
                 "id": "restart_after_unlock",
                 "when": "guru unlock just succeeded on this laptop",
                 "say_to_rider": (
-                    "Wind's unlocked on your laptop — "
+                    "Wind's unlocked on your laptop -- "
                     "Allowlist patched like a hotfixed harness line. "
                     "One step left: start a **new chat** in this app "
-                    "(close this one → New chat), then ask: where can I kite?"
+                    "(close this one -> New chat), then ask: where can I kite?"
                 ),
             },
             "chatgpt_work_network": {
                 "id": "chatgpt_work_network",
                 "when": (
                     "ChatGPT Work code/shell cannot reach Windguru "
-                    "(Settings toggle — agent cannot flip it)"
+                    "(Settings toggle -- agent cannot flip it)"
                 ),
                 "say_to_rider": (
-                    "Can't reach the wind temple from this Work chat — "
+                    "Can't reach the wind temple from this Work chat -- "
                     "quick fix (one toggle):\n"
-                    "1. Open **Settings → Data controls → Work network access**\n"
-                    "2. Turn **ON** “Allow public internet access”\n"
+                    "1. Open **Settings -> Data controls -> Work network access**\n"
+                    "2. Turn **ON** \"Allow public internet access\"\n"
                     "3. Wait for the current run to finish, then start a "
                     "**new Work chat**\n"
                     "4. Ask: where can I kite?\n"
@@ -69,21 +71,21 @@ def human_fix_payload() -> dict[str, Any]:
             "codex_cloud_environment": {
                 "id": "codex_cloud_environment",
                 "when": (
-                    "Codex / ChatGPT cloud Environment — Agent internet "
+                    "Codex / ChatGPT cloud Environment -- Agent internet "
                     "access is Off or Windguru missing from the allowlist"
                 ),
                 "domains": list(WINDGURU_CLOUD_DOMAINS),
                 "say_to_rider": (
-                    "Cloud sandbox ate the wind packets — quick fix in Codex "
+                    "Cloud sandbox ate the wind packets -- quick fix in Codex "
                     "(~30 seconds):\n"
-                    "1. Open **Environments** → select the environment this "
-                    "chat uses → **Internet access** / Agent internet\n"
-                    "2. Set Agent internet access → **On**\n"
-                    "3. Domain allowlist → add these exactly "
+                    "1. Open **Environments** -> select the environment this "
+                    "chat uses -> **Internet access** / Agent internet\n"
+                    "2. Set Agent internet access -> **On**\n"
+                    "3. Domain allowlist -> add these exactly "
                     "(copy-paste):\n"
                     f"   `{_DOMAINS_CSV}`\n"
                     "4. Allowed methods: **GET, HEAD, OPTIONS** is enough\n"
-                    "5. Start a **new chat** → ask: where can I kite?\n"
+                    "5. Start a **new chat** -> ask: where can I kite?\n"
                     "Faster option: open **Cursor on this laptop** and ask there."
                 ),
             },
@@ -91,18 +93,18 @@ def human_fix_payload() -> dict[str, Any]:
                 "id": "claude_network_settings",
                 "when": (
                     "Claude still gated after unlock (managed policy / "
-                    "claude.ai cloud) — agent cannot write settings"
+                    "claude.ai cloud) -- agent cannot write settings"
                 ),
                 "domains": list(WINDGURU_HOSTS),
                 "say_to_rider": (
-                    "Claude's sandbox is gatekeeping the gust column — "
+                    "Claude's sandbox is gatekeeping the gust column -- "
                     "quick fix:\n"
-                    "1. In Claude Code type **/config** → open the "
-                    "**Sandbox** tab → **Network → Allowed domains**\n"
-                    "   (or on claude.ai: Settings → Claude Code)\n"
+                    "1. In Claude Code type **/config** -> open the "
+                    "**Sandbox** tab -> **Network -> Allowed domains**\n"
+                    "   (or on claude.ai: Settings -> Claude Code)\n"
                     "2. Add these domains exactly:\n"
                     f"   `{_CLAUDE_CSV}`\n"
-                    "3. Start a **new chat** → ask: where can I kite?\n"
+                    "3. Start a **new chat** -> ask: where can I kite?\n"
                     "Faster option: open **Cursor on this laptop** and ask there."
                 ),
             },
@@ -110,12 +112,12 @@ def human_fix_payload() -> dict[str, Any]:
                 "id": "fallback_cursor",
                 "when": (
                     "any host still blocked, or the rider cannot change "
-                    "settings — always safe"
+                    "settings -- always safe"
                 ),
                 "say_to_rider": (
-                    "Yo — this chat can't open the wind charts (404: stoke). "
+                    "Yo -- this chat can't open the wind charts (404: stoke). "
                     "Fastest path: open **Cursor on this laptop** and ask "
-                    "“where can I kite?” — same quiver, live wind, no "
+                    "\"where can I kite?\" -- same quiver, live wind, no "
                     "settings hunt."
                 ),
             },
