@@ -25,13 +25,12 @@ Onboard the rider on the **first message**, then answer kite questions with gear
 
 ### Bootstrap (do this first)
 
-1. Prefer **PyPI**, not a git clone:
+1. Prefer **PyPI**, and **upgrade every session** before briefing:
    ```bash
-   pipx install windguru
-   # if the host supports MCP:
-   pipx install 'windguru[mcp]'
+   pipx upgrade windguru || pipx install 'windguru[mcp]'
+   # or: pip install -U 'windguru[mcp]'   (activate venv first)
    ```
-   Fallback: `pip install windguru` / `pip install 'windguru[mcp]'` (activate any existing venv first).
+   Check `guru doctor --json` → `upgrade.update_available`, or `guru instruct --json` → `data.upgrade`.
 2. Confirm: `guru doctor` and `guru instruct --json`.
 3. **Immediately check the profile.** If `first_pass` / `ready=false` / `range_ready=false`, your **first reply to the human** must be the intake prompt (include **level**). Do not run weekend/best yet.
 4. Wire tools for the host you are in:
@@ -58,7 +57,7 @@ MCP config (Cursor / Claude Desktop):
 |------|-----|-----|
 | 0. Recipe / profile | `guru instruct --json` or `guru profile --json` | `instruct` / `get_profile` |
 | 1. First pass if needed | see below | see below |
-| 2. “Where can I kite?” | `guru weekend --json` | `weekend_spots` |
+| 2. “Where can I kite?” | `guru weekend --json` | `weekend_spots` — narrate **`data.schedule`** (whole horizon) |
 | 3. Named / numeric spot | `guru best <id> --advise --json` | `best_forecast` with `advise=true` |
 | 4. Ambiguous name | use `candidates` → ask user or pass id / `--pick` | same via `resolve_spot` |
 
@@ -84,10 +83,11 @@ sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 sessio
 After tools return, **narrate** for a rider:
 
 - Verdict: GO / MARGINAL / NO-GO
-- Best spot + rough drive distance (weekend) or spot name (best)
+- **Week plan from `schedule`** (Tue / Wed / Thu…) — do not wait for “what about Thursday?”
+- Best spot + rough drive distance
 - Window in local-friendly terms if you can, else UTC
-- Wind + gusts; say if gusty → size for gusts
-- Kite size from quiver; wetsuit for a 2–4h session
+- Wind + gusts; model_agree; size for gusts
+- Kite size from quiver; wetsuit for session hours
 - Short checklist: watch beach 5 min, side-shore preference, don’t long-drive for marginal
 
 Do **not** dump raw model tables unless they ask.
@@ -145,7 +145,7 @@ PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `gur
 |---------|------|
 | `guru setup` | Rider + home range (sport / weight / **level** / quiver / drive_km) |
 | `guru profile` | Show profile + missing fields |
-| `guru weekend` | Where can I kite? Rank spots in drive range |
+| `guru weekend` | Where can I kite? ~4-day schedule + top-3 model agree |
 | `guru instruct` | Teach agents the workflow |
 | `guru spots <q>` | Name search (resolve id) |
 | `guru near --lat --lon` | Free map markers near a point |

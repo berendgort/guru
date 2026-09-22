@@ -199,7 +199,27 @@ class WeekendSpotAdvice(BaseModel):
     summary: str = ""
     best_window: AdviceWindow | None = None
     model: str | None = None
+    model_agree: int = 1  # how many of top-3 models like this window's day
     score: float = 0.0
+
+
+class ScheduleSlot(BaseModel):
+    """Best call for a calendar day — agents narrate the week without re-asking."""
+
+    day: str  # YYYY-MM-DD (UTC)
+    weekday: str  # Mon … Sun
+    start: str
+    end: str
+    spot_id: int
+    name: str
+    drive_km: float | None = None
+    verdict: str
+    wind_kn: float | None = None
+    gust_kn: float | None = None
+    owned_kite_m2: float | None = None
+    owned_wetsuit: str | None = None
+    model_agree: int = 1
+    summary: str = ""
 
 
 class WeekendReport(BaseModel):
@@ -208,7 +228,10 @@ class WeekendReport(BaseModel):
     home_lat: float | None = None
     home_lon: float | None = None
     drive_km: float | None = None
+    hours: int = 96
+    top_models: int = 3
     spots: list[WeekendSpotAdvice] = Field(default_factory=list)
+    schedule: list[ScheduleSlot] = Field(default_factory=list)
     missing_profile: list[str] = Field(default_factory=list)
     summary: str = ""
     thinking: list[str] = Field(default_factory=list)

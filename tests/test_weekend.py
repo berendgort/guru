@@ -2,13 +2,67 @@
 
 from __future__ import annotations
 
-from guru.models.profile import Level, RiderProfile, Sport
-from guru.rider.weekend import _score
+from guru.models.profile import Level, RiderProfile, ScheduleSlot, Sport
+from guru.rider.weekend import _pick_schedule, _score
 
 
 def test_weekend_score_prefers_go_nearby() -> None:
     assert _score("go", 20) > _score("go", 100)
     assert _score("go", 100) > _score("marginal", 20)
+    assert _score("go", 50, model_agree=3) > _score("go", 50, model_agree=1)
+
+
+def test_pick_schedule_one_per_day() -> None:
+    a = ScheduleSlot(
+        day="2026-09-24",
+        weekday="Thu",
+        start="2026-09-24T11:00:00Z",
+        end="2026-09-24T14:00:00Z",
+        spot_id=1,
+        name="Near",
+        drive_km=5,
+        verdict="go",
+        wind_kn=12,
+        model_agree=2,
+        summary="a",
+    )
+    b = ScheduleSlot(
+        day="2026-09-24",
+        weekday="Thu",
+        start="2026-09-24T12:00:00Z",
+        end="2026-09-24T13:00:00Z",
+        spot_id=2,
+        name="Far",
+        drive_km=80,
+        verdict="marginal",
+        wind_kn=10,
+        model_agree=1,
+        summary="b",
+    )
+    c = ScheduleSlot(
+        day="2026-09-25",
+        weekday="Fri",
+        start="2026-09-25T11:00:00Z",
+        end="2026-09-25T13:00:00Z",
+        spot_id=1,
+        name="Near",
+        drive_km=5,
+        verdict="go",
+        wind_kn=14,
+        model_agree=3,
+        summary="c",
+    )
+    out = _pick_schedule(
+        [
+            ("2026-09-24", a, 200.0),
+            ("2026-09-24", b, 50.0),
+            ("2026-09-25", c, 210.0),
+        ]
+    )
+    assert len(out) == 2
+    assert out[0].name == "Near"
+    assert out[0].day == "2026-09-24"
+    assert out[1].day == "2026-09-25"
 
 
 def test_range_ready() -> None:

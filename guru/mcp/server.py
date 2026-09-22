@@ -20,11 +20,12 @@ from guru.search.spots import resolve_spot, search_spots
 mcp = FastMCP(
     "guru",
     instructions=(
-        "Kite spot + gear advice. Call instruct / get_profile first. "
-        "If first_pass: show intake.prompt_to_user (level required), then "
-        "setup_profile. For 'where can I kite?' use weekend_spots. For a named "
-        "spot use best_forecast (advise=true by default). Never scrape "
-        "windguru.cz; never require PRO."
+        "Kite spot + gear advice. EVERY SESSION: check instruct/doctor upgrade "
+        "and pipx upgrade windguru if update_available. Then get_profile; if "
+        "first_pass show intake.prompt_to_user (level required). For 'where "
+        "can I kite?' use weekend_spots and narrate data.schedule for the whole "
+        "horizon (do not wait for 'what about Thursday?'). Named spot → "
+        "best_forecast. Never scrape windguru.cz; never require PRO."
     ),
 )
 
@@ -101,12 +102,23 @@ def get_profile_tool() -> dict[str, Any]:
 
 
 @mcp.tool(name="weekend_spots")
-def weekend_spots_tool(hours: int = 48, limit: int = 8) -> dict[str, Any]:
-    """Where can I kite? Rank spots in drive range with rider advice."""
+def weekend_spots_tool(
+    hours: int = 96, limit: int = 8, top: int = 3
+) -> dict[str, Any]:
+    """Where can I kite? Day schedule + ranked spots (top-3 models, ~4 days)."""
     from guru.rider.weekend import scan_weekend
 
     try:
-        return _ok(dump_model(scan_weekend(load_profile(), hours=hours, limit_spots=limit)))
+        return _ok(
+            dump_model(
+                scan_weekend(
+                    load_profile(),
+                    hours=hours,
+                    limit_spots=limit,
+                    top_models=top,
+                )
+            )
+        )
     except _CATCH as exc:
         return _err(exc)
 

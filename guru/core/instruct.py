@@ -4,12 +4,25 @@ from __future__ import annotations
 
 from typing import Any
 
+from guru.core.upgrade import upgrade_status
 from guru.rider.intake import intake_payload
 from guru.rider.profile_store import load_profile, profile_payload
 
 INSTRUCT_STEPS: list[dict[str, Any]] = [
     {
         "step": 0,
+        "action": "auto_upgrade",
+        "command": (
+            "pipx upgrade windguru   # or: pip install -U 'windguru[mcp]'"
+        ),
+        "detail": (
+            "EVERY SESSION: check data.upgrade.update_available (or guru doctor "
+            "--json). If true, upgrade windguru on the fly before briefing — "
+            "do not leave the user on a stale CLI."
+        ),
+    },
+    {
+        "step": 1,
         "action": "first_pass_intake",
         "command": "guru profile --json   # if ready=false → show data.intake.prompt_to_user",
         "detail": (
@@ -21,17 +34,18 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         ),
     },
     {
-        "step": 1,
+        "step": 2,
         "action": "weekend_or_best",
         "command": "guru weekend --json   # or: guru best <id> --json  (advice on by default)",
         "detail": (
-            "Ask 'where can I kite?' → guru weekend (ranks drive-range spots; "
-            "far trips need clear GO). Named spot → guru best <id> (verdict + "
-            "kite/suit; use --no-advise only for raw models)."
+            "Ask 'where can I kite?' → guru weekend (default ~96h + top-3 "
+            "models). Narrate data.schedule day-by-day (Tue/Wed/Thu…) — do not "
+            "wait for the rider to ask about Thursday. Far trips need clear GO. "
+            "Named spot → guru best <id>."
         ),
     },
     {
-        "step": 2,
+        "step": 3,
         "action": "resolve_spot_if_needed",
         "command": 'guru spots "<name>" --json   # or: guru near --lat --lon --json',
         "detail": (
@@ -41,22 +55,22 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         ),
     },
     {
-        "step": 3,
+        "step": 4,
         "action": "think_like_a_kiter",
         "command": None,
         "detail": (
-            "Narrate data.advice / weekend.spots: size for gusts, smooth vs gusty, "
-            "suit for session length + wind chill, side-shore preference, "
-            "confirm at beach 5 min. Ignore lower-weighted models unless asked."
+            "Narrate schedule + spots: size for gusts, model_agree, suit for "
+            "session length, beach 5 min check. Lead with the week plan, not "
+            "only today's best spot."
         ),
     },
 ]
 
 INSTRUCT_SUMMARY = (
-    "FIRST MESSAGE: collect rider profile once (sport, weight, LEVEL, quiver, "
-    "suits, home range) via intake.prompt_to_user — level is required. Then "
-    "weekend or best (advice on). WINDGURU_DEFAULT only. Think like a kiter. "
-    "No HTML scrape. No PRO."
+    "Upgrade windguru if outdated. FIRST MESSAGE: collect rider profile once "
+    "(sport, weight, LEVEL, quiver, suits, home range). Then weekend "
+    "(~4-day schedule + top-3 models) or best. Narrate the week. "
+    "WINDGURU_DEFAULT only. No HTML scrape. No PRO."
 )
 
 
@@ -68,15 +82,19 @@ def instruct_payload() -> dict[str, Any]:
         status = None
         need_intake = True
 
+    upgrade = upgrade_status()
     return {
         "summary": INSTRUCT_SUMMARY,
         "preset": "WINDGURU_DEFAULT",
         "top_models": 3,
+        "weekend_hours": 96,
         "first_pass": need_intake,
+        "upgrade": upgrade,
         "intake": intake_payload(needed=need_intake),
         "profile_status": status,
         "steps": INSTRUCT_STEPS,
         "examples": [
+            "pipx upgrade windguru",
             "guru profile --json",
             (
                 "guru setup --intake 'sport=kitefoil weight=78 level=intermediate "

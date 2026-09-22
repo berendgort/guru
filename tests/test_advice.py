@@ -78,7 +78,10 @@ def test_cli_setup_and_instruct(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     instruct = runner.invoke(app, ["instruct", "--json"])
     assert instruct.exit_code == 0
     body = json.loads(instruct.stdout)["data"]
-    assert body["steps"][0]["action"] == "first_pass_intake"
+    assert body["steps"][0]["action"] == "auto_upgrade"
+    assert "upgrade" in body
+    assert "upgrade_commands" in body["upgrade"]
+    assert any(s.get("action") == "first_pass_intake" for s in body["steps"])
     assert "intake" in body
     assert any(
         s.get("action") == "weekend_or_best"

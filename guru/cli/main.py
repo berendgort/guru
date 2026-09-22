@@ -210,14 +210,24 @@ def profile_cmd(
 
 @app.command("weekend")
 def weekend_cmd(
-    hours: int = typer.Option(48, "--hours", "-H", help="Forecast horizon (steps)"),
+    hours: int = typer.Option(
+        96,
+        "--hours",
+        "-H",
+        help="Forecast horizon in steps (~96 ≈ 4 days so mid-week is covered)",
+    ),
     limit: int = typer.Option(8, "--limit", "-n", help="Max spots to scan"),
+    top: int = typer.Option(
+        3, "--top", help="WINDGURU_DEFAULT models to agree across"
+    ),
     as_json: bool = typer.Option(False, "--json"),
 ) -> None:
-    """Where can I kite? Rank spots in your drive range with advice."""
+    """Where can I kite? Rank spots + day schedule (top models, ~4-day horizon)."""
     try:
         profile = load_profile()
-        report = scan_weekend(profile, hours=hours, limit_spots=limit)
+        report = scan_weekend(
+            profile, hours=hours, limit_spots=limit, top_models=top
+        )
     except _CATCH as exc:
         fail(exc, as_json=as_json)
     if as_json:
@@ -370,13 +380,17 @@ def schema_cmd(
 def doctor_cmd(
     as_json: bool = typer.Option(False, "--json"),
 ) -> None:
-    """Env + version sanity check (no live Windguru call)."""
+    """Env + version + PyPI upgrade check."""
+    from guru.core.upgrade import upgrade_status
+
     try:
         payload = profile_payload()
     except Exception:
         payload = {"ready": False, "missing": ["profile"], "path": None}
+    upgrade = upgrade_status()
     info = {
         "version": __version__,
+        "upgrade": upgrade,
         "GURU_TIMEOUT": os.environ.get("GURU_TIMEOUT", "30"),
         "GURU_IMPERSONATE": os.environ.get("GURU_IMPERSONATE", "chrome"),
         "models": list_models(),
@@ -386,6 +400,15 @@ def doctor_cmd(
         print_ok(info)
         return
     console.print(f"guru {__version__}")
+    if upgrade.get("update_available"):
+        console.print(
+            f"[yellow]update available: {upgrade.get('pypi_latest')} — "
+            f"pipx upgrade windguru[/yellow]"
+        )
+    else:
+        console.print(
+            f"pypi={upgrade.get('pypi_latest') or '?'} · up to date"
+        )
     console.print(f"GURU_TIMEOUT={info['GURU_TIMEOUT']}")
     console.print(f"GURU_IMPERSONATE={info['GURU_IMPERSONATE']}")
     console.print(f"{len(info['models'])} known model aliases")

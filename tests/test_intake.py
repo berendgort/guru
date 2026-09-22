@@ -63,9 +63,10 @@ def test_instruct_includes_intake(tmp_path, monkeypatch) -> None:
     assert result.exit_code == 0
     body = json.loads(result.stdout)["data"]
     assert body["first_pass"] is True
+    assert body["steps"][0]["action"] == "auto_upgrade"
     assert "prompt_to_user" in body["intake"]
     assert "level" in body["intake"]["prompt_to_user"].lower()
     assert "sport=" in body["intake"]["reply_template"]
     assert "level=" in body["intake"]["reply_template"]
     assert "level" in body["intake"]["required_highlights"]
-    assert body["steps"][0]["action"] == "first_pass_intake"
+    assert any(s["action"] == "first_pass_intake" for s in body["steps"])
