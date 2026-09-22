@@ -392,22 +392,36 @@ def schema_cmd(
 @app.command("unlock")
 def unlock_cmd(
     as_json: bool = typer.Option(False, "--json"),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        help="Write allowlists even when Windguru is already reachable.",
+    ),
 ) -> None:
-    """Open Windguru for Claude on this laptop + plug guru tools (agent runs this)."""
-    from guru.core.wire import unlock_for_claude
+    """Open Windguru for Claude + ChatGPT Work/Codex when charts are gated.
+
+    Skips writes when the probe already reaches Windguru (unless --force).
+    Agent runs this — not the human.
+    """
+    from guru.core.wire import unlock_wind_charts
 
     try:
-        payload = unlock_for_claude()
+        payload = unlock_wind_charts(force=force)
     except _CATCH as exc:
         fail(exc, as_json=as_json)
         return
     if as_json:
         print_ok(payload)
         return
+    if payload.get("skipped"):
+        console.print("[dim]already reachable — unlock skipped[/dim]")
+        return
     console.print(payload.get("say_to_rider") or "unlocked")
-    if payload.get("network", {}).get("path"):
-        console.print(f"[dim]{payload['network']['path']}[/dim]")
-
+    for key in ("claude_network", "codex_network", "network"):
+        path = (payload.get(key) or {}).get("path")
+        if path:
+            console.print(f"[dim]{path}[/dim]")
+            break
 
 @app.command("wire")
 def wire_cmd(

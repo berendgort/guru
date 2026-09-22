@@ -66,7 +66,11 @@ class Client:
         )
         if resp.status_code >= 400:
             body = (resp.text or "")[:200]
-            if resp.status_code == 403 and "allowlist" in body.lower():
+            if resp.status_code == 403 and (
+                "allowlist" in body.lower()
+                or "not allowed" in body.lower()
+                or "blocked" in body.lower()
+            ):
                 raise GuruHTTPError(
                     "Yo — this chat can't peek at the wind charts (gated). "
                     "Run guru unlock on the laptop or ask in Cursor for a live SEND IT.",

@@ -28,10 +28,11 @@ mcp = FastMCP(
         "Kite spot + gear advice in kite-bro voice (SEND IT / SOFT CALL / "
         "SIT IT OUT — see instruct.voice). ONE PATH every app: local guru CLI. "
         "EVERY SESSION: instruct/doctor without --wire. If network.reachable "
-        "is false: follow on_unreachable (setup ok; NEVER weekend/best; "
-        "say_exactly only). wire_mcp ONLY if shell guru unavailable. Upgrade "
-        "if update_available. get_profile; if first_pass show "
-        "intake.prompt_to_user (level required). 'where can I kite?' → "
+        "is false: follow on_unreachable — run unlock once (Claude + ChatGPT "
+        "Work/Codex), then say_after_unlock; NEVER weekend/best while blocked; "
+        "never unlock when already reachable. wire_mcp ONLY if shell guru "
+        "unavailable. Upgrade if update_available. get_profile; if first_pass "
+        "show intake.prompt_to_user (level required). 'where can I kite?' → "
         "weekend_spots + narrate schedule in voice. Named spot → "
         "best_forecast. Never scrape; never require PRO; never hype a soft "
         "long haul."
@@ -213,19 +214,25 @@ def list_models_tool() -> dict[str, Any]:
     return _ok(list_models())
 
 
-@mcp.tool(name="unlock_claude")
-def unlock_claude_tool() -> dict[str, Any]:
-    """Open Windguru for Claude on this laptop and plug guru tools.
+@mcp.tool(name="unlock")
+def unlock_tool(force: bool = False) -> dict[str, Any]:
+    """Open Windguru for Claude + ChatGPT Work/Codex on this laptop.
 
-    Call when Claude cannot fetch wind (blocked chat). Speaks to the rider
-    in kite-bro voice via say_to_rider — never dump allowlist jargon.
+    Call ONLY when network.reachable is false / charts are gated. Skips when
+    already reachable unless force=true. Speaks kite-bro via say_to_rider.
     """
-    from guru.core.wire import unlock_for_claude
+    from guru.core.wire import unlock_wind_charts
 
     try:
-        return _ok(unlock_for_claude())
+        return _ok(unlock_wind_charts(force=force))
     except _CATCH as exc:
         return _err(exc)
+
+
+@mcp.tool(name="unlock_claude")
+def unlock_claude_tool(force: bool = False) -> dict[str, Any]:
+    """Alias for unlock — same Claude + ChatGPT Work/Codex allowlist fix."""
+    return unlock_tool(force=force)
 
 
 @mcp.tool(name="wire_mcp")
