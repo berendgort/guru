@@ -31,9 +31,9 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
             "ONE PATH FOR EVERY APP: local `guru … --json` on a machine that "
             "reaches Windguru. YOU run all commands — human_runs is always []. "
             "If data.network.reachable is false: follow data.on_unreachable "
-            "(intake in-chat only if needed; one sentence to switch to a local "
-            "agent host). NEVER ask the human to install/run guru or paste "
-            "bash. Wire/tunnel ONLY if shell guru is unavailable AND a local "
+            "exactly (intake → you run setup → say_exactly only). NEVER ask the "
+            "human to install/run guru, never 'you'll need to run', never tutor. "
+            "Wire/tunnel ONLY if shell guru is unavailable AND a local "
             "STDIO MCP host needs guru missing — never by default."
         ),
     },
