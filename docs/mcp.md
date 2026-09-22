@@ -32,12 +32,15 @@ which guru-mcp   # use full path in MCP config if needed
 
 | Tool | Args | Returns |
 |------|------|---------|
-| `instruct` | — | Fixed agent recipe (WINDGURU_DEFAULT → top 3) |
+| `instruct` | — | Agent recipe (setup → best advise) |
+| `setup_profile` | sport, weight, kites, wetsuits, home_lat/lon, drive_km, session_hours… | Merged profile |
+| `get_profile` | — | Profile + ready / range_ready |
+| `weekend_spots` | `hours?`, `limit?` | Ranked spots in drive range + advice |
 | `search_spots` | `query`, `limit?` | Named spots (no lat/lon) |
 | `near_spots` | `lat`, `lon`, `radius_km?`, `limit?` | Free map markers near a point |
-| `resolve_spot` | `spot`, `pick?` | Spot id/name → spot (ambiguous → error + candidates) |
-| `best_forecast` | `spot`, `top?` (3), `hours?` (48), `pick?` | Weights + forecasts for top models |
-| `get_forecast` | `spot`, `model?` (`gfs`), `hours?`, `pick?` | Single-model escape hatch |
+| `resolve_spot` | `spot`, `pick?` | Spot id/name → spot |
+| `best_forecast` | `spot`, `top?`, `hours?`, `pick?`, `advise?` | Weights + forecasts + `advice` |
+| `get_forecast` | `spot`, `model?`, `hours?`, `pick?` | Single-model escape hatch |
 | `list_models` | — | Known aliases → id_model |
 
 All responses: `{ "ok", "api_version": 1, "data" | error fields }`.
@@ -61,8 +64,9 @@ Client already retries with backoff. On `retryable: true`, wait seconds before a
 ## Agent rules
 
 1. Call `instruct` once if unfamiliar.
-2. Resolve a **named** spot (`search_spots` or `near_spots`).
-3. Call `best_forecast` — never invent PRO lat/lon forecasts.
-4. Do not scrape windguru.cz.
+2. Ensure rider + home range (`get_profile` / `setup_profile`).
+3. For “where can I kite?” call `weekend_spots`; else resolve a named spot.
+4. Call `best_forecast` with `advise=true` for a single spot.
+5. Do not scrape windguru.cz; never invent PRO lat/lon forecasts.
 
 See also: [`WIRE.md`](WIRE.md), `guru instruct --json`, [`skills/guru/SKILL.md`](../skills/guru/SKILL.md).

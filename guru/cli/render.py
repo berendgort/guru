@@ -7,6 +7,7 @@ from rich.table import Table
 from guru.cli.console import console
 from guru.models.blend import BestForecast
 from guru.models.forecast import Forecast, Spot, wind_dir_cardinal
+from guru.models.profile import AdviceReport, RiderProfile, WeekendReport
 
 
 def print_spots_table(spots: list[Spot], *, title: str) -> None:
@@ -45,7 +46,7 @@ def print_models_table(rows: list[dict[str, object]]) -> None:
     console.print(table)
 
 
-def print_best(best: BestForecast) -> None:
+def print_best(best: BestForecast, advice: AdviceReport | None = None) -> None:
     console.print(
         f"[bold]{best.spot.name}[/bold] · preset {best.preset} · top {len(best.models)}"
     )
@@ -57,8 +58,113 @@ def print_best(best: BestForecast) -> None:
     for m in best.models:
         table.add_row(str(m.rank), m.name, str(m.id_model), f"{m.weight_pct:.1f}")
     console.print(table)
+    if advice is not None:
+        print_advice(advice)
     for fc in best.forecasts:
         print_forecast(fc)
+
+
+def print_advice(advice: AdviceReport) -> None:
+    console.print(f"[bold]Advice[/bold] · {advice.verdict} · {advice.summary}")
+    if advice.missing_profile:
+        console.print(f"[yellow]Missing profile: {', '.join(advice.missing_profile)}[/yellow]")
+        return
+    if advice.checklist:
+        for item in advice.checklist[:4]:
+            console.print(f"  · {item}")
+    if not advice.windows:
+        return
+    table = Table(title="Ride windows")
+    table.add_column("UTC")
+    table.add_column("kt", justify="right")
+    table.add_column("Gust", justify="right")
+    table.add_column("Quality")
+    table.add_column("Kite")
+    table.add_column("Suit")
+    table.add_column("Verdict")
+    table.add_column("Note")
+    for w in advice.windows:
+        kite = ""
+        if w.owned_kite_m2 is not None:
+            kite = f"{w.owned_kite_m2:g}"
+            if w.kite_m2 is not None:
+                kite += f" (~{w.kite_m2:g})"
+        elif w.kite_m2 is not None:
+            kite = f"~{w.kite_m2:g}"
+        suit = w.owned_wetsuit or w.wetsuit or "-"
+        if w.accessories:
+            suit += f" +{','.join(w.accessories[:2])}"
+        table.add_row(
+            f"{w.start}→{w.end}",
+            f"{w.wind_kn:g}",
+            "-" if w.gust_kn is None else f"{w.gust_kn:g}",
+            w.wind_quality or "-",
+            kite,
+            suit,
+            w.verdict,
+            w.note,
+        )
+    console.print(table)
+
+
+def print_weekend(report: WeekendReport) -> None:
+    console.print(f"[bold]Weekend[/bold] · {report.verdict} · {report.summary}")
+    if report.range_label:
+        console.print(f"Range: {report.range_label}")
+    if report.missing_profile:
+        console.print(
+            f"[yellow]Missing: {', '.join(report.missing_profile)}[/yellow]"
+        )
+        return
+    for item in report.thinking[:3]:
+        console.print(f"  · {item}")
+    if not report.spots:
+        return
+    table = Table(title="Spots in drive range")
+    table.add_column("ID", style="cyan")
+    table.add_column("Name")
+    table.add_column("km", justify="right")
+    table.add_column("Verdict")
+    table.add_column("Summary")
+    for s in report.spots:
+        table.add_row(
+            str(s.spot_id),
+            s.name,
+            "-" if s.drive_km is None else f"{s.drive_km:g}",
+            s.verdict,
+            s.summary[:60],
+        )
+    console.print(table)
+
+
+def print_profile(
+    profile: RiderProfile,
+    *,
+    path: str,
+    ready: bool,
+    missing: list[str],
+    range_ready: bool = False,
+    missing_range: list[str] | None = None,
+) -> None:
+    console.print(
+        f"Profile [cyan]{path}[/cyan] · ready={ready} · range_ready={range_ready}"
+    )
+    console.print(f"  sport={profile.sport.value if profile.sport else '-'}")
+    console.print(f"  weight_kg={profile.weight_kg if profile.weight_kg is not None else '-'}")
+    console.print(f"  level={profile.level.value}")
+    console.print(f"  session_hours={profile.session_hours}")
+    console.print(f"  kites_m2={profile.kites_m2 or '-'}")
+    console.print(f"  boards={profile.boards or '-'}")
+    console.print(f"  wetsuits={profile.wetsuits or '-'}")
+    home = "-"
+    if profile.home_lat is not None and profile.home_lon is not None:
+        home = f"{profile.home_lat:g},{profile.home_lon:g}"
+    console.print(f"  home={home} drive_km={profile.drive_km or '-'}")
+    console.print(f"  range_label={profile.range_label or '-'}")
+    if missing:
+        console.print(f"[yellow]Missing: {', '.join(missing)}[/yellow]")
+    if missing_range:
+        console.print(f"[yellow]Missing range: {', '.join(missing_range)}[/yellow]")
 
 
 def print_forecast(fc: Forecast) -> None:

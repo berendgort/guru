@@ -1,9 +1,8 @@
 ---
 name: guru
 description: >
-  Install and use guru (Windguru CLI + MCP). Use when setting up windguru with pipx,
-  running guru best/spots/near, configuring Cursor/Claude with guru-mcp, or teaching
-  an agent the WINDGURU_DEFAULT top-3 forecast recipe.
+  Install and use guru (Windguru CLI + MCP). Use for first-pass rider intake,
+  guru setup/weekend/best, home drive range, or Cursor/Claude MCP.
 license: MIT
 ---
 
@@ -12,39 +11,30 @@ license: MIT
 ## Primary path (PyPI)
 
 ```bash
-pipx install windguru              # CLI
-pipx install 'windguru[mcp]'       # CLI + MCP
-guru --help
-guru-mcp
+pipx install windguru
+pipx install 'windguru[mcp]'
 ```
 
-Do **not** clone the repo unless the user wants to contribute. Prefer PyPI.
+## First pass (mandatory if profile empty)
 
-## Agent workflow (always)
+1. Run `guru instruct --json` or `guru profile --json`
+2. If `first_pass` / `ready=false` / `range_ready=false`: **show `intake.prompt_to_user` to the human once**
+3. Wait for **one** reply (key=value paste)
+4. `guru setup --intake '<their paste>' --json`
+5. Continue with weekend / best
 
-1. `guru instruct --json` (or MCP `instruct`) if unfamiliar
-2. Resolve a **named spot**: `guru spots "<place>" --json` or `guru near --lat --lon --json`
-3. `guru best <id> --json` — WINDGURU_DEFAULT Tune → top 3 models → forecasts
-4. Ignore lower-weighted models unless asked for a specific `guru forecast -m`
+**Do not** ask sport, then weight, then kites separately. One message. One reply.
 
-Never scrape windguru.cz. Never ask for PRO credentials for core forecasts.
+Example paste:
 
-## JSON contract
-
-Success: `{"ok": true, "api_version": 1, "data": ...}`  
-Failure: `{"ok": false, "api_version": 1, "error", "error_type", "retryable"}`  
-Ambiguous spot: `error_type: "ambiguous"` + `candidates[]`.
-
-## Claude / Cursor MCP config
-
-```json
-{
-  "mcpServers": {
-    "guru": {
-      "command": "guru-mcp"
-    }
-  }
-}
+```text
+sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 session=3 home=41.39,2.17 drive_km=200 range=Trabucador → Leucate
 ```
 
-Find the binary with `which guru-mcp` after `pipx ensurepath`.
+## After onboarded
+
+- "Where can I kite this weekend?" → `guru weekend --json`
+- Named spot → `guru best <id> --advise --json`
+- Narrate advice (gusts, kite, 2–4h wetsuit, checklist)
+
+Never scrape windguru.cz. Never require PRO.

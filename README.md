@@ -25,19 +25,21 @@ Or with pip: `pip install windguru` / `pip install 'windguru[mcp]'`.
 
 PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `guru-mcp`, `guru-mcp-http`
 
-## Quick start
+## Quick start (Cursor / agents)
 
-```bash
-guru instruct --json
-guru spots "castelldefels" --json
-guru best 201 --json
-guru near --lat 51.9 --lon 4.1 --json
-guru best 48309 -H 24 --json   # De Slufter
+**First pass** — agent shows one prompt; user pastes one line:
+
+```text
+sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 session=3 home=41.39,2.17 drive_km=200 range=Trabucador → Leucate
 ```
 
-`guru best` always uses **WINDGURU_DEFAULT** Tune weights and returns the **top 3** models + forecasts. Prefer that over raw GFS.
+```bash
+guru setup --intake '<paste>' --json
+guru weekend --json
+guru best 201 --advise --json
+```
 
-JSON envelope: `{"ok": true|false, "api_version": 1, "data"|error fields}`. Shared `error_type` / `retryable` with MCP.
+`guru instruct --json` / `guru profile --json` expose `intake.prompt_to_user` when the profile is incomplete — agents must ask **once**, not field-by-field.
 
 ## MCP (Cursor / Claude Desktop)
 
@@ -61,11 +63,13 @@ guru-mcp-http     # http://127.0.0.1:8000/mcp/
 
 | Tool | Description |
 |------|-------------|
-| `instruct` | Agent recipe (WINDGURU_DEFAULT → top 3) |
+| `instruct` | Agent recipe (setup → best --advise) |
+| `setup_profile` / `get_profile` | Rider + home range onboarding |
+| `weekend_spots` | Rank rideable spots in drive range |
 | `search_spots` | Named spot search |
 | `near_spots` | Free map markers near lat/lon |
 | `resolve_spot` | Name/id → spot (`ambiguous` + candidates) |
-| `best_forecast` | Tune weights → top models → forecasts |
+| `best_forecast` | Tune top models + rider advice (`advise=true`) |
 | `get_forecast` | Single-model escape hatch |
 | `list_models` | Known aliases |
 
@@ -75,10 +79,13 @@ More: [`docs/mcp.md`](docs/mcp.md).
 
 | Command | Role |
 |---------|------|
+| `guru setup` | Rider + home range (sport / weight / quiver / drive_km) |
+| `guru profile` | Show profile + missing fields |
+| `guru weekend` | Where can I kite? Rank spots in drive range |
 | `guru instruct` | Teach agents the workflow |
 | `guru spots <q>` | Name search |
 | `guru near --lat --lon` | Free map markers near a point |
-| `guru best <spot>` | WINDGURU_DEFAULT → top 3 → forecasts |
+| `guru best <spot> --advise` | WINDGURU_DEFAULT → top 3 → gear advice |
 | `guru forecast <spot> -m gfs` | Single model |
 | `guru models` / `schema` / `doctor` | Discoverability |
 
@@ -111,9 +118,11 @@ ruff check .
 | Core | `guru/core/` | Shared envelope, errors, instruct recipe |
 | CLI | `guru/cli/` | Typer + Rich + `--json` (thin over core) |
 | MCP | `guru/mcp/` | FastMCP over core (no CLI imports) |
+| Rider | `guru/rider/` | Profile store + kite/wetsuit advice |
 | Search | `guru/search/` | HTTP (`curl_cffi`), blend_math, near, forecast |
 | Models | `guru/models/` | Pydantic + aliases only |
 | Wire | [`docs/WIRE.md`](docs/WIRE.md) | Captured `iapi.php` |
+| MCP | [`docs/mcp.md`](docs/mcp.md) | `guru-mcp` setup + tools |
 
 Read [`AGENTS.md`](AGENTS.md) before extending. Capture Network → fixtures → tests.
 

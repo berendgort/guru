@@ -7,12 +7,16 @@ You are working on **guru**: a Windguru CLI/library/MCP reverse-engineered the s
 ```bash
 pipx install 'windguru[mcp]'   # PyPI — do not require a git clone
 guru instruct --json
-guru spots "<place>" --json          # or: guru near --lat --lon --json
-guru best <id_spot> --json           # WINDGURU_DEFAULT → top 3 forecasts
+guru setup --sport kitefoil --weight 78 --kites 7,9,12 --wetsuits "3/2,4/3" \
+  --home-lat 41.39 --home-lon 2.17 --drive-km 200 \
+  --range-label "Trabucador → Leucate" --session-hours 3 --json
+guru weekend --json                  # where can I kite?
+guru best <id_spot> --advise --json  # single spot + gear advice
 ```
 
-- Prefer **`best` / `best_forecast`**, not raw GFS.
+- Prefer **`weekend` / `best --advise`**, not raw GFS.
 - Preset is always **WINDGURU_DEFAULT** (only adaptive Tune preset we support).
+- Onboard once: sport / weight / quiver / wetsuits / home range via `guru setup`.
 - On `error_type: ambiguous`, pick from `candidates` — never silent first-match.
 - Envelope: `ok`, `api_version`, `error_type`, `retryable` (shared CLI + MCP).
 - Do **not** scrape HTML, Tune jBox, or MapLibre. Do **not** require PRO.
@@ -47,9 +51,10 @@ Keep a local checkout of fli (`git clone https://github.com/punitarani/fli /tmp/
 
 ```text
 pipx install windguru          # or: pipx install 'windguru[mcp]'
+guru setup --sport … --weight … --kites … --wetsuits …
 guru spots <query>
 guru near --lat Y --lon X
-guru best <id|name> [--top 3] [--hours N] [--json]
+guru best <id|name> --advise [--top 3] [--hours N] [--json]
 guru-mcp
 ```
 

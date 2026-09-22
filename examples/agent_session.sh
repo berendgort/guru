@@ -1,8 +1,12 @@
-# Example agent session (run after: pipx install -e ".[mcp]")
-#
-#   guru instruct --json
-#   guru spots "castelldefels" --json
-#   guru best 201 --hours 12 --json
-#   guru spots "De Slufter" --json
-#   guru best 48309 --hours 12 --json
-#   guru near --lat 51.9 --lon 4.1 --radius 40 --json
+#!/usr/bin/env bash
+# Cursor/agent session — profile + home range, then weekend / best --advise.
+set -euo pipefail
+
+guru setup --sport kitefoil --weight 78 \
+  --kites 7,9,12 --wetsuits "3/2,4/3" --session-hours 3 \
+  --home-lat 41.39 --home-lon 2.17 --drive-km 200 \
+  --range-label "Trabucador → Leucate" --json
+
+guru profile --json
+guru weekend --json
+guru best 201 -H 24 --advise --json
