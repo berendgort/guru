@@ -43,11 +43,11 @@ def human_fix_payload() -> dict[str, Any]:
             "restart_after_unlock": {
                 "id": "restart_after_unlock",
                 "when": "guru unlock just succeeded on this laptop",
+                "kind": "user_visible_copy",
                 "say_to_rider": (
-                    "Wind's unlocked on your laptop -- "
-                    "Allowlist patched like a hotfixed harness line. "
-                    "One step left: start a **new chat** in this app "
-                    "(close this one -> New chat), then ask: where can I kite?"
+                    "Wind's unlocked -- charts allowlist patched on this "
+                    "laptop. One step left: open a **new chat** in this app, "
+                    "then ask where you can kite."
                 ),
             },
             "chatgpt_work_network": {

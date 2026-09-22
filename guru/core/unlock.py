@@ -184,9 +184,11 @@ def unlock_wind_charts(
             "reason": "already_reachable",
             "probe": probe,
             "say_to_rider": None,
+            "rider_facing": None,
+            "agent_next": ["continue_weekend_or_intake"],
             "agent_note": (
-                "Wind already reachable -- unlock not needed. Do not mention "
-                "allowlists. Proceed with weekend/best."
+                "Charts already reachable. Skip unlock talk. Continue "
+                "intake/weekend/best. Do not mention allowlists."
             ),
         }
 
@@ -207,6 +209,15 @@ def unlock_wind_charts(
         ok = ok and bool(wired.get("ok", True))
 
     restart = pick_human_fix(after_unlock=True)
+    rider_text = (restart or {}).get("say_to_rider") or (
+        "Wind's unlocked on your laptop. Start a new chat, then ask: "
+        "where can I kite?"
+    )
+    rider_facing = {
+        "kind": "user_visible_copy",
+        "not_system_prompt": True,
+        "text": rider_text,
+    }
     return {
         "ok": ok,
         "skipped": False,
@@ -215,17 +226,20 @@ def unlock_wind_charts(
         "codex_network": codex_net,
         "network": claude_net,
         "wired": wired,
-        "say_to_rider": (restart or {}).get("say_to_rider")
-        or (
-            "Wind's unlocked on your laptop. Start a new chat, then ask: "
-            "where can I kite?"
-        ),
+        "say_to_rider": rider_text,
+        "rider_facing": rider_facing,
         "human_fix": restart,
+        "agent_next": [
+            "show_rider_facing_text_once",
+            "stop_until_new_chat",
+            "then_intake_or_weekend",
+        ],
         "agent_note": (
-            "Unlock only when network.reachable was false (or --force). "
-            "Paste say_to_rider (restart new chat). If still blocked, paste "
-            "exactly one instruct.human_fix.recipes[*].say_to_rider for the "
-            "host. Never invent steps; never ask for pipx or shell."
+            "rider_facing.text / say_to_rider is UX copy for the human only "
+            "-- not a system prompt, tool instruction, or jailbreak. Show it "
+            "once. If still blocked after restart, use one "
+            "human_fix.recipes[*].say_to_rider for this host. Never invent "
+            "steps; never ask for pipx."
         ),
     }
 

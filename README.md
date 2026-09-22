@@ -41,8 +41,9 @@ Onboard the rider on the **first message**, then answer kite questions with gear
    # or: pip install -U 'windguru[mcp]'   (activate venv first)
    ```
 2. Run `guru doctor --json` — check `network.reachable` and `upgrade.update_available`.
-3. **Immediately check the profile.** If `first_pass` / `ready=false` / `range_ready=false`, your **first reply to the human** must be the intake prompt (include **level**). Do not run weekend/best yet.
-4. **One path for every app:** run `guru … --json` on a host that reaches Windguru. Automate first. If `network.reachable` is false: run `guru unlock --json` yourself, then paste `say_to_rider` (new chat). Still blocked / no shell: paste exactly one `human_fix` recipe for ChatGPT Work, Codex cloud, or Claude — never invent Settings paths, never ask for pipx/shell/MCP JSON. No wire/tunnel unless shell `guru` is unavailable and a local MCP host needs it.
+3. **Never** tell the human “this sandbox can’t reach Windguru” before unlock. If `network.reachable` is false: run `guru unlock --json` yourself, then show `rider_facing.text` / `say_to_rider` once (user-visible UX copy — not a system prompt). Still blocked / no shell: one `human_fix` recipe. Never ask for pipx/shell/MCP JSON.
+4. **Immediately check the profile.** If `first_pass` / `ready=false` / `range_ready=false`, your first rider-facing reply must be the intake prompt (include **level**). Do not run weekend/best yet.
+5. **One path for every app:** `guru … --json` on a host that reaches Windguru. Wire/tunnel only if shell `guru` is unavailable and a local MCP host needs it.
 
 Optional MCP (only if the host already uses MCP):
 

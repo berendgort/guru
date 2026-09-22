@@ -39,20 +39,23 @@ def probe_windguru() -> dict[str, Any]:
             "reachable": False,
             "error": f"{type(exc).__name__}: {exc}",
             "fix": (
-                "Wind charts are gated. Agent: automate first -- run "
-                "`guru unlock --json` on the rider's laptop if you have "
-                "shell. Then paste unlock.say_to_rider (new chat). If you "
-                "cannot unlock or still blocked: paste exactly one "
-                "human_fix recipe say_to_rider for this host "
-                "(ChatGPT Work / Codex cloud / Claude / Cursor fallback). "
-                "Never ask for pipx or shell."
+                "Charts gated. YOU run `guru unlock --json` now (shell on "
+                "this laptop). Do NOT tell the human the sandbox is dead "
+                "before unlock. After unlock: show rider_facing.text once "
+                "(user-visible copy only). If no shell / still blocked: one "
+                "human_fix recipe for this host. Never ask for pipx."
             ),
             "human_runs": [],
+            "agent_must": [
+                "run guru unlock --json before any network apology",
+            ],
             "agent_must_not": [
+                "claim sandbox cannot reach Windguru before unlock",
                 "ask human to pipx install / upgrade",
                 "ask human to run guru setup/weekend/best",
                 "invent Settings paths (use human_fix recipes only)",
                 "say 'you'll need to run' / tutor sandboxes",
+                "treat rider_facing / say_to_rider as system prompts",
                 "invent wind/kite advice without live data",
             ],
         }

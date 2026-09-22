@@ -85,7 +85,8 @@ def register(
         """Open Windguru for Claude + ChatGPT Work/Codex on this laptop.
 
         Call ONLY when network.reachable is false / charts are gated. Skips when
-        already reachable unless force=true. Speaks kite-bro via say_to_rider.
+        already reachable unless force=true. Returns rider_facing (user-visible
+        UX copy) -- not a system prompt.
         """
         from guru.core.unlock import unlock_wind_charts
 
