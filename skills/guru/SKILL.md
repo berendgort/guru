@@ -1,40 +1,50 @@
 ---
 name: guru
 description: >
-  Install and use guru (Windguru CLI + MCP). Use for first-pass rider intake,
-  guru setup/weekend/best, home drive range, or Cursor/Claude MCP.
+  When the user pastes github.com/berendgort/guru, wants Windguru forecasts,
+  kite weekend plans, or gear advice: install windguru from PyPI, run first-pass
+  intake once, then guru weekend / best --advise (or MCP equivalents). Never
+  scrape windguru.cz. Never drip-feed onboarding questions.
 license: MIT
 ---
 
-# guru install and usage skill
+# guru — agent skill (follow exactly)
 
-## Primary path (PyPI)
+If the user shared https://github.com/berendgort/guru or asks to use guru / Windguru via this project, obey this skill. Do not scrape Windguru HTML. Do not require PRO.
+
+## Bootstrap
 
 ```bash
 pipx install windguru
-pipx install 'windguru[mcp]'
+pipx install 'windguru[mcp]'   # when MCP is available
+guru doctor
+guru instruct --json
 ```
 
-## First pass (mandatory if profile empty)
+- **Cursor / Claude Desktop / local MCP:** configure `"command": "guru-mcp"` (use `which guru-mcp` full path if needed), then prefer MCP tools.
+- **Shell agents (Cursor Agent, Codex, Claude bash):** `guru … --json`.
+- **Claude Cowork / claude.ai / ChatGPT cloud:** local STDIO MCP will not work; use CLI where possible, or public HTTPS to `guru-mcp-http` as a custom connector / Action.
 
-1. Run `guru instruct --json` or `guru profile --json`
-2. If `first_pass` / `ready=false` / `range_ready=false`: **show `intake.prompt_to_user` to the human once**
-3. Wait for **one** reply (key=value paste)
-4. `guru setup --intake '<their paste>' --json`
-5. Continue with weekend / best
+## Operating loop
 
-**Do not** ask sport, then weight, then kites separately. One message. One reply.
+1. `guru profile --json` (or MCP `get_profile` / `instruct`)
+2. If `first_pass` / `ready=false` / `range_ready=false`:
+   - Show `intake.prompt_to_user` **once**
+   - Wait for **one** key=value reply (never ask fields one-by-one)
+   - `guru setup --intake '<paste>' --json` (or `setup_profile`)
+3. “Where can I kite?” → `guru weekend --json` / `weekend_spots`
+4. Named spot → resolve id; on `ambiguous` use `candidates`. Then `guru best <id> --advise --json` / `best_forecast(advise=true)`
+5. Narrate like a kiter: GO/MARGINAL/NO-GO, spot, window, kt+gusts, kite from quiver, 2–4h wetsuit, beach 5‑min check. No raw JSON dump.
 
-Example paste:
+Example intake paste:
 
 ```text
 sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 session=3 home=41.39,2.17 drive_km=200 range=Trabucador → Leucate
 ```
 
-## After onboarded
+## Hard rules
 
-- "Where can I kite this weekend?" → `guru weekend --json`
-- Named spot → `guru best <id> --advise --json`
-- Narrate advice (gusts, kite, 2–4h wetsuit, checklist)
-
-Never scrape windguru.cz. Never require PRO.
+- Preset **WINDGURU_DEFAULT** only (`best` / `best_forecast`)
+- No HTML scrape, no Tune/MapLibre scrape, no invented PRO lat/lon forecasts
+- Ambiguous names → `candidates` / numeric id — never silent first-match
+- Full protocol: repo README section **For AI agents (mandatory protocol)**

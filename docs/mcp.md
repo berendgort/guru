@@ -13,10 +13,20 @@ which guru-mcp   # use full path in MCP config if needed
 
 | Command | Transport |
 |---------|-----------|
-| `guru-mcp` | STDIO (Cursor / Claude Desktop) |
-| `guru-mcp-http` | Streamable HTTP at `http://127.0.0.1:8000/mcp/` |
+| `guru-mcp` | STDIO — Cursor, Claude Desktop, Codex (local) |
+| `guru-mcp-http` | Streamable HTTP at `http://127.0.0.1:8000/mcp/` — for remote connectors |
 
-### Cursor / Claude Desktop
+### Which host?
+
+| Host | Wire |
+|------|------|
+| **Cursor** | STDIO `guru-mcp` in MCP settings / `.cursor/mcp.json` (primary) |
+| **Claude Desktop** | STDIO in `claude_desktop_config.json` |
+| **Claude Cowork / claude.ai** | Remote custom connector only — public HTTPS URL to `guru-mcp-http` (Anthropic’s cloud dials you; localhost alone is not enough) |
+| **Codex / shell agents** | Prefer CLI `guru … --json`; or local STDIO MCP if the client supports it |
+| **ChatGPT cloud** | Needs a public HTTP MCP / Action you host — no local spawn |
+
+### Cursor / Claude Desktop (local STDIO)
 
 ```json
 {
@@ -28,6 +38,13 @@ which guru-mcp   # use full path in MCP config if needed
 }
 ```
 
+### Claude Cowork / claude.ai (remote)
+
+1. `guru-mcp-http`
+2. Publish `https://<host>/mcp/` (tunnel or VPS) reachable from the public internet
+3. Customize → Connectors → Add custom connector → paste URL
+
+See Anthropic’s [custom connectors / remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp) notes: the connection originates from Anthropic’s cloud, not your laptop.
 ## Tools
 
 | Tool | Args | Returns |
