@@ -2,6 +2,15 @@
 
 from __future__ import annotations
 
+__all__ = (
+    "Forecast",
+    "ForecastHour",
+    "Spot",
+    "hour_time",
+    "init_to_datetime",
+    "wind_dir_cardinal",
+)
+
 from datetime import datetime, timedelta, timezone
 
 from pydantic import BaseModel, Field
@@ -30,7 +39,7 @@ class ForecastHour(BaseModel):
     # Windguru table stars (computed; site defaults 10.6 / 15.6 / 19.4 kt)
     rating_stars: int = 0
     rating_cold: bool = False
-    rating: str = "—"  # e.g. "★★" or "★★★ cold"
+    rating: str = "-"  # e.g. stars or "3c"
 
 
 class Forecast(BaseModel):

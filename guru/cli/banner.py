@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+__all__ = (
+    "print_banner",
+)
+
 from rich.text import Text
 
 from guru.cli.console import console
 from guru.rider.voice import BANNER_TAG, joke, tagline
 
-# Format A — bright neon ice (#67E8F9)
+# Format A -- bright neon ice (#67E8F9)
 _BANNER_ROWS = (
     r"  ██████╗ ██╗   ██╗██████╗ ██╗   ██╗      ██████╗ ██╗      ██╗",
     r" ██╔════╝ ██║   ██║██╔══██╗██║   ██║     ██╔════╝ ██║      ██║",

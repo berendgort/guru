@@ -220,28 +220,21 @@ Do not invent a fifth gold state.
 
 ---
 
-## 7. Verification Commands
+## 7. Verification Commands (guru)
+
+Stored facts in this repo: rider profile TOML, SST disk cache
+(`schema_version` = `CACHE_SCHEMA` in `guru/search/sst.py`), and curated
+`guru/data/shore_sectors.json` (`schema_version` at root). Bump schema when
+fields change; old cache entries without matching version are ignored.
 
 ```bash
-# 1. Architecture DAG (imports, ranks, cycles)
+# 1. Architecture DAG, LOC, em-dash, bare print
 python scripts/check_code_quality.py
 
-# 2. Working-store ciphertext
-python scripts/verify_encryption_at_rest.py
-
-# 3. Archive: index ↔ object, size, digest, no plaintext
-python scripts/verify_gold_store.py
-# python scripts/verify_gold_store.py --sample 5
-
-# 4. Schema, outbox, clocks, allowlist, AAD, no-FK
-python -m pytest -q tests/test_gold_schema.py \
-  tests/test_gold_store.py tests/test_gold_flush.py \
-  tests/test_encryption_at_rest.py
-
-# 5. Director copy lockstep (keep line; never "remainder")
-#    in rubikmd-frontend: portal/copy.test.mjs
+# 2. Lint + offline tests (fixtures under fixtures/)
+ruff check .
+pytest -q
 ```
 
-Export for evals: `python scripts/gold_export.py` (refuses an API-only
-service once the worker is split). It also refuses forbidden fields and any
-decision key outside `GOLD_DECISION_KEYS`. Do not treat `pg_dump` as gold.
+Live network: `pytest -m live`. Do not commit cookies, PRO passwords, or
+private nicknames as defaults.

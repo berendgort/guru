@@ -1,6 +1,16 @@
-"""Pure WINDGURU DEFAULT weight math (no I/O) — SPA ``di.calcSortByWeights``."""
+"""Pure WINDGURU DEFAULT weight math (no I/O) -- SPA ``di.calcSortByWeights``."""
 
 from __future__ import annotations
+
+__all__ = (
+    "SKIP_MODEL_IDS",
+    "ai",
+    "blend_from_forecast_spot",
+    "calc_sort_by_weights",
+    "normalize",
+    "ri",
+    "weather_model_ids",
+)
 
 from typing import Any
 

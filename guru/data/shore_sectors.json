@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "sectors": {
+    "201": {
+      "name": "Castelldefels",
+      "dirs": "S-SW,W",
+      "offshore": "N-NE",
+      "confidence": "medium",
+      "note": "Example Med beach face -- edit via guru note"
+    }
+  }
+}

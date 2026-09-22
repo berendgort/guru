@@ -1,4 +1,4 @@
-"""Model id aliases — prefer ``guru.models.aliases``."""
+"""Model id aliases -- prefer ``guru.models.aliases``."""
 
 from guru.models.aliases import MODEL_NAMES, MODELS, list_models, resolve_model
 

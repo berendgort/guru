@@ -33,11 +33,11 @@ If every metric is green and the rider still drives to the wrong beach, under-ri
 
 Work backwards from the beach, not from the API.
 
-1. **Worth going** — GO (or honest MARGINAL for locals); no long drive for soft maybe.
-2. **Fits the rider** — sport (kite / foil / surfkite), level, quiver, wetsuits, session length, home range.
-3. **Sized for reality** — average *and* gusts; size for gusts; foil light-wind rules ≠ twin-tip freestyle rules.
-4. **Safe enough to say out loud** — side-shore preference, offshore = advanced-only, beach 5‑min check in the checklist.
-5. **Decidable in one breath** — spot, window, kite, suit, verdict. Not three models and a shrug.
+1. **Worth going** — GO (or honest MARGINAL for locals); long haul (>150 km) needs ≥2h continuous GO. Soft home vs solid far: report both.
+2. **Fits the rider** — sport (kite / foil / surfkite), level (incl. expert), quiver, suit ladder, session length, home range, local spot notes.
+3. **Sized for reality** — size for **average**; gusty → warn (beginners stay MARGINAL). Foil light-wind rules ≠ twin-tip.
+4. **Safe enough to say out loud** — side-shore preference when known; offshore = advanced-only if determinable; beach 5-min check in **agent voice** (not CLI preach).
+5. **Decidable in one breath** — spot, window, kite, suit, verdict. Horizon = top-3 model data; beyond that: we have not hacked time yet.
 
 ---
 

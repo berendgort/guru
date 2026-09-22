@@ -1,6 +1,8 @@
-# Backend Engineering Standard: The Korotkevich / Tourist Bar
+# Engineering Standard: The Korotkevich / Tourist Bar
 
-Every line of code in `rubikmd-backend` must meet an elite, competitive-programming standard of mathematical clarity, modular purity, and machine readability. Sprawling monoliths, circular imports, hidden state mutations, and ambiguous contracts are strictly forbidden.
+Every line in `guru` must meet a competitive-programming bar: mathematical
+clarity, modular purity, machine readability. Sprawling monoliths, circular
+imports, hidden I/O on import, and ambiguous contracts are forbidden.
 
 Automated enforcement: `python scripts/check_code_quality.py`
 
@@ -8,43 +10,24 @@ Automated enforcement: `python scripts/check_code_quality.py`
 
 ## 1. Architectural Layers & Dependency Hierarchy
 
-The backend enforces a strict downward directed acyclic graph (DAG). Lower-rank layers cannot import from higher-rank layers. Cross-layer cycles are fatal.
+Strict downward DAG. Lower ranks never import higher ranks. Cycles are fatal.
 
 ```
-Foundation (Cross-Cutting - Importable by any layer):
-  app.config · app.metrics · app.rate_limit
-
-Domain & Service Hierarchy (Strict Monotonic Layer Ranks):
-  [10] security     (AES-256-GCM envelope crypto, key rotation)
-  [15] auth.email   (canonical email normalization, audit hashing)
-  [20] anonymize    (PHI detection, regex spans, harbor/masking)
-  [20] ingest       (file format parsing, text extraction)
-  [20] ocr          (scan gate classification, lockstep unread rule)
-  [22] charts       (chart validation, sample bundles, note cleaning)
-  [22] rater        (practice-chart schema, independent scores, invite roster)
-  [25] jobs.entity  (Job, case_number, result_index, contract hashing)
-  [30] store        (Postgres repositories, pg pool, SQL persistence)
-  [35] gold         (Path A remainder archive: JSONL allowlist, GOLD key, bucket, outbox)
-  [40] auth         (cookie signing, allowlist, session lifecycle)
-  [45] review       (SuperGLP eval pins, LLM prompt stack, brief generation)
-  [48] speech       (recorded audio to text; nothing stored; OpenRouter transcriptions)
-  [50] mail         (transactional Resend/SMTP delivery, pace control)
-  [55] jobs         (job creation, acceptance, queue row formatting)
-  [60] worker       (async worker service, lease heartbeats, queue polling)
-  [75] http         (FastAPI middleware, request tracing, error mapping)
-  [80] api          (route handlers, request schemas, status codes)
-  [90] main         (FastAPI application assembly and lifespan)
+[10] guru.models · guru.data     Pydantic DTOs, static JSON packs
+[12] guru.core.exceptions        Shared exception types (foundation)
+[20] guru.search                 HTTP / Wire / Open-Meteo I/O shell
+[30] guru.core                   Envelope, errors, wire helpers, path
+[40] guru.rider                  Pure advice / weekend / sizing / voice
+[50] guru.cli · guru.mcp         Typer + FastMCP entrypoints
 ```
 
 ### Invariants
-- **Zero Circular Dependencies**: Absolutely no cycles at module or package level.
-- **Downward Imports Only**: Higher layers may import lower layers; lower layers never import higher layers (e.g. `store` never imports `review`, and `charts` never imports `jobs.service`).
-- **Zero Import Side Effects**: Modules must never execute I/O, connect to databases, or inspect live network resources upon being imported.
-- **Circular Import Elimination Strategies**:
-  - Extract shared hashing/identity primitives (`audit_hash`) to foundational utility layers (`app.auth.email`).
-  - Move cross-cutting transport protocols (`retry_after_s`) into foundational utilities (`app.rate_limit`).
-  - Enclose type-only dependencies within `if TYPE_CHECKING:` guards.
-  - Keep package `__init__.py` files as pure, thin facade re-exports without circular references back into internal implementation submodules.
+- **Zero Circular Dependencies**: No cycles at module or package level.
+- **Downward Imports Only**: Higher layers may import lower; never reverse
+  (e.g. `search` never imports `rider`, `models` never imports `core`).
+- **Zero Import Side Effects**: No network, disk profile I/O, or client
+  construction on import.
+- **Facades**: Package `__init__.py` files stay thin re-exports.
 
 ---
 
@@ -129,21 +112,33 @@ No file in `app/` should exceed **250 lines of code**. When a module approaches 
 - **Strict Mypy Compliance**: `mypy --strict` passes with 0 errors across all source files.
 - **Explicit Exports**: Every library module must define `__all__` to publish its public interface and decouple internal implementation helpers.
 - **No Em-Dashes**: Strictly no unicode em-dash (`\u2014`) in any API responses, error messages, or logs.
-- **Zero Print Statements**: Use structured `logging.getLogger("rubikmd.<subsystem>")`. Never use bare `print()` in application code.
+- **Zero Print Statements**: Bare `print()` only in CLI/MCP entry surfaces
+  (`guru.cli`, `guru.mcp`). Library code uses exceptions or returned payloads.
 
 ---
 
 ## 7. Verification Commands
 
 ```bash
-# 1. Architecture, layer hierarchy, line count, and cycle checks
+# 1. Architecture, LOC, em-dash, bare print, layer DAG
 python scripts/check_code_quality.py
 
-# 2. Strict static analysis & linting
+# 2. Lint
 ruff check .
-mypy app scripts/check_code_quality.py
 
-# 3. Test suite execution (100% deterministic, 588+ tests)
-export DATABASE_URL="postgresql://rubik:rubik_password@localhost:5432/rubik_portal"
-python -m pytest -q -m "not live_review"
+# 3. Tests (offline; add -m live for network)
+pytest -q
 ```
+
+Layer ranks (downward imports only):
+
+| Rank | Package |
+|------|---------|
+| 10 | `guru.models`, `guru.data` |
+| 12 | `guru.core.exceptions` |
+| 20 | `guru.search` |
+| 30 | `guru.core` |
+| 40 | `guru.rider` |
+| 50 | `guru.cli`, `guru.mcp` |
+
+Hard caps: every `guru/**/*.py` file ≤ **250 LOC**; no unicode em/en-dash (`U+2014` / `U+2013`); no bare `print()` outside CLI/MCP entrypoints.

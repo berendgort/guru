@@ -2,10 +2,18 @@
 
 from __future__ import annotations
 
+__all__ = (
+    "API_VERSION",
+    "ERROR_SCHEMA",
+    "dump_model",
+    "error_payload",
+    "success_payload",
+)
+
 from typing import Any
 
 from guru.core.errors import classify_error
-from guru.search.exceptions import GuruAmbiguousError
+from guru.core.exceptions import GuruAmbiguousError
 
 API_VERSION = 1
 

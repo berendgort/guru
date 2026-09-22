@@ -62,7 +62,8 @@ Optional MCP (only if the host already uses MCP):
 |------|-----|-----|
 | 0. Recipe / profile | `guru instruct --json` or `guru profile --json` | `instruct` / `get_profile` |
 | 1. First pass if needed | see below | see below |
-| 2. “Where can I kite?” | `guru weekend --json` | `weekend_spots` — narrate **`data.schedule`** (whole horizon) |
+| 2. “Where can I kite?” | `guru weekend --json` [`--day Thu`] | `weekend_spots` — narrate **`data.schedule`** (whole horizon) |
+| Local knowledge | `guru note <id> "dirs=SW-W offshore=N-NE …"` | persists in profile |
 | 3. Named / numeric spot | `guru best <id> --advise --json` | `best_forecast` with `advise=true` |
 | 4. Ambiguous name | use `candidates` → ask user or pass id / `--pick` | same via `resolve_spot` |
 
@@ -141,7 +142,8 @@ PyPI: [`windguru`](https://pypi.org/project/windguru/)
 |---------|------|
 | `guru setup` | Rider + home range (sport / weight / **level** / quiver / drive_km) |
 | `guru profile` | Show profile + missing fields |
-| `guru weekend` | Where can I kite? ~4-day schedule + top-3 model agree |
+| `guru weekend` | Where can I kite? ~4-day schedule + top-3 model agree (`--day Thu` filter) |
+| `guru note` | Save local knowledge / wind sectors (`dirs=` `offshore=`) |
 | `guru instruct` | Teach agents the workflow |
 | `guru spots <q>` | Name search (resolve id) |
 | `guru near --lat --lon` | Free map markers near a point |

@@ -1,6 +1,15 @@
-"""HTTP client — curl_cffi + Chrome impersonation, retries, env timeouts."""
+"""HTTP client -- curl_cffi + Chrome impersonation, retries, env timeouts."""
 
 from __future__ import annotations
+
+__all__ = (
+    "Client",
+    "DEFAULT_IMPERSONATE",
+    "IAPI_CZ",
+    "IAPI_NET",
+    "REQUEST_TIMEOUT",
+    "get_client",
+)
 
 import os
 from typing import Any

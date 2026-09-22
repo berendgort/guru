@@ -2,12 +2,18 @@
 
 from __future__ import annotations
 
+__all__ = (
+    "print_advice", "print_best", "print_forecast", "print_models_table",
+    "print_near_table", "print_profile", "print_spots_table", "print_weekend",
+)
+
 from rich.table import Table
 
 from guru.cli.console import console
+from guru.models.advice import AdviceReport, WeekendReport
 from guru.models.blend import BestForecast
 from guru.models.forecast import Forecast, Spot, wind_dir_cardinal
-from guru.models.profile import AdviceReport, RiderProfile, WeekendReport
+from guru.models.profile import RiderProfile
 from guru.rider.voice import call_label
 
 
@@ -106,7 +112,7 @@ def print_advice(advice: AdviceReport) -> None:
             f"{w.start}→{w.end}",
             f"{w.wind_kn:g}",
             "-" if w.gust_kn is None else f"{w.gust_kn:g}",
-            w.rating or "—",
+            w.rating or "-",
             w.wind_quality or "-",
             kite,
             suit,
@@ -151,9 +157,9 @@ def print_weekend(report: WeekendReport) -> None:
                 f"{s.weekday} {s.day[5:]}",
                 s.name[:28],
                 "-" if s.drive_km is None else f"{s.drive_km:g}",
-                f"{s.start[11:16]}–{s.end[11:16]}",
+                f"{s.start[11:16]}-{s.end[11:16]}",
                 f"{wind} / {gust}",
-                s.rating or "—",
+                s.rating or "-",
                 kite,
                 f"{s.model_agree}/3",
                 s.verdict,
@@ -227,7 +233,7 @@ def print_forecast(fc: Forecast) -> None:
             row.time.strftime("%a %d %H:%M"),
             _fmt(row.wind_kn, 1),
             _fmt(row.gust_kn, 1),
-            row.rating or "—",
+            row.rating or "-",
             f"{wind_dir_cardinal(row.wind_dir_deg)} {_fmt(row.wind_dir_deg, 0)}".strip(),
             _fmt(row.temp_c, 1),
             _fmt(row.precip_mm, 1),

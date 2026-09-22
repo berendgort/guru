@@ -1,4 +1,4 @@
-"""WINDGURU DEFAULT Tune — I/O orchestration over ``blend_math``."""
+"""WINDGURU DEFAULT Tune -- I/O orchestration over ``blend_math``."""
 
 from __future__ import annotations
 

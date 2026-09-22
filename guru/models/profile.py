@@ -1,4 +1,4 @@
-"""Rider profile — sport, weight, quiver, home range (no I/O)."""
+"""Rider profile -- sport, weight, quiver, home range (no I/O)."""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ class Level(str, Enum):
     BEGINNER = "beginner"
     INTERMEDIATE = "intermediate"
     ADVANCED = "advanced"
+    EXPERT = "expert"
 
 
 _SPORT_ALIASES: dict[str, Sport] = {
@@ -40,7 +41,8 @@ _LEVEL_ALIASES: dict[str, Level] = {
     "int": Level.INTERMEDIATE,
     "advanced": Level.ADVANCED,
     "adv": Level.ADVANCED,
-    "expert": Level.ADVANCED,
+    "expert": Level.EXPERT,
+    "pro": Level.EXPERT,
 }
 
 
@@ -70,17 +72,19 @@ class RiderProfile(BaseModel):
 
     sport: Sport | None = None
     weight_kg: float | None = None
-    level: Level | None = None  # required for advice — beginner/intermediate/advanced
+    level: Level | None = None  # beginner|intermediate|advanced|expert
     kites_m2: list[float] = Field(default_factory=list)
     boards: list[str] = Field(default_factory=list)
     wetsuits: list[str] = Field(default_factory=list)
     home_spots: list[int] = Field(default_factory=list)
-    # Drive corridor (e.g. Barcelona home, Trabucador↔Leucate ≈ 180–200 km)
+    # Local knowledge: "201" -> "Bunker dies in SW" (invited via `guru note`)
+    spot_notes: dict[str, str] = Field(default_factory=dict)
+    # Drive corridor (e.g. Barcelona home, Trabucador<->Leucate ~ 180-200 km)
     home_lat: float | None = None
     home_lon: float | None = None
     drive_km: float | None = None
-    range_label: str | None = None  # human note: "Trabucador → Leucate"
-    session_hours: float = 3.0  # typical kite session 2–4 h
+    range_label: str | None = None  # human note: "Trabucador -> Leucate"
+    session_hours: float = 3.0  # typical kite session 2-4 h
 
     @field_validator("weight_kg")
     @classmethod
@@ -115,7 +119,7 @@ class RiderProfile(BaseModel):
         out = sorted({float(x) for x in v})
         for size in out:
             if size < 3 or size > 25:
-                raise ValueError(f"kite size {size} m² out of range (3–25)")
+                raise ValueError(f"kite size {size} m2 out of range (3-25)")
         return out
 
     def missing_fields(self) -> list[str]:
@@ -157,87 +161,10 @@ class RiderProfile(BaseModel):
         return RiderProfile.model_validate(data)
 
 
-class AdviceWindow(BaseModel):
-    start: str
-    end: str
-    wind_kn: float
-    gust_kn: float | None = None
-    gust_spread_kn: float | None = None
-    wind_quality: str | None = None  # smooth | ok | gusty
-    kite_m2: float | None = None
-    owned_kite_m2: float | None = None
-    kite_gap_m2: float | None = None
-    wetsuit: str | None = None
-    owned_wetsuit: str | None = None
-    accessories: list[str] = Field(default_factory=list)
-    verdict: str  # go | marginal | no
-    rating_stars: int = 0
-    rating_cold: bool = False
-    rating: str = "—"
-    note: str = ""
-
-
-class AdviceReport(BaseModel):
-    verdict: str  # go | marginal | no | incomplete
-    sport: str | None = None
-    level: str | None = None
-    model: str | None = None
-    windows: list[AdviceWindow] = Field(default_factory=list)
-    sizing_rule: str = "2.2*kg/kn; foil -40%; surfkite -15%; size for gusts"
-    wetsuit_rule: str = (
-        "kiteboarding air+wind-chill; warmer for 3–4h sessions / beginners"
-    )
-    checklist: list[str] = Field(default_factory=list)
-    missing_profile: list[str] = Field(default_factory=list)
-    summary: str = ""
-
-
-class WeekendSpotAdvice(BaseModel):
-    spot_id: int
-    name: str
-    lat: float | None = None
-    lon: float | None = None
-    drive_km: float | None = None
-    verdict: str
-    summary: str = ""
-    best_window: AdviceWindow | None = None
-    model: str | None = None
-    model_agree: int = 1  # how many of top-3 models like this window's day
-    score: float = 0.0
-
-
-class ScheduleSlot(BaseModel):
-    """Best call for a calendar day — agents narrate the week without re-asking."""
-
-    day: str  # YYYY-MM-DD (UTC)
-    weekday: str  # Mon … Sun
-    start: str
-    end: str
-    spot_id: int
-    name: str
-    drive_km: float | None = None
-    verdict: str
-    wind_kn: float | None = None
-    gust_kn: float | None = None
-    owned_kite_m2: float | None = None
-    owned_wetsuit: str | None = None
-    model_agree: int = 1
-    rating_stars: int = 0
-    rating_cold: bool = False
-    rating: str = "—"
-    summary: str = ""
-
-
-class WeekendReport(BaseModel):
-    verdict: str  # go | marginal | no | incomplete
-    range_label: str | None = None
-    home_lat: float | None = None
-    home_lon: float | None = None
-    drive_km: float | None = None
-    hours: int = 96
-    top_models: int = 3
-    spots: list[WeekendSpotAdvice] = Field(default_factory=list)
-    schedule: list[ScheduleSlot] = Field(default_factory=list)
-    missing_profile: list[str] = Field(default_factory=list)
-    summary: str = ""
-    thinking: list[str] = Field(default_factory=list)
+__all__ = [
+    "Level",
+    "RiderProfile",
+    "Sport",
+    "parse_level",
+    "parse_sport",
+]

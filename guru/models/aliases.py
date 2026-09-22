@@ -1,6 +1,13 @@
-"""Model id aliases — extend only from live Network captures (see docs/WIRE.md)."""
+"""Model id aliases -- extend only from live Network captures (see docs/WIRE.md)."""
 
 from __future__ import annotations
+
+__all__ = (
+    "MODELS",
+    "MODEL_NAMES",
+    "list_models",
+    "resolve_model",
+)
 
 MODELS: dict[str, int] = {
     "gfs": 3,

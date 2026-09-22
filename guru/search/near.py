@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+__all__ = (
+    "haversine_km",
+    "load_simplemap_spots",
+    "rank_near",
+    "spots_near",
+    "spots_near_from_rows",
+)
+
 import math
 from collections.abc import Sequence
 from typing import Any
@@ -88,7 +96,7 @@ def spots_near_from_rows(
     radius_km: float = 50.0,
     limit: int = 20,
 ) -> list[Spot]:
-    """Offline helper for tests — same ranking over a fixture subset."""
+    """Offline helper for tests -- same ranking over a fixture subset."""
     return rank_near(
         _parse_simplemap_rows(rows), lat, lon, radius_km=radius_km, limit=limit
     )

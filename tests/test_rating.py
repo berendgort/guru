@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from guru.core.rating import windguru_rating
+from guru.models.rating import windguru_rating
 
 
 def test_rating_thresholds() -> None:
@@ -26,7 +26,7 @@ def test_rating_cold_blue_stars() -> None:
     assert cold.cold is True
     assert cold.label == "★★ cold"
 
-    assert windguru_rating(8.0, 5.0).label == "—"
+    assert windguru_rating(8.0, 5.0).label == "-"
 
 
 def test_decode_forecast_includes_rating() -> None:

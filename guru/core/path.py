@@ -5,11 +5,16 @@ One rule for every host (Cursor, Claude, Codex, ChatGPT, shell bots):
   Run ``guru … --json`` (or local STDIO ``guru-mcp``) on a machine that can
   reach Windguru. Same CLI. Same JSON envelope. No per-app tunnels.
 
-Cloud sandboxes that block windguru.cz cannot be fixed by MCP config files —
+Cloud sandboxes that block windguru.cz cannot be fixed by MCP config files --
 move the agent to a local/host process, or stop. Never invent forecasts.
 """
 
 from __future__ import annotations
+
+__all__ = (
+    "agent_path_payload",
+    "probe_windguru",
+)
 
 from typing import Any
 
@@ -27,14 +32,14 @@ def probe_windguru() -> dict[str, Any]:
             base=IAPI_CZ,
         )
         return {"ok": True, "host": "www.windguru.cz", "reachable": True}
-    except Exception as exc:  # noqa: BLE001 — probe must never raise
+    except Exception as exc:  # noqa: BLE001 -- probe must never raise
         return {
             "ok": False,
             "host": "www.windguru.cz",
             "reachable": False,
             "error": f"{type(exc).__name__}: {exc}",
             "fix": (
-                "Wind charts are gated. Agent: automate first — run "
+                "Wind charts are gated. Agent: automate first -- run "
                 "`guru unlock --json` on the rider's laptop if you have "
                 "shell. Then paste unlock.say_to_rider (new chat). If you "
                 "cannot unlock or still blocked: paste exactly one "
@@ -61,7 +66,7 @@ def agent_path_payload() -> dict[str, Any]:
         "summary": (
             "Install windguru once, then every app uses the same local CLI "
             "(`guru … --json`). Optional local STDIO MCP (`guru-mcp`) is the "
-            "same library for hosts that spawn MCP — not a second product."
+            "same library for hosts that spawn MCP -- not a second product."
         ),
         "install": "pipx install 'windguru[mcp]'",
         "commands": {
@@ -74,7 +79,7 @@ def agent_path_payload() -> dict[str, Any]:
             "stdio": "guru-mcp",
             "when": (
                 "ONLY if shell `guru` is unavailable AND the host needs local "
-                "STDIO MCP with guru missing — never every session"
+                "STDIO MCP with guru missing -- never every session"
             ),
             "wire": "guru wire --json  # opt-in; doctor does not wire by default",
             "resolved": mcp,

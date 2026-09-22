@@ -1,6 +1,6 @@
 [project]
 name = "windguru"
-version = "0.3.20"
+version = "0.3.22"
 description = "Windguru CLI for kiters who code — kite bro / guru voice, spot + gear advice, MCP for agents"
 authors = [{ name = "Dr. Berend Gort", email = "berend.gort@gmail.com" }]
 readme = "README.md"
@@ -58,6 +58,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["guru"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"guru/data/shore_sectors.json" = "guru/data/shore_sectors.json"
 
 [tool.ruff]
 line-length = 100

@@ -55,7 +55,7 @@ Top-level + `fcst` parallel arrays (**knots**): `hours`, `WINDSPD`, `GUST`, `WIN
 
 ### Windguru rating (stars)
 
-The free forecast JSON lists `RATING` in `default_vars` but does **not** return a `RATING` array — the SPA paints stars client-side. Guest Preferences defaults (`/forms/preferences.php`):
+The free forecast JSON lists `RATING` in `default_vars` but does **not** return a `RATING` array — the SPA paints stars client-side. Same for `WCHILL` (listed in `default_vars`, not present as a free `fcst` array in captured fixtures). Suit chill uses Open-Meteo SST when available, else air + wind-speed proxy. Guest Preferences defaults (`/forms/preferences.php`):
 
 | Stars | Min average wind (kt) |
 |-------|------------------------|
@@ -63,7 +63,7 @@ The free forecast JSON lists `RATING` in `default_vars` but does **not** return 
 | 2 | 15.6 |
 | 3 | 19.4 |
 
-Blue stars when air temp **< 10 °C** (`tlimit`). `guru` mirrors this in `guru.core.rating.windguru_rating` and attaches `rating` / `rating_stars` / `rating_cold` on each forecast hour and advice window.
+Blue stars when air temp **< 10 °C** (`tlimit`). `guru` mirrors this in `guru.models.rating.windguru_rating` and attaches `rating` / `rating_stars` / `rating_cold` on each forecast hour and advice window.
 
 Also returns `wgmodel` (resolution_real, initstamp) when needed for debugging.
 

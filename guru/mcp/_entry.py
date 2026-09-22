@@ -81,7 +81,7 @@ def run_tunnel() -> None:
                     file=sys.stderr,
                 )
                 os._exit(1)
-            # Quiet banner — tunnel output is what the user needs.
+            # Quiet banner -- tunnel output is what the user needs.
             os.environ.setdefault("FASTMCP_SHOW_SERVER_BANNER", "false")
             mcp.run(transport="http", host=host, port=port)
 

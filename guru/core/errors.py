@@ -5,12 +5,22 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from guru.search.exceptions import (
+from guru.core.exceptions import (
     GuruAmbiguousError,
     GuruError,
     GuruHTTPError,
     GuruNotFoundError,
     GuruParseError,
+)
+
+__all__ = (
+    "ErrorClassification",
+    "GuruAmbiguousError",
+    "GuruError",
+    "GuruHTTPError",
+    "GuruNotFoundError",
+    "GuruParseError",
+    "classify_error",
 )
 
 _RETRYABLE_HTTP = {429}
@@ -34,7 +44,6 @@ class ErrorClassification:
 
 def classify_error(exc: BaseException) -> ErrorClassification:
     """Map an exception to a stable ``error_type`` + ``retryable`` pair."""
-    # tenacity wraps the real cause after retries
     cause = getattr(exc, "last_attempt", None)
     if cause is not None:
         try:

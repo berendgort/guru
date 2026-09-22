@@ -1,4 +1,4 @@
-"""Windguru star rating — mirrors site defaults from Preferences.
+"""Windguru star rating -- mirrors site defaults from Preferences.
 
 Windguru does not publish a closed-form formula in Help, but the free
 Preferences UI exposes the defaults used for the forecast-table stars:
@@ -14,6 +14,15 @@ community guides (stars ≈ wind strength for wind/kite; not a surf score).
 
 from __future__ import annotations
 
+__all__ = (
+    "DEFAULT_LIMIT_1_KN",
+    "DEFAULT_LIMIT_2_KN",
+    "DEFAULT_LIMIT_3_KN",
+    "DEFAULT_TEMP_BLUE_C",
+    "WindguruRating",
+    "windguru_rating",
+)
+
 from dataclasses import dataclass
 
 # Guest defaults from Windguru Preferences → "Windguru star rating"
@@ -25,7 +34,7 @@ DEFAULT_TEMP_BLUE_C = 10.0
 
 @dataclass(frozen=True)
 class WindguruRating:
-    stars: int  # 0–3
+    stars: int  # 0-3
     cold: bool  # blue stars on the site
     wind_kn: float | None
     temp_c: float | None
@@ -33,7 +42,7 @@ class WindguruRating:
     @property
     def label(self) -> str:
         if self.stars <= 0:
-            return "—"
+            return "-"
         marks = "★" * self.stars
         return f"{marks} cold" if self.cold else marks
 

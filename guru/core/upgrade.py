@@ -1,6 +1,12 @@
-"""Installed vs PyPI version — agents should upgrade before briefing."""
+"""Installed vs PyPI version -- agents should upgrade before briefing."""
 
 from __future__ import annotations
+
+__all__ = (
+    "is_newer",
+    "pypi_latest_version",
+    "upgrade_status",
+)
 
 import json
 import re
@@ -50,7 +56,7 @@ def upgrade_status() -> dict[str, Any]:
     """Machine-readable upgrade hint for agents."""
     latest = pypi_latest_version()
     current = _installed_version()
-    # Only flag upgrade when PyPI is *newer* — never when CDN lags behind us.
+    # Only flag upgrade when PyPI is *newer* -- never when CDN lags behind us.
     update = bool(latest and is_newer(latest, current))
     return {
         "installed": current,

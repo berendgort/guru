@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+__all__ = (
+    "emit_json",
+    "fail",
+    "print_ok",
+)
+
 import json
 import sys
 from typing import Any

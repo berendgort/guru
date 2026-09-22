@@ -27,7 +27,7 @@ VOCABULARY: dict[str, str] = {
     "schlogging": "barely planing, fighting for power",
     "tea-bagging": "popping in/out of the water in light or gusty wind",
     "glassy": "smooth water / clean steady wind",
-    "gusty": "big wind spike vs average -- size for gusts",
+    "gusty": "big wind spike vs average -- warn; still size on average",
     "boost": "send the kite for air",
     "lofted": "gust lifts you off the beach -- serious hazard",
     "kitemare": "bad incident / close call",
@@ -59,10 +59,11 @@ VOICE_RULE = (
     "programmer-surfer who turned models into the famous table). This CLI "
     "is guru -- same spirit, beach-side. GO -> SEND IT. Marginal -> SOFT CALL "
     "(locals only / short session). NO -> SIT IT OUT. Never hype a long "
-    "drive on soft wind. Size for gusts. Offshore / lofted / kitemare = "
-    "safety first. Drop a programmer/kiter one-liner when it fits -- never "
-    "force jokes over a clear call. Use VOCABULARY. Lead with the call "
-    "(spot, window, kite, suit) -- don't dump raw model tables."
+    "drive on soft wind. Size for average; gusty -> warn. Long haul (>150 km) "
+    "needs ≥2h continuous GO. Beach 5-min check is agent voice, not preach. "
+    "Offshore / lofted / kitemare = safety first when known. Drop a "
+    "programmer/kiter one-liner when it fits -- never force jokes over a "
+    "clear call. Use VOCABULARY. Lead with the call (spot, window, kite, suit)."
 )
 
 NAME_LORE: dict[str, str] = {
@@ -157,15 +158,15 @@ Level matters: it changes the SEND IT wind and which kite you rig.
 
 • sport: kitesurf / kitefoil / surfkite
 • weight_kg
-• level: beginner | intermediate | advanced  <- required
+• level: beginner | intermediate | advanced | expert  <- required
 • kites m2 you own (e.g. 7,9,12)
 • boards (optional)
-• wetsuits you own (e.g. 3/2,4/3)
+• wetsuits / layers: none, 3/2, 6/4, 6/4+jacket, 6/4+jacket+gloves+boots
 • session hours (2-4)
 • home lat,lon · max drive_km · range label (e.g. Trabucador -> Leucate)
 
 Paste format (edit numbers):
 sport=kitefoil weight=78 level=intermediate kites=7,9,12 \\
-wetsuits=3/2,4/3 session=3 home=41.39,2.17 drive_km=200 \\
+wetsuits=none,3/2,6/4,6/4+jacket session=3 home=41.39,2.17 drive_km=200 \\
 range=Trabucador -> Leucate
 """

@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+__all__ = (
+    "INSTRUCT_STEPS",
+    "INSTRUCT_SUMMARY",
+    "instruct_payload",
+)
+
 from typing import Any
 
 from guru.core.human_fix import human_fix_payload
@@ -30,11 +36,11 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "command": "guru doctor --json   # probe + upgrade; do NOT pass --wire",
         "detail": (
             "ONE PATH FOR EVERY APP: local `guru … --json` on a machine that "
-            "reaches Windguru. YOU run all commands. Automate first — unlock, "
+            "reaches Windguru. YOU run all commands. Automate first -- unlock, "
             "setup, weekend. Ask the human ONLY via data.human_fix recipes "
             "when you cannot write their app settings (cloud UI / admin lock). "
             "Wire/tunnel ONLY if shell guru is unavailable AND a local STDIO "
-            "MCP host needs guru missing — never by default."
+            "MCP host needs guru missing -- never by default."
         ),
     },
     {
@@ -43,7 +49,7 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "command": "guru profile --json   # if ready=false → show data.intake.prompt_to_user",
         "detail": (
             "FIRST USER MESSAGE: if profile not ready or not range_ready, show "
-            "intake.prompt_to_user to the human ONCE (must include level — it "
+            "intake.prompt_to_user to the human ONCE (must include level -- it "
             "changes GO wind and sizing). They reply with one key=value line. "
             "Then: guru setup --intake '<paste>' --json. Never drip-feed "
             "questions. Never skip to weekend/best without a ready profile. "
@@ -56,10 +62,13 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "action": "weekend_or_best",
         "command": "guru weekend --json   # or: guru best <id> --json  (advice on by default)",
         "detail": (
-            "Ask 'where can I kite?' → guru weekend (default ~96h + top-3 "
-            "models). Narrate data.schedule day-by-day (Tue/Wed/Thu…) — do not "
-            "wait for the rider to ask about Thursday. Far trips need clear GO. "
-            "Named spot → guru best <id>."
+            "Ask 'where can I kite?' → guru weekend [--day Thu] (top-3 models; "
+            "horizon = what those models return). Narrate data.schedule. "
+            "filter_day / --day for Thursday asks. Beyond horizon: we have not "
+            "hacked time yet. Far trips need clear GO + ≥2h continuous. Soft "
+            "home vs solid far: report both. SST from Open-Meteo Marine for "
+            "suits. Named spot → guru best <id>. Local knowledge: "
+            '`guru note <id> "dirs=SW-W offshore=N-NE Bunker dies in NE"`.'
         ),
     },
     {
@@ -68,8 +77,9 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "command": 'guru spots "<name>" --json   # or: guru near --lat --lon --json',
         "detail": (
             "If you need an id: search named spots or free map markers near "
-            "coords. On ambiguous, pick from candidates — never silent "
-            "first-match. Never use PRO lat/lon click-forecast."
+            "coords. On ambiguous with home coords, prefer closest; else ask "
+            "from candidates -- never silent first-match. Never use PRO "
+            "lat/lon click-forecast."
         ),
     },
     {
@@ -78,17 +88,19 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "command": None,
         "detail": (
             "Narrate like a kite bro who ships code (data.voice): SEND IT / "
-            "SOFT CALL / SIT IT OUT. Drop one short programmer/kiter joke when "
-            "it fits — never instead of the call. Lead with week plan + spot + "
-            "kite + suit; size for gusts; model_agree; beach 5 min check. "
-            "Honesty > hype — long haul only on clear SEND IT. "
-            "If asked about the name: data.voice.lore (Windguru = Wind + Guru)."
+            "SOFT CALL / SIT IT OUT. Light programmer/kiter jokes -- not too "
+            "much. Lead with week plan + spot + kite + suit; size for "
+            "average; gusty warn; model_agree only when GO disagrees. Beach "
+            "5-min check in your voice when relevant. Honesty > hype -- long "
+            "haul only on clear SEND IT ≥2h. Invite local notes when the "
+            "rider says spot-specific truth. If asked about the name: "
+            "data.voice.lore (Windguru = Wind + Guru)."
         ),
     },
 ]
 
 INSTRUCT_SUMMARY = (
-    "Automate first: local guru CLI — kite bro who codes, Wind + Guru energy. "
+    "Automate first: local guru CLI -- kite bro who codes, Wind + Guru energy. "
     "Voice: SEND IT / SOFT CALL / SIT IT OUT + light programmer/kiter jokes "
     "(data.voice). Ask the human only for rare UI toggles via human_fix. "
     "FIRST MESSAGE: rider profile once (LEVEL required). Then weekend or best. "
@@ -130,11 +142,11 @@ def instruct_payload() -> dict[str, Any]:
                 "(never ask the human to run it)",
                 "2) If unlock ok: paste unlock.say_to_rider / "
                 "human_fix.recipes.restart_after_unlock.say_to_rider "
-                "(new chat) — that is the only ask",
+                "(new chat) -- that is the only ask",
                 "3) If no local shell OR still blocked after unlock+restart: "
                 "paste EXACTLY one human_fix.recipes[*].say_to_rider for "
                 "this host (chatgpt_work_network / codex_cloud_environment / "
-                "claude_network_settings / fallback_cursor) — do not invent steps",
+                "claude_network_settings / fallback_cursor) -- do not invent steps",
                 "If first_pass: intake + YOU run setup, then steps above",
                 "NEVER weekend/best while still blocked",
                 "Never unlock when already reachable",
@@ -146,7 +158,7 @@ def instruct_payload() -> dict[str, Any]:
             "do_not": [
                 "Ask the human to install/run guru/pipx or edit MCP JSON",
                 "Tutor sandboxes / allowlists / HTTP / tracebacks",
-                "Invent Settings paths — only paste recipe say_to_rider blocks",
+                "Invent Settings paths -- only paste recipe say_to_rider blocks",
                 "Run weekend/best while still blocked",
                 "Run unlock when charts already work",
                 "Invent forecasts",

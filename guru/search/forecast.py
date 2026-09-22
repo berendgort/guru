@@ -1,12 +1,17 @@
-"""Forecast fetch — Windguru ``iapi.php?q=forecast``."""
+"""Forecast fetch -- Windguru ``iapi.php?q=forecast``."""
 
 from __future__ import annotations
 
+__all__ = (
+    "decode_forecast",
+    "get_forecast",
+)
+
 from typing import Any
 
-from guru.core.rating import windguru_rating
 from guru.models.aliases import resolve_model
 from guru.models.forecast import Forecast, ForecastHour, Spot, hour_time, init_to_datetime
+from guru.models.rating import windguru_rating
 from guru.search.client import IAPI_CZ, get_client
 from guru.search.exceptions import GuruParseError
 from guru.search.spots import get_spot

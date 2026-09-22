@@ -2,6 +2,13 @@
 
 from __future__ import annotations
 
+__all__ = (
+    "INTAKE_FIELDS",
+    "REPLY_TEMPLATE",
+    "intake_payload",
+    "parse_intake_text",
+)
+
 import re
 from typing import Any
 
@@ -23,7 +30,7 @@ INTAKE_FIELDS: list[dict[str, str]] = [
     {
         "key": "level",
         "ask": "Level (required)",
-        "hint": "beginner | intermediate | advanced -- changes SEND IT wind and sizing",
+        "hint": "beginner | intermediate | advanced | expert -- changes SEND IT wind and sizing",
     },
     {
         "key": "kites_m2",
@@ -37,8 +44,8 @@ INTAKE_FIELDS: list[dict[str, str]] = [
     },
     {
         "key": "wetsuits",
-        "ask": "Wetsuits you own",
-        "hint": 'e.g. "3/2,4/3,shorty"',
+        "ask": "Wetsuits / layers you own",
+        "hint": "ladder: none, 3/2, 6/4, 6/4+jacket, 6/4+jacket+gloves+boots",
     },
     {
         "key": "session_hours",
@@ -64,7 +71,7 @@ INTAKE_FIELDS: list[dict[str, str]] = [
 
 REPLY_TEMPLATE = (
     "sport=kitefoil weight=78 level=intermediate kites=7,9,12 "
-    "wetsuits=3/2,4/3 boards=foil 1300,TT 138 session=3 "
+    "wetsuits=none,3/2,6/4,6/4+jacket boards=foil 1300,TT 138 session=3 "
     "home=41.39,2.17 drive_km=200 range=Trabucador -> Leucate"
 )
 

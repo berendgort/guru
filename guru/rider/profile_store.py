@@ -82,7 +82,24 @@ def _normalize_updates(updates: dict[str, Any]) -> dict[str, Any]:
         out["range_label"] = str(updates["range_label"])
     if "session_hours" in updates and updates["session_hours"] is not None:
         out["session_hours"] = float(updates["session_hours"])
+    if "spot_notes" in updates and updates["spot_notes"] is not None:
+        out["spot_notes"] = {
+            str(k): str(v) for k, v in dict(updates["spot_notes"]).items() if str(v).strip()
+        }
     return out
+
+
+def set_spot_note(spot_id: int | str, note: str) -> RiderProfile:
+    """Invite local knowledge into the profile (simple natural language)."""
+    current = load_profile()
+    notes = dict(current.spot_notes)
+    key = str(int(spot_id) if str(spot_id).isdigit() else spot_id)
+    text = note.strip()
+    if text:
+        notes[key] = text
+    else:
+        notes.pop(key, None)
+    return update_profile(spot_notes=notes)
 
 
 def parse_float_list(raw: str | None) -> list[float] | None:
@@ -144,5 +161,6 @@ __all__ = [
     "profile_path",
     "profile_payload",
     "save_profile",
+    "set_spot_note",
     "update_profile",
 ]

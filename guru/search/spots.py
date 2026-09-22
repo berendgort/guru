@@ -1,6 +1,14 @@
-"""Spot search + meta — Windguru ``search_spots`` / ``forecast_spot``."""
+"""Spot search + meta -- Windguru ``search_spots`` / ``forecast_spot``."""
 
 from __future__ import annotations
+
+__all__ = (
+    "fetch_forecast_spot",
+    "get_spot",
+    "resolve_spot",
+    "search_spots",
+    "spot_from_forecast_spot",
+)
 
 from typing import Any
 
@@ -75,8 +83,14 @@ def get_spot(spot_id: int) -> Spot:
     return spot_from_forecast_spot(fetch_forecast_spot(spot_id), spot_id)
 
 
-def resolve_spot(spot: str, *, pick: int | None = None) -> Spot:
-    """Resolve a numeric id or unique name. Multiple hits → ``GuruAmbiguousError``."""
+def resolve_spot(
+    spot: str,
+    *,
+    pick: int | None = None,
+    prefer_lat: float | None = None,
+    prefer_lon: float | None = None,
+) -> Spot:
+    """Resolve a numeric id or unique name. Multiple hits → closest or ambiguous."""
     text = spot.strip()
     if text.isdigit():
         return get_spot(int(text))
@@ -96,7 +110,22 @@ def resolve_spot(spot: str, *, pick: int | None = None) -> Spot:
     exact = [h for h in hits if h.name.lower() == text.lower()]
     if len(exact) == 1:
         return get_spot(exact[0].id)
+
+    # Ambiguous: prefer closest to home when coords known (questionnaire 5A)
+    if prefer_lat is not None and prefer_lon is not None:
+        from guru.search.near import haversine_km
+
+        with_coords = [h for h in hits if h.lat is not None and h.lon is not None]
+        if with_coords:
+            closest = min(
+                with_coords,
+                key=lambda h: haversine_km(
+                    prefer_lat, prefer_lon, float(h.lat), float(h.lon)
+                ),
+            )
+            return get_spot(closest.id)
+
     raise GuruAmbiguousError(
-        f"Ambiguous spot {spot!r}: {len(hits)} matches — pass a numeric id or --pick <id>",
+        f"Ambiguous spot {spot!r}: {len(hits)} matches -- pass a numeric id or --pick <id>",
         candidates=hits,
     )

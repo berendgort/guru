@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-
-from guru.core.rating import windguru_rating
+from guru.models.advice import AdviceReport
 from guru.models.forecast import Forecast, ForecastHour, Spot
-from guru.models.profile import AdviceReport, AdviceWindow, Level, RiderProfile, Sport
+from guru.models.profile import Level, RiderProfile, Sport
 from guru.rider import voice
+from guru.rider.advice_gates import apply_long_drive_gate, apply_spot_note
+from guru.rider.advice_windows import collapse_windows, overall_verdict, summary_line
+from guru.rider.shore import classify_shore, sectors_for_spot
 from guru.rider.sizing import (
     hour_verdict,
     ideal_kite_m2,
@@ -18,11 +19,10 @@ from guru.rider.sizing import (
     wind_quality,
 )
 
-_VERDICT_RANK = {"go": 2, "marginal": 1, "no": 0, "incomplete": -1}
+__all__ = ("advise_forecast", "drive_km_from_home")
 
 
 def drive_km_from_home(profile: RiderProfile, spot: Spot) -> float | None:
-    """Haversine home→spot when both have coordinates; else None."""
     from guru.search.near import haversine_km
 
     if (
@@ -32,9 +32,7 @@ def drive_km_from_home(profile: RiderProfile, spot: Spot) -> float | None:
         or spot.lon is None
     ):
         return None
-    return haversine_km(
-        profile.home_lat, profile.home_lon, spot.lat, spot.lon
-    )
+    return haversine_km(profile.home_lat, profile.home_lon, spot.lat, spot.lon)
 
 
 def advise_forecast(
@@ -43,6 +41,8 @@ def advise_forecast(
     *,
     max_windows: int = 6,
     drive_km: float | None = None,
+    sst_c: float | None = None,
+    wave_by_hour: dict[int, tuple[float | None, float | None]] | None = None,
 ) -> AdviceReport:
     """Score rideable windows on the top-model forecast."""
     missing = profile.missing_fields()
@@ -54,17 +54,36 @@ def advise_forecast(
             model=forecast.model,
             missing_profile=missing,
             summary=voice.incomplete_advice_summary(missing),
-            sizing_rule="2.2*kg/kn; foil -40%; surfkite -15%; size for gusts",
+            sizing_rule="2.2*kg/kn; size for average; gusty -> warn",
             checklist=voice.checklist(gusty=False, drive_km=drive_km),
         )
 
     assert profile.sport is not None
     assert profile.weight_kg is not None
     assert profile.level is not None
-    sport = profile.sport
-    level = profile.level
-    weight = profile.weight_kg
-    session_h = profile.session_hours
+    sport, level = profile.sport, profile.level
+    weight, session_h = profile.weight_kg, profile.session_hours
+
+    sst_source = None
+    if sst_c is None and forecast.spot.lat is not None and forecast.spot.lon is not None:
+        try:
+            from guru.search.sst import SST_SOURCE, fetch_sst
+
+            sst_c = fetch_sst(forecast.spot.lat, forecast.spot.lon)
+            if sst_c is not None:
+                sst_source = SST_SOURCE
+        except Exception:  # noqa: BLE001
+            sst_c = None
+
+    note_text = profile.spot_notes.get(str(forecast.spot.id))
+    preferred, offshore, shore_source = sectors_for_spot(
+        forecast.spot.id, spot_note=note_text
+    )
+
+    if wave_by_hour is None and sport is Sport.SURFKITE:
+        from guru.search.wave import wave_map_for_forecast
+
+        wave_by_hour = wave_map_for_forecast(forecast)
 
     scored: list[
         tuple[
@@ -80,34 +99,35 @@ def advise_forecast(
     ] = []
     any_gusty = False
     for hour in forecast.hours:
-        verdict = hour_verdict(
-            hour.wind_kn, hour.gust_kn, sport=sport, level=level
+        shore = classify_shore(
+            hour.wind_dir_deg, preferred=preferred, offshore=offshore
         )
+        verdict = hour_verdict(hour.wind_kn, hour.gust_kn, sport=sport, level=level)
+        if shore == "offshore" and verdict != "no":
+            verdict = "no" if level is Level.BEGINNER else "marginal"
         if verdict == "no":
             continue
         quality = wind_quality(hour.wind_kn, hour.gust_kn)
         if quality == "gusty":
             any_gusty = True
         ideal = ideal_kite_m2(
-            weight,
-            hour.wind_kn or 0.0,
-            sport=sport,
-            level=level,
-            gust_kn=hour.gust_kn,
+            weight, hour.wind_kn or 0.0, sport=sport, level=level, gust_kn=hour.gust_kn
         )
-        owned, gap = pick_owned_kite(ideal, profile.kites_m2)
+        owned, gap = pick_owned_kite(
+            ideal, profile.kites_m2, level=level, sport=sport
+        )
         rec_suit, accessories = recommend_wetsuit(
             hour.temp_c,
             wind_kn=hour.wind_kn,
             session_hours=session_h,
             level=level,
+            sst_c=sst_c,
         )
         owned_suit = pick_owned_wetsuit(rec_suit, profile.wetsuits)
         note = _hour_note(
             sport=sport,
             level=level,
             wind_kn=hour.wind_kn,
-            gust_kn=hour.gust_kn,
             quality=quality,
             ideal=ideal,
             owned=owned,
@@ -116,22 +136,41 @@ def advise_forecast(
             owned_suit=owned_suit,
             session_hours=session_h,
         )
+        if shore == "offshore":
+            tag = "offshore (known sector) -- advanced / rescue only"
+            note = f"{note}; {tag}" if note else tag
+        note = apply_spot_note(note, profile, forecast)
         scored.append(
             (hour, verdict, ideal, owned, gap, owned_suit or rec_suit, accessories, note)
         )
 
-    windows = _collapse_windows(
-        scored, max_windows=max_windows, session_hours=session_h, level=level
-    )
-    overall = _overall_verdict(windows)
-    # Far drive: demote marginal-only to no for ranking callers
-    if drive_km is not None and drive_km > 90 and overall == "marginal":
-        overall = "no"
-        for w in windows:
-            if w.verdict == "marginal":
-                w.note = voice.far_drive_note(w.note)
+    shore_rel = "unknown"
+    if any(
+        classify_shore(h.wind_dir_deg, preferred=preferred, offshore=offshore)
+        == "offshore"
+        for h, *_ in scored
+    ):
+        shore_rel = "offshore"
+    elif preferred or offshore:
+        shore_rel = "preferred"
 
-    summary = _summary(overall, windows, sport=sport, level=level, session_h=session_h)
+    windows = collapse_windows(
+        scored,
+        max_windows=max_windows,
+        session_hours=session_h,
+        level=level,
+        sunrise=forecast.sunrise,
+        sunset=forecast.sunset,
+        sst_c=sst_c,
+        shore_relation=shore_rel if shore_source != "unknown" else "unknown",
+        wave_by_hour=wave_by_hour,
+    )
+    overall = apply_long_drive_gate(
+        overall_verdict(windows), windows, drive_km=drive_km
+    )
+    summary = summary_line(
+        overall, windows, sport=sport, level=level, session_h=session_h
+    )
 
     return AdviceReport(
         verdict=overall,
@@ -143,6 +182,9 @@ def advise_forecast(
         checklist=voice.checklist(gusty=any_gusty, drive_km=drive_km),
         missing_profile=[],
         summary=summary,
+        sst_c=sst_c,
+        sst_source=sst_source,
+        shore_source=shore_source if shore_source != "unknown" else None,
     )
 
 
@@ -151,7 +193,6 @@ def _hour_note(
     sport: Sport,
     level: Level,
     wind_kn: float | None,
-    gust_kn: float | None,
     quality: str,
     ideal: float | None,
     owned: float | None,
@@ -176,147 +217,3 @@ def _hour_note(
         and wind_kn >= 20,
     )
     return "; ".join(bits) if bits else ""
-
-
-def _collapse_windows(
-    scored: list[
-        tuple[
-            ForecastHour,
-            str,
-            float | None,
-            float | None,
-            float | None,
-            str | None,
-            list[str],
-            str,
-        ]
-    ],
-    *,
-    max_windows: int,
-    session_hours: float,
-    level: Level,
-) -> list[AdviceWindow]:
-    if not scored:
-        return []
-
-    windows: list[AdviceWindow] = []
-    block_hours = [scored[0]]
-    block_verdict = scored[0][1]
-
-    def flush() -> None:
-        nonlocal block_hours
-        if not block_hours:
-            return
-        first = block_hours[0][0]
-        last = block_hours[-1][0]
-        mid = block_hours[len(block_hours) // 2]
-        hour, verdict, ideal, owned, gap, suit, accessories, note = mid
-        spread = None
-        if hour.gust_kn is not None and hour.wind_kn is not None:
-            spread = round(hour.gust_kn - hour.wind_kn, 1)
-        rec_suit, _acc = recommend_wetsuit(
-            hour.temp_c,
-            wind_kn=hour.wind_kn,
-            session_hours=session_hours,
-            level=level,
-        )
-        rating = windguru_rating(hour.wind_kn, hour.temp_c)
-        windows.append(
-            AdviceWindow(
-                start=_iso(first.time),
-                end=_iso(last.time),
-                wind_kn=float(hour.wind_kn or 0.0),
-                gust_kn=hour.gust_kn,
-                gust_spread_kn=spread,
-                wind_quality=wind_quality(hour.wind_kn, hour.gust_kn),
-                kite_m2=ideal,
-                owned_kite_m2=owned,
-                kite_gap_m2=gap,
-                wetsuit=rec_suit,
-                owned_wetsuit=suit,
-                accessories=accessories,
-                verdict=verdict,
-                rating_stars=rating.stars,
-                rating_cold=rating.cold,
-                rating=rating.label,
-                note=note,
-            )
-        )
-        block_hours = []
-
-    for i in range(1, len(scored)):
-        prev_t = block_hours[-1][0].time
-        cur = scored[i]
-        same_verdict = cur[1] == block_verdict
-        contiguous = _hours_adjacent(prev_t, cur[0].time)
-        if same_verdict and contiguous:
-            block_hours.append(cur)
-        else:
-            flush()
-            block_verdict = cur[1]
-            block_hours = [cur]
-    flush()
-
-    windows.sort(key=lambda w: (-_VERDICT_RANK.get(w.verdict, 0), w.start))
-    return windows[:max_windows]
-
-
-def _hours_adjacent(a: datetime, b: datetime) -> bool:
-    return abs((b - a).total_seconds()) <= 3 * 3600
-
-
-def _overall_verdict(windows: list[AdviceWindow]) -> str:
-    if not windows:
-        return "no"
-    return max(windows, key=lambda w: _VERDICT_RANK.get(w.verdict, 0)).verdict
-
-
-def _summary(
-    overall: str,
-    windows: list[AdviceWindow],
-    *,
-    sport: Sport,
-    level: Level,
-    session_h: float,
-) -> str:
-    if overall == "no" or not windows:
-        return voice.advice_summary(
-            "no",
-            start="",
-            end="",
-            wind_kn=0,
-            gust_kn=None,
-            stars="",
-            kite="",
-            suit="",
-            session_h=session_h,
-            sport=sport.value,
-            level=level.value,
-        )
-    top = windows[0]
-    kite = (
-        f"{top.owned_kite_m2:g} m²"
-        if top.owned_kite_m2 is not None
-        else (f"~{top.kite_m2:g} m²" if top.kite_m2 else "kite n/a")
-    )
-    suit = top.owned_wetsuit or top.wetsuit or "suit n/a"
-    stars = top.rating if top.rating and top.rating != "—" else ""
-    return voice.advice_summary(
-        overall,
-        start=top.start,
-        end=top.end,
-        wind_kn=top.wind_kn,
-        gust_kn=top.gust_kn,
-        stars=stars,
-        kite=kite,
-        suit=suit,
-        session_h=session_h,
-        sport=sport.value,
-        level=level.value,
-    )
-
-
-def _iso(dt: datetime) -> str:
-    if dt.tzinfo is None:
-        return dt.isoformat() + "Z"
-    return dt.isoformat().replace("+00:00", "Z")

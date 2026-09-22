@@ -1,68 +1,35 @@
-"""Weekend / drive-range spot scanner — 'where can I kite?'."""
+"""Weekend / drive-range spot scanner -- 'where can I kite?'."""
 
 from __future__ import annotations
 
-from datetime import datetime
-
-from guru.models.forecast import Spot
-from guru.models.profile import (
-    AdviceWindow,
-    RiderProfile,
-    ScheduleSlot,
-    WeekendReport,
-    WeekendSpotAdvice,
-)
+from guru.models.advice import ScheduleSlot, WeekendReport, WeekendSpotAdvice
+from guru.models.profile import RiderProfile
 from guru.rider import voice
 from guru.rider.advice import advise_forecast
+from guru.rider.weekend_rank import (
+    filter_schedule_by_day,
+    home_vs_far_line,
+    model_agree_by_day,
+    parse_filter_day,
+    pick_schedule,
+    score_spot,
+    slot_rank,
+    slot_summary,
+    weekend_summary_text,
+)
+from guru.rider.weekend_spots import candidate_spots, long_drive_ok, weekday_label
 from guru.search.blend import get_best_forecast
-from guru.search.near import haversine_km, spots_near
-from guru.search.spots import get_spot
+from guru.search.sst import SST_SOURCE, fetch_sst_many
 
-_VERDICT_RANK = {"go": 2, "marginal": 1, "no": 0, "incomplete": -1}
+__all__ = (
+    "DEFAULT_TOP_MODELS",
+    "DEFAULT_WEEKEND_HOURS",
+    "candidate_spots",
+    "scan_weekend",
+)
 
-# Free-model horizon that covers mid-week asks without “what about Thursday?”
 DEFAULT_WEEKEND_HOURS = 96
 DEFAULT_TOP_MODELS = 3
-
-
-def candidate_spots(
-    profile: RiderProfile,
-    *,
-    limit: int = 12,
-) -> list[tuple[Spot, float | None]]:
-    """Spots in drive range + explicit home_spots. Returns (spot, drive_km)."""
-    by_id: dict[int, tuple[Spot, float | None]] = {}
-
-    if profile.home_lat is not None and profile.home_lon is not None:
-        radius = float(profile.drive_km or 80.0)
-        near = spots_near(
-            profile.home_lat, profile.home_lon, radius_km=radius, limit=limit
-        )
-        for s in near:
-            d = None
-            if s.lat is not None and s.lon is not None:
-                d = haversine_km(profile.home_lat, profile.home_lon, s.lat, s.lon)
-            by_id[s.id] = (s, d)
-
-    for sid in profile.home_spots:
-        if sid in by_id:
-            continue
-        spot = get_spot(sid)
-        d = None
-        if (
-            profile.home_lat is not None
-            and profile.home_lon is not None
-            and spot.lat is not None
-            and spot.lon is not None
-        ):
-            d = haversine_km(
-                profile.home_lat, profile.home_lon, spot.lat, spot.lon
-            )
-        by_id[sid] = (spot, d)
-
-    rows = list(by_id.values())
-    rows.sort(key=lambda x: (x[1] is None, x[1] if x[1] is not None else 9999))
-    return rows[:limit]
 
 
 def scan_weekend(
@@ -71,6 +38,7 @@ def scan_weekend(
     hours: int = DEFAULT_WEEKEND_HOURS,
     limit_spots: int = 8,
     top_models: int = DEFAULT_TOP_MODELS,
+    filter_day: str | None = None,
 ) -> WeekendReport:
     """Rank rideable spots + day-by-day schedule (top WINDGURU_DEFAULT models)."""
     missing = profile.missing_fields() + profile.missing_range_fields()
@@ -89,38 +57,50 @@ def scan_weekend(
             drive_km=profile.drive_km,
             hours=hours,
             top_models=top_models,
+            filter_day=filter_day,
             missing_profile=missing,
             summary=voice.weekend_incomplete(missing),
             thinking=thinking,
         )
 
     candidates = candidate_spots(profile, limit=limit_spots)
+    coords = [
+        (float(s.lat), float(s.lon))
+        for s, _ in candidates
+        if s.lat is not None and s.lon is not None
+    ]
+    sst_map = fetch_sst_many(coords) if coords else {}
+
     results: list[WeekendSpotAdvice] = []
-    # (day, slot_candidate dict pieces) for schedule build
     day_candidates: list[tuple[str, ScheduleSlot, float]] = []
 
     for spot, drive in candidates:
         best = get_best_forecast(spot.id, top=top_models, hours=hours)
         if not best.forecasts:
             continue
-
-        # Advise each top model; primary = highest-weight model
-        model_advices = []
-        for fc in best.forecasts:
-            model_advices.append(
-                advise_forecast(fc, profile, drive_km=drive, max_windows=12)
-            )
+        sst_c = (
+            sst_map.get((float(spot.lat), float(spot.lon)))
+            if spot.lat is not None and spot.lon is not None
+            else None
+        )
+        model_advices = [
+            advise_forecast(fc, profile, drive_km=drive, max_windows=12, sst_c=sst_c)
+            for fc in best.forecasts
+        ]
         primary = model_advices[0]
         if primary.verdict in {"no", "incomplete"}:
             continue
-        if drive is not None and drive > 90 and primary.verdict != "go":
+        if not long_drive_ok(
+            drive, verdict=primary.verdict, windows=primary.windows
+        ):
             continue
 
-        agree_by_day = _model_agree_by_day(model_advices)
+        agree_by_day = model_agree_by_day(model_advices)
         window = primary.windows[0] if primary.windows else None
-        day_key = _day_key(window.start) if window else ""
+        day_key = window.start[:10] if window else ""
         agree = agree_by_day.get(day_key, 1) if day_key else 1
-        score = _score(primary.verdict, drive, model_agree=agree)
+        score = score_spot(primary.verdict, drive, model_agree=agree)
+        drive_r = round(drive, 1) if drive is not None else None
 
         results.append(
             WeekendSpotAdvice(
@@ -128,85 +108,59 @@ def scan_weekend(
                 name=spot.name,
                 lat=spot.lat,
                 lon=spot.lon,
-                drive_km=round(drive, 1) if drive is not None else None,
+                drive_km=drive_r,
                 verdict=primary.verdict,
                 summary=primary.summary,
                 best_window=window,
                 model=primary.model,
                 model_agree=agree,
                 score=score,
+                sst_c=sst_c,
             )
         )
 
-        for adv in model_advices[:1]:  # schedule from primary model windows
-            for w in adv.windows:
-                if w.verdict not in {"go", "marginal"}:
-                    continue
-                if drive is not None and drive > 90 and w.verdict != "go":
-                    continue
-                d = _day_key(w.start)
-                a = agree_by_day.get(d, 1)
-                slot = ScheduleSlot(
-                    day=d,
-                    weekday=_weekday(w.start),
-                    start=w.start,
-                    end=w.end,
-                    spot_id=spot.id,
-                    name=spot.name,
-                    drive_km=round(drive, 1) if drive is not None else None,
-                    verdict=w.verdict,
-                    wind_kn=w.wind_kn,
-                    gust_kn=w.gust_kn,
-                    owned_kite_m2=w.owned_kite_m2,
-                    owned_wetsuit=w.owned_wetsuit or w.wetsuit,
-                    model_agree=a,
-                    rating_stars=w.rating_stars,
-                    rating_cold=w.rating_cold,
-                    rating=w.rating,
-                    summary=_slot_summary(spot.name, w, a),
-                )
-                day_candidates.append((d, slot, _slot_rank(w, drive, a)))
+        for w in primary.windows:
+            if w.verdict not in {"go", "marginal"}:
+                continue
+            if not long_drive_ok(drive, window=w):
+                continue
+            d = w.start[:10]
+            a = agree_by_day.get(d, 1)
+            slot = ScheduleSlot(
+                day=d,
+                weekday=weekday_label(w.start),
+                start=w.start,
+                end=w.end,
+                spot_id=spot.id,
+                name=spot.name,
+                drive_km=drive_r,
+                verdict=w.verdict,
+                wind_kn=w.wind_kn,
+                gust_kn=w.gust_kn,
+                wind_dir_deg=w.wind_dir_deg,
+                owned_kite_m2=w.owned_kite_m2,
+                owned_wetsuit=w.owned_wetsuit or w.wetsuit,
+                model_agree=a,
+                rating_stars=w.rating_stars,
+                rating_cold=w.rating_cold,
+                rating=w.rating,
+                summary=slot_summary(spot.name, w, a),
+                hours_usable=w.hours_usable,
+            )
+            day_candidates.append((d, slot, slot_rank(w, drive, a)))
 
     results.sort(
         key=lambda r: (-r.score, r.drive_km if r.drive_km is not None else 999)
     )
-    schedule = _pick_schedule(day_candidates)
+    schedule = pick_schedule(day_candidates)
+    schedule, results, thinking = _apply_day_filter(
+        filter_day, schedule, results, thinking
+    )
 
     overall = results[0].verdict if results else "no"
-    if schedule:
-        lead = schedule[0]
-        days = ", ".join(f"{s.weekday} {s.name}" for s in schedule[:4])
-        summary = voice.weekend_summary(
-            overall=overall,
-            lead_weekday=lead.weekday,
-            lead_name=lead.name,
-            lead_drive=lead.drive_km,
-            lead_line=lead.summary,
-            plan_days=days,
-        )
-    elif results:
-        top = results[0]
-        summary = voice.weekend_summary(
-            overall=overall,
-            lead_weekday=None,
-            lead_name=None,
-            lead_drive=None,
-            lead_line=None,
-            plan_days=None,
-            top_name=top.name,
-            top_id=top.spot_id,
-            top_drive=top.drive_km,
-            top_line=top.summary,
-        )
-    else:
-        summary = voice.weekend_summary(
-            overall="no",
-            lead_weekday=None,
-            lead_name=None,
-            lead_drive=None,
-            lead_line=None,
-            plan_days=None,
-        )
+    compare = home_vs_far_line(results)
+    if compare:
+        thinking.append(compare)
 
     return WeekendReport(
         verdict=overall,
@@ -216,86 +170,33 @@ def scan_weekend(
         drive_km=profile.drive_km,
         hours=hours,
         top_models=top_models,
+        filter_day=filter_day,
         spots=results,
         schedule=schedule,
         missing_profile=[],
-        summary=summary,
+        summary=weekend_summary_text(overall, schedule, results),
         thinking=thinking,
+        sst_source=SST_SOURCE if sst_map else None,
     )
 
 
-def _model_agree_by_day(advices: list) -> dict[str, int]:
-    """Count how many of the top models have go/marginal on each UTC day."""
-    counts: dict[str, int] = {}
-    for adv in advices:
-        days = {
-            _day_key(w.start)
-            for w in adv.windows
-            if w.verdict in {"go", "marginal"}
-        }
-        for d in days:
-            counts[d] = counts.get(d, 0) + 1
-    return counts
-
-
-def _day_key(iso: str) -> str:
-    return iso[:10]
-
-
-def _weekday(iso: str) -> str:
-    try:
-        dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
-    except ValueError:
-        return iso[:10]
-    return dt.strftime("%a")
-
-
-def _slot_summary(name: str, w: AdviceWindow, agree: int) -> str:
-    kite = (
-        f"{w.owned_kite_m2:g} m²"
-        if w.owned_kite_m2 is not None
-        else (f"~{w.kite_m2:g} m²" if w.kite_m2 else "kite n/a")
-    )
-    return voice.slot_line(
-        verdict=w.verdict,
-        start=w.start,
-        end=w.end,
-        wind_kn=w.wind_kn,
-        gust_kn=w.gust_kn,
-        stars=w.rating,
-        kite=kite,
-        agree=agree,
-    )
-
-
-def _slot_rank(w: AdviceWindow, drive: float | None, agree: int) -> float:
-    base = float(_VERDICT_RANK.get(w.verdict, 0)) * 100.0
-    base += agree * 15.0
-    if drive is not None:
-        base -= drive
-    return base
-
-
-def _pick_schedule(
-    candidates: list[tuple[str, ScheduleSlot, float]],
-) -> list[ScheduleSlot]:
-    """One best slot per UTC day, chronological."""
-    best: dict[str, tuple[ScheduleSlot, float]] = {}
-    for day, slot, rank in candidates:
-        cur = best.get(day)
-        if cur is None or rank > cur[1]:
-            best[day] = (slot, rank)
-    return [best[d][0] for d in sorted(best.keys())]
-
-
-def _score(
-    verdict: str,
-    drive_km: float | None,
-    *,
-    model_agree: int = 1,
-) -> float:
-    base = float(_VERDICT_RANK.get(verdict, 0)) * 100.0
-    base += model_agree * 15.0
-    if drive_km is None:
-        return base
-    return base - drive_km
+def _apply_day_filter(
+    filter_day: str | None,
+    schedule: list[ScheduleSlot],
+    results: list[WeekendSpotAdvice],
+    thinking: list[str],
+) -> tuple[list[ScheduleSlot], list[WeekendSpotAdvice], list[str]]:
+    wd, iso = parse_filter_day(filter_day)
+    if not wd and not iso:
+        return schedule, results, thinking
+    schedule = filter_schedule_by_day(schedule, weekday=wd, iso_day=iso)
+    if schedule:
+        keep = {s.spot_id for s in schedule}
+        results = [r for r in results if r.spot_id in keep] or results
+    else:
+        results = []
+        thinking.append(
+            f"Nothing on {filter_day} in this horizon "
+            "(we have not hacked time yet beyond top-model range)"
+        )
+    return schedule, results, thinking

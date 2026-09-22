@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
-from guru.models.profile import Level, RiderProfile, ScheduleSlot, Sport
-from guru.rider.weekend import _pick_schedule, _score
+from guru.models.advice import ScheduleSlot
+from guru.models.profile import Level, RiderProfile, Sport
+from guru.rider.weekend_rank import pick_schedule, score_spot
 
 
 def test_weekend_score_prefers_go_nearby() -> None:
-    assert _score("go", 20) > _score("go", 100)
-    assert _score("go", 100) > _score("marginal", 20)
-    assert _score("go", 50, model_agree=3) > _score("go", 50, model_agree=1)
+    assert score_spot("go", 20) > score_spot("go", 100)
+    assert score_spot("go", 100) > score_spot("marginal", 100)
+    assert score_spot("go", 50, model_agree=3) > score_spot("go", 50, model_agree=1)
+    # Soft <1h boost can beat a farther GO of equal model agree
+    assert score_spot("go", 40) > score_spot("go", 80)
 
 
 def test_pick_schedule_one_per_day() -> None:
@@ -52,7 +55,7 @@ def test_pick_schedule_one_per_day() -> None:
         model_agree=3,
         summary="c",
     )
-    out = _pick_schedule(
+    out = pick_schedule(
         [
             ("2026-09-24", a, 200.0),
             ("2026-09-24", b, 50.0),

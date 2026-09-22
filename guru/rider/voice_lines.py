@@ -83,7 +83,7 @@ def hour_bits(
     if quality == "smooth":
         bits.append("glassy power")
     elif quality == "gusty":
-        bits.append("gusty -- size for the spikes, not the lull")
+        bits.append("gusty -- warn; sized on average (not the spike)")
     elif quality == "ok":
         bits.append("clean enough")
     if sport_foil_light:
@@ -180,26 +180,26 @@ def slot_line(
 
 
 def checklist(*, gusty: bool, drive_km: float | None = None) -> list[str]:
+    # Beach 5-min check stays in agent voice (not CLI checklist preach).
     items = [
-        "Check avg + gusts -- size for the send, not the lull",
-        "Beach: watch 5 min -- direction, consistency, downwind kitemare risks",
-        "Side-shore / side-on preferred; offshore = advanced-only (don't get lofted)",
-        "Models agree before a long haul (LGTM the blend)",
+        "Size for average wind; gusty -> warn (beginners stay SOFT CALL)",
+        "Side-shore / side-on preferred; offshore = advanced-only if known",
+        "Models must agree on GO before a long haul",
     ]
     if gusty:
-        items.append("Gusty -> downsize / more depower / shorter session")
-    if drive_km is not None and drive_km > 90:
+        items.append("Gusty session -- more depower / shorter send, not auto downsize")
+    if drive_km is not None and drive_km > 150:
         items.append(
-            f"Long haul (~{drive_km:.0f} km) -> require SEND IT, not a soft maybe"
+            f"Long haul (~{drive_km:.0f} km) -> need ≥2h continuous SEND IT"
         )
     return items
 
 
 def thinking_headers(*, hours: int, top_models: int, range_label: str | None) -> list[str]:
     bits = [
-        "Long haul only on a clear SEND IT -- prefer models locked",
-        f"Scan ~{hours}h with top {top_models} models; lay the week so Thu/Fri "
-        "show up without re-asking",
+        "Long haul only on clear SEND IT with ≥2h continuous GO",
+        f"Scan with top {top_models} models; horizon = what those models return "
+        f"(~{hours}h default) -- beyond that we have not hacked time yet",
         joke(about="general", seed=f"think:{hours}:{top_models}"),
     ]
     if range_label:

@@ -32,11 +32,11 @@ def test_surfkite_slightly_smaller() -> None:
     assert surf <= tt
 
 
-def test_size_for_gusts() -> None:
+def test_size_for_average_not_gusts() -> None:
     calm = ideal_kite_m2(75, 18, gust_kn=18)
     gusty = ideal_kite_m2(75, 18, gust_kn=28)
     assert calm is not None and gusty is not None
-    assert gusty < calm
+    assert gusty == calm
 
 
 def test_pick_owned_kite() -> None:
@@ -46,17 +46,15 @@ def test_pick_owned_kite() -> None:
     assert abs(gap - (9 - 10.5)) < 0.01
 
 
-def test_wetsuit_bands_calm_2h() -> None:
-    # Calm short session → baseline air-temp chart
-    assert recommend_wetsuit(26, wind_kn=8, session_hours=2)[0] == "lycra"
-    assert recommend_wetsuit(20, wind_kn=8, session_hours=2)[0] == "shorty"
-    assert recommend_wetsuit(16, wind_kn=8, session_hours=2)[0] == "3/2"
-    assert recommend_wetsuit(13, wind_kn=8, session_hours=2)[0] == "4/3"
-    assert recommend_wetsuit(5, wind_kn=8, session_hours=2)[0] == "5/4+hood"
+def test_wetsuit_ladder_calm_2h() -> None:
+    assert recommend_wetsuit(26, wind_kn=8, session_hours=2)[0] == "none"
+    assert recommend_wetsuit(18, wind_kn=8, session_hours=2)[0] == "3/2"
+    assert recommend_wetsuit(12, wind_kn=8, session_hours=2)[0] == "6/4"
+    assert recommend_wetsuit(7, wind_kn=8, session_hours=2)[0] == "6/4+jacket"
+    assert recommend_wetsuit(2, wind_kn=8, session_hours=2)[0] == "6/4+jacket+gloves+boots"
 
 
 def test_wetsuit_warmer_for_long_windy_session() -> None:
-    # 16°C: 3/2 at 2h calm; windy 4h beginner → thicker
     calm_short, _ = recommend_wetsuit(
         16, wind_kn=8, session_hours=2, level=Level.INTERMEDIATE
     )
@@ -64,14 +62,14 @@ def test_wetsuit_warmer_for_long_windy_session() -> None:
         16, wind_kn=20, session_hours=4, level=Level.BEGINNER
     )
     assert calm_short == "3/2"
-    # wind -1, session -2, beginner -1 → 3-4 ranks colder
-    assert long_windy in {"5/4+hood", "5/4", "4/3"}
-    assert "boots" in acc or long_windy.startswith("5")
+    assert long_windy in {"6/4", "6/4+jacket", "6/4+jacket+gloves+boots"}
+    assert "jacket" in long_windy or "gloves" in acc or long_windy.startswith("6")
 
 
 def test_pick_owned_wetsuit() -> None:
-    assert pick_owned_wetsuit("3/2", ["4/3", "3/2"]) == "3/2"
-    assert pick_owned_wetsuit("5/4", ["3/2", "4/3"]) == "4/3"
+    assert pick_owned_wetsuit("3/2", ["6/4", "3/2"]) == "3/2"
+    assert pick_owned_wetsuit("6/4", ["3/2", "6/4"]) == "6/4"
+    assert pick_owned_wetsuit("6/4+jacket", ["3/2", "6/4"]) == "6/4"
 
 
 def test_min_wind_foil_lower() -> None:
@@ -80,10 +78,22 @@ def test_min_wind_foil_lower() -> None:
     )
 
 
+def test_intermediate_twintip_floor_13() -> None:
+    assert min_wind_kn(Sport.KITESURF, Level.INTERMEDIATE) == 13.0
+
+
+def test_expert_lower_than_advanced() -> None:
+    assert min_wind_kn(Sport.KITESURF, Level.EXPERT) < min_wind_kn(
+        Sport.KITESURF, Level.ADVANCED
+    )
+
+
 def test_hour_verdict() -> None:
     assert hour_verdict(6, 8, sport=Sport.KITESURF, level=Level.INTERMEDIATE) == "no"
     assert hour_verdict(14, 16, sport=Sport.KITESURF, level=Level.INTERMEDIATE) == "go"
+    # Gusty: warn, still GO for intermediate (beginners stay marginal)
+    assert hour_verdict(14, 24, sport=Sport.KITESURF, level=Level.INTERMEDIATE) == "go"
     assert (
-        hour_verdict(14, 24, sport=Sport.KITESURF, level=Level.INTERMEDIATE) == "marginal"
+        hour_verdict(14, 24, sport=Sport.KITESURF, level=Level.BEGINNER) == "marginal"
     )
     assert hour_verdict(10, 12, sport=Sport.KITEFOIL, level=Level.INTERMEDIATE) == "go"
