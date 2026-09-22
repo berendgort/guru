@@ -6,7 +6,12 @@ import os
 from typing import Any
 
 from curl_cffi import requests as curl_requests
-from tenacity import retry, stop_after_attempt, wait_exponential
+from tenacity import (
+    retry,
+    retry_if_exception,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from guru.search.exceptions import GuruHTTPError, GuruParseError
 
@@ -17,6 +22,20 @@ IAPI_CZ = "https://www.windguru.cz/int/iapi.php"
 IAPI_NET = "https://www.windguru.net/int/iapi.php"
 
 
+def _retryable_http(exc: BaseException) -> bool:
+    """Don't burn retries on allowlist / hard 4xx (except 429)."""
+    if isinstance(exc, GuruHTTPError):
+        status = exc.status_code
+        if status is None:
+            return True
+        if status == 429 or status >= 500:
+            return True
+        return False
+    if isinstance(exc, GuruParseError):
+        return False
+    return True
+
+
 class Client:
     def __init__(self) -> None:
         self._session = curl_requests.Session(impersonate=DEFAULT_IMPERSONATE)
@@ -24,7 +43,12 @@ class Client:
     def close(self) -> None:
         self._session.close()
 
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=0.5, min=0.5, max=4))
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=0.5, min=0.5, max=4),
+        retry=retry_if_exception(_retryable_http),
+        reraise=True,
+    )
     def get_json(
         self,
         *,
@@ -37,16 +61,25 @@ class Client:
             "Accept": "application/json, text/javascript, */*; q=0.01",
             "X-Requested-With": "XMLHttpRequest",
         }
-        resp = self._session.get(base, params=params, headers=headers, timeout=REQUEST_TIMEOUT)
+        resp = self._session.get(
+            base, params=params, headers=headers, timeout=REQUEST_TIMEOUT
+        )
         if resp.status_code >= 400:
-            raise GuruHTTPError(
-                f"HTTP {resp.status_code} for {params.get('q')}: {resp.text[:200]}",
-                status_code=resp.status_code,
-            )
+            body = (resp.text or "")[:200]
+            msg = f"HTTP {resp.status_code} for {params.get('q')}: {body}"
+            if resp.status_code == 403 and "allowlist" in body.lower():
+                msg = (
+                    "Windguru blocked in this runtime (host allowlist). "
+                    "Open the same ask in Cursor / local Claude Code — "
+                    "do not invent forecasts."
+                )
+            raise GuruHTTPError(msg, status_code=resp.status_code)
         try:
             data = resp.json()
         except Exception as exc:  # noqa: BLE001
-            raise GuruParseError(f"Non-JSON for {params.get('q')}: {resp.text[:200]}") from exc
+            raise GuruParseError(
+                f"Non-JSON for {params.get('q')}: {resp.text[:200]}"
+            ) from exc
         if isinstance(data, dict) and data.get("return") == "error":
             raise GuruHTTPError(str(data.get("message") or data))
         return data

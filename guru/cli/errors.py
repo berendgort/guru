@@ -25,10 +25,24 @@ def print_ok(data: Any) -> None:
 
 def fail(exc: BaseException, *, as_json: bool) -> None:
     """Print error (JSON or Rich) and exit with a stable code."""
-    classified = classify_error(exc)
+    # Unwrap tenacity RetryError so we don't dump a stack to humans/agents.
+    inner = _unwrap(exc)
+    classified = classify_error(inner)
     code = 2 if classified.retryable else 1
     if as_json:
-        emit_json(error_payload(exc))
+        emit_json(error_payload(inner))
         raise typer.Exit(code) from exc
-    console.print(f"[red]{exc}[/red]")
+    console.print(f"[red]{inner}[/red]")
     raise typer.Exit(code) from exc
+
+
+def _unwrap(exc: BaseException) -> BaseException:
+    attempt = getattr(exc, "last_attempt", None)
+    if attempt is not None:
+        try:
+            nested = attempt.exception()
+            if nested is not None:
+                return nested
+        except Exception:  # noqa: BLE001
+            pass
+    return exc

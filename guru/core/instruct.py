@@ -124,7 +124,8 @@ def instruct_payload() -> dict[str, Any]:
             "do": [
                 "If first_pass: show ONLY intake.prompt_to_user (kite-bro), wait for one key=value paste",
                 "On their reply: YOU run `guru setup --intake '…' --json` in this shell (profile write works offline)",
-                "Then say EXACTLY on_unreachable.say_exactly — nothing else about installs, tutorials, or bash",
+                "Then say EXACTLY on_unreachable.say_exactly — nothing else",
+                "NEVER run guru weekend / best / spots / near while network.reachable is false",
             ],
             "say_exactly": (
                 "Live Windguru is blocked in this chat — open the same ask in "
@@ -133,6 +134,7 @@ def instruct_payload() -> dict[str, Any]:
             ),
             "do_not": [
                 "Ask the human to install or run guru/pipx",
+                "Run guru weekend/best/spots while unreachable (causes allowlist noise)",
                 "Say 'you'll need to run', 'run guru weekend locally', or 'I can teach you how'",
                 "Paste bash install/setup/weekend blocks for the human",
                 "Add a second paragraph explaining the sandbox after say_exactly",

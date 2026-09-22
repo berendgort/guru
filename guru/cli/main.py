@@ -39,7 +39,12 @@ from guru.search.forecast import get_forecast
 from guru.search.near import spots_near
 from guru.search.spots import resolve_spot, search_spots
 
-_CATCH = (GuruError, ValueError, OSError)
+try:
+    from tenacity import RetryError as _RetryError
+except ImportError:  # pragma: no cover
+    _RetryError = ()  # type: ignore[misc, assignment]
+
+_CATCH = (GuruError, ValueError, OSError, _RetryError)
 
 
 class _GuruGroup(TyperGroup):
@@ -223,7 +228,15 @@ def weekend_cmd(
     as_json: bool = typer.Option(False, "--json"),
 ) -> None:
     """Where can I kite? Rank spots + day schedule (top models, ~4-day horizon)."""
+    from guru.core.path import probe_windguru
+
     try:
+        net = probe_windguru()
+        if net.get("reachable") is False:
+            raise GuruError(
+                net.get("fix")
+                or "Windguru unreachable in this runtime — use a local agent host."
+            )
         profile = load_profile()
         report = scan_weekend(
             profile, hours=hours, limit_spots=limit, top_models=top

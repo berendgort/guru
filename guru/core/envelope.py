@@ -28,6 +28,15 @@ def success_payload(data: Any) -> dict[str, Any]:
 
 
 def error_payload(exc: BaseException) -> dict[str, Any]:
+    # Prefer the underlying HTTP/allowlist error over tenacity RetryError text.
+    attempt = getattr(exc, "last_attempt", None)
+    if attempt is not None:
+        try:
+            nested = attempt.exception()
+            if nested is not None:
+                exc = nested
+        except Exception:  # noqa: BLE001
+            pass
     classified = classify_error(exc)
     payload: dict[str, Any] = {
         "ok": False,

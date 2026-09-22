@@ -34,6 +34,15 @@ class ErrorClassification:
 
 def classify_error(exc: BaseException) -> ErrorClassification:
     """Map an exception to a stable ``error_type`` + ``retryable`` pair."""
+    # tenacity wraps the real cause after retries
+    cause = getattr(exc, "last_attempt", None)
+    if cause is not None:
+        try:
+            inner = cause.exception()
+            if inner is not None:
+                return classify_error(inner)
+        except Exception:  # noqa: BLE001
+            pass
     if isinstance(exc, GuruAmbiguousError):
         return ErrorClassification("ambiguous", retryable=False)
     if isinstance(exc, GuruNotFoundError):
@@ -42,6 +51,11 @@ def classify_error(exc: BaseException) -> ErrorClassification:
         return ErrorClassification("parse_error", retryable=False)
     if isinstance(exc, GuruHTTPError):
         status = getattr(exc, "status_code", None)
+        msg = str(exc).lower()
+        if status == 403 or "allowlist" in msg or "blocked in this runtime" in msg:
+            return ErrorClassification(
+                "connection_error", retryable=False, http_status=status
+            )
         retryable = status is not None and (status in _RETRYABLE_HTTP or status >= 500)
         return ErrorClassification("http_error", retryable=retryable, http_status=status)
     if isinstance(exc, TimeoutError):
@@ -57,4 +71,6 @@ def classify_error(exc: BaseException) -> ErrorClassification:
         return ErrorClassification("timeout", retryable=True)
     if "429" in msg or "rate" in msg:
         return ErrorClassification("rate_limited", retryable=True, http_status=429)
+    if "allowlist" in msg or "retryerror" in type(exc).__name__.lower():
+        return ErrorClassification("connection_error", retryable=False)
     return ErrorClassification("unexpected_error", retryable=False)
