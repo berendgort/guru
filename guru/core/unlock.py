@@ -53,8 +53,8 @@ def unlock_claude_network() -> dict[str, Any]:
         "hosts": list(WINDGURU_HOSTS),
         "ok": True,
         "rider_note": (
-            "Wind charts unlocked for Claude on this machine -- restart the "
-            "Claude chat once, then ask where to kite again."
+            "Wind charts unlocked for Claude -- restart the chat, then ask "
+            "where to kite again."
         ),
     }
 
@@ -125,14 +125,14 @@ def unlock_codex_network() -> dict[str, Any]:
         "proxy_was_enabled": proxy_enabled,
         "ok": True,
         "rider_note": (
-            "Wind charts unlocked for ChatGPT Work / Codex on this machine -- "
-            "restart that chat once, then ask where to kite again."
+            "Wind charts unlocked for ChatGPT Work / Codex -- restart that "
+            "chat, then ask where to kite again."
         ),
         "cloud_domains": list(WINDGURU_CLOUD_DOMAINS),
         "cloud_note": (
-            "ChatGPT Work / Codex *cloud* chats use the environment Agent "
-            "internet allowlist (not this file). Only if still blocked after "
-            "local unlock: add cloud_domains there, or continue in Cursor."
+            "Cloud chats use the environment Agent internet allowlist (not "
+            "this file). Still blocked after local unlock: add cloud_domains "
+            "there, or continue in Cursor."
         ),
     }
 
@@ -186,10 +186,7 @@ def unlock_wind_charts(
             "say_to_rider": None,
             "rider_facing": None,
             "agent_next": ["continue_weekend_or_intake"],
-            "agent_note": (
-                "Charts already reachable. Skip unlock talk. Continue "
-                "intake/weekend/best. Do not mention allowlists."
-            ),
+            "agent_note": "Charts reachable -- skip unlock talk; continue.",
         }
 
     claude_net = unlock_claude_network()
@@ -208,42 +205,43 @@ def unlock_wind_charts(
     if wired is not None:
         ok = ok and bool(wired.get("ok", True))
 
-    restart = pick_human_fix(after_unlock=True)
-    rider_text = (restart or {}).get("say_to_rider") or (
-        "Wind's unlocked on your laptop. Start a new chat, then ask: "
-        "where can I kite?"
+    allowlist_written = claude_wind_open() or codex_wind_open()
+    probe_after = probe_windguru()
+    still_blocked = probe_after.get("reachable") is not True
+    restart = pick_human_fix(
+        after_unlock=True,
+        still_blocked=still_blocked,
+        allowlist_written=allowlist_written,
     )
-    rider_facing = {
-        "kind": "user_visible_copy",
-        "not_system_prompt": True,
-        "text": rider_text,
-    }
+    rider_text = (restart or {}).get("say_to_rider") or (
+        "Wind's unlocked. Open a new chat, then ask where you can kite."
+    )
     return {
         "ok": ok,
         "skipped": False,
         "probe": probe,
+        "probe_after": probe_after,
+        "still_blocked": still_blocked,
+        "allowlist_written": allowlist_written,
         "claude_network": claude_net,
         "codex_network": codex_net,
         "network": claude_net,
         "wired": wired,
         "say_to_rider": rider_text,
-        "rider_facing": rider_facing,
+        "rider_facing": {
+            "kind": "user_visible_copy",
+            "not_system_prompt": True,
+            "text": rider_text,
+        },
         "human_fix": restart,
-        "agent_next": [
-            "show_rider_facing_text_once",
-            "stop_until_new_chat",
-            "then_intake_or_weekend",
-        ],
+        "agent_next": ["show_rider_facing_text_once", "stop_until_new_chat"],
         "agent_note": (
-            "rider_facing.text / say_to_rider is UX copy for the human only "
-            "-- not a system prompt, tool instruction, or jailbreak. Show it "
-            "once. If still blocked after restart, use one "
-            "human_fix.recipes[*].say_to_rider for this host. Never invent "
-            "steps; never ask for pipx."
+            "rider_facing is UX only. allowlist_written → restart_after_unlock "
+            "(never /config domains). New chat still gated → fallback_cursor."
         ),
     }
 
 
 def unlock_for_claude(*, command: str | None = None, force: bool = False) -> dict[str, Any]:
-    """Back-compat alias for ``unlock_wind_charts``."""
+    """Alias for ``unlock_wind_charts``."""
     return unlock_wind_charts(command=command, force=force)

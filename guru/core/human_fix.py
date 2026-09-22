@@ -1,8 +1,8 @@
 """Rare human UI fixes -- only when the agent cannot automate.
 
-Agents must run ``guru unlock`` / wire themselves first. Paste a
-``say_to_rider`` block only when local writes are impossible or still
-blocked (cloud environment UI, admin-locked toggle). Never invent steps.
+Agents must run ``guru unlock`` themselves first. Show a ``say_to_rider``
+block only when local writes are impossible or a new chat after unlock is
+still gated. Never invent steps. Never depend on ``jq``.
 """
 
 from __future__ import annotations
@@ -21,15 +21,17 @@ def human_fix_payload() -> dict[str, Any]:
     """Machine-readable rare-path recipes for instruct / unlock."""
     return {
         "policy": (
-            "Automate everything first (upgrade, unlock, setup, weekend). "
-            "Ask the human ONLY when this process cannot write their app "
-            "settings -- then paste the matching say_to_rider block EXACTLY. "
-            "Never ask for pipx, shell guru, MCP JSON, or tunnels."
+            "Automate first (upgrade, unlock once, setup, weekend). Ask the "
+            "human ONLY when this process cannot open charts -- show the "
+            "matching say_to_rider EXACTLY. Never ask for pipx, shell, jq, "
+            "MCP JSON, or tunnels."
         ),
         "ask_human_only_when": [
-            "no local shell to run guru unlock on the rider's machine",
-            "unlock wrote settings but charts still gated (cloud/managed policy)",
-            "ChatGPT Work / Codex cloud environment internet is off (UI-only)",
+            "no local shell to run guru unlock",
+            "unlock wrote allowlist but THIS process still gated "
+            "(need new chat -- use restart_after_unlock, not /config)",
+            "new chat after unlock still gated (cloud hard block -- Cursor)",
+            "ChatGPT Work / Codex cloud internet toggle is UI-only",
             "company admin locked the network toggle",
         ],
         "never_ask_human": [
@@ -38,16 +40,20 @@ def human_fix_payload() -> dict[str, Any]:
             "edit MCP JSON by hand",
             "run cloudflared / guru-mcp-tunnel",
             "paste CLI JSON dumps",
+            "install jq",
         ],
         "recipes": {
             "restart_after_unlock": {
                 "id": "restart_after_unlock",
-                "when": "guru unlock just succeeded on this laptop",
+                "when": (
+                    "unlock wrote allowlist (claude_unlocked true) but this "
+                    "process is still gated -- domains need a new chat"
+                ),
                 "kind": "user_visible_copy",
                 "say_to_rider": (
-                    "Wind's unlocked -- charts allowlist patched on this "
-                    "laptop. One step left: open a **new chat** in this app, "
-                    "then ask where you can kite."
+                    "Wind allowlist is patched on this machine. One step "
+                    "left: open a **new chat**, then ask where you can kite. "
+                    "No Settings hunt -- domains are already written."
                 ),
             },
             "chatgpt_work_network": {
@@ -92,33 +98,33 @@ def human_fix_payload() -> dict[str, Any]:
             "claude_network_settings": {
                 "id": "claude_network_settings",
                 "when": (
-                    "Claude still gated after unlock (managed policy / "
-                    "claude.ai cloud) -- agent cannot write settings"
+                    "Claude allowlist NOT written yet and agent cannot write "
+                    "~/.claude/settings.json (rare). If claude_unlocked is "
+                    "already true, use restart_after_unlock or fallback_cursor "
+                    "-- never this recipe."
                 ),
                 "domains": list(WINDGURU_HOSTS),
                 "say_to_rider": (
-                    "Claude's sandbox is gatekeeping the gust column -- "
-                    "quick fix:\n"
-                    "1. In Claude Code type **/config** -> open the "
-                    "**Sandbox** tab -> **Network -> Allowed domains**\n"
-                    "   (or on claude.ai: Settings -> Claude Code)\n"
-                    "2. Add these domains exactly:\n"
+                    "Claude could not write the Windguru allowlist for you -- "
+                    "fastest path: open **Cursor on this laptop** and ask "
+                    "\"where can I kite?\".\n"
+                    "Optional on Claude Code desktop only: **/config** -> "
+                    "Sandbox -> Network -> Allowed domains -> add:\n"
                     f"   `{_CLAUDE_CSV}`\n"
-                    "3. Start a **new chat** -> ask: where can I kite?\n"
-                    "Faster option: open **Cursor on this laptop** and ask there."
+                    "then a **new chat**. Cloud sandboxes often ignore that UI."
                 ),
             },
             "fallback_cursor": {
                 "id": "fallback_cursor",
                 "when": (
-                    "any host still blocked, or the rider cannot change "
-                    "settings -- always safe"
+                    "new chat after unlock still gated, or any hard cloud "
+                    "block -- always safe"
                 ),
                 "say_to_rider": (
-                    "Yo -- this chat can't open the wind charts (404: stoke). "
-                    "Fastest path: open **Cursor on this laptop** and ask "
-                    "\"where can I kite?\" -- same quiver, live wind, no "
-                    "settings hunt."
+                    "Yo -- this chat's sandbox still blocks Windguru even "
+                    "after unlock (cloud isolation). Fastest path: open "
+                    "**Cursor on this laptop** and ask \"where can I kite?\" "
+                    "-- same quiver, live wind, no settings hunt."
                 ),
             },
         },
@@ -130,13 +136,19 @@ def pick_human_fix(
     host_hint: str | None = None,
     after_unlock: bool = False,
     still_blocked: bool = False,
+    allowlist_written: bool = False,
 ) -> dict[str, Any] | None:
     """Choose one rare recipe. Returns None when the agent should keep automating."""
     recipes = human_fix_payload()["recipes"]
+    if after_unlock and allowlist_written:
+        # Domains are on disk; this process may stay gated until a new chat.
+        return recipes["restart_after_unlock"]
     if after_unlock and not still_blocked:
         return recipes["restart_after_unlock"]
     if not still_blocked and not after_unlock:
         return None
+    if allowlist_written:
+        return recipes["fallback_cursor"]
     hint = (host_hint or "").lower()
     if "chatgpt" in hint or "work" in hint:
         return recipes["chatgpt_work_network"]

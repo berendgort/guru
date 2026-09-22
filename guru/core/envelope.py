@@ -54,6 +54,16 @@ def error_payload(exc: BaseException) -> dict[str, Any]:
     }
     if isinstance(exc, GuruAmbiguousError):
         payload["candidates"] = [c.model_dump(mode="json") for c in exc.candidates]
+    from guru.core.gated import gated_fields, is_gated
+
+    if is_gated(exc):
+        msg = str(exc).lower()
+        done = (
+            "do not run unlock again" in msg
+            or "unlock again" in msg
+            or "allowlist already written" in msg
+        )
+        payload.update(gated_fields(unlock_already_done=True if done else None))
     return payload
 
 

@@ -1,0 +1,26 @@
+{
+  "sandbox": {
+    "network": {
+      "allowedDomains": [
+        "www.windguru.cz",
+        "windguru.cz",
+        "*.windguru.cz",
+        "www.windguru.net",
+        "windguru.net",
+        "*.windguru.net",
+        "marine-api.open-meteo.com",
+        "api.open-meteo.com"
+      ]
+    }
+  },
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:windguru.cz)",
+      "WebFetch(domain:www.windguru.cz)",
+      "WebFetch(domain:windguru.net)",
+      "WebFetch(domain:www.windguru.net)",
+      "WebFetch(domain:marine-api.open-meteo.com)",
+      "WebFetch(domain:api.open-meteo.com)"
+    ]
+  }
+}

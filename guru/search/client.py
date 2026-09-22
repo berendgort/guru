@@ -81,10 +81,10 @@ class Client:
                 or "blocked" in body.lower()
             ):
                 raise GuruHTTPError(
-                    "Windguru gated in this runtime (allowlist). Agent must "
-                    "run `guru unlock --json` now -- do not ask the rider to "
-                    "run shell, and do not claim the sandbox is dead before "
-                    "unlock. (Sandbox ate the packets -- not the quiver.)",
+                    "Windguru gated in this runtime (allowlist). Agent: check "
+                    "doctor.network.unlock_already_done -- unlock once if "
+                    "false; if true show restart_after_unlock or "
+                    "fallback_cursor (never /config domains again).",
                     status_code=resp.status_code,
                 )
             raise GuruHTTPError(
