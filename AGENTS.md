@@ -62,6 +62,13 @@ guru-mcp
 - **Don’t** ship a worldwide spot dump in the wheel (live `near` / `spots` only).
 - **Don’t** depend on `life-research` — this repo is public and clean-slate.
 
+## Engineering standards
+
+Keep and follow (do not delete):
+
+- [`docs/code_quality.md`](docs/code_quality.md) — Korotkevich / Tourist bar
+- [`docs/data_engineering_standards.md`](docs/data_engineering_standards.md) — Gray / Stonebraker bar
+
 ## Dev commands
 
 ```bash

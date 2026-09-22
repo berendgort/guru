@@ -124,6 +124,11 @@ print(best.forecasts[0].hours[0].wind_kn)
 
 Read [`AGENTS.md`](AGENTS.md) before extending. Capture Network → fixtures → tests.
 
+Engineering standards (kept in-repo):
+
+- [`docs/code_quality.md`](docs/code_quality.md) — Korotkevich / Tourist bar (layers, size caps, pure core)
+- [`docs/data_engineering_standards.md`](docs/data_engineering_standards.md) — Gray / Stonebraker bar (one writer, clocks, contracts)
+
 ## Disclaimer
 
 Unofficial. Not affiliated with Windguru. Personal / research use; respect ToS and rate limits.
