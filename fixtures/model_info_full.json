@@ -1,0 +1,2656 @@
+{
+  "3": {
+    "id_model": 3,
+    "model_name": "GFS 13 km",
+    "model": "gfs",
+    "hr_start": 0,
+    "hr_end": 378,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x240x0x240-2026092200x243x384x249x384",
+    "lat": [
+      -90,
+      90
+    ],
+    "lon": [
+      -180,
+      179.75
+    ],
+    "longname": "GFS 13 km (World)",
+    "pro": false,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 13,
+    "priority": 1000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "84": {
+    "id_model": 84,
+    "model_name": "GFS-Wave 16 km",
+    "model": "gfswh",
+    "hr_start": 0,
+    "hr_end": 378,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x240x0x240-2026092200x243x384x249x384",
+    "lat": [
+      -15,
+      52.17
+    ],
+    "lon": [
+      -180,
+      180
+    ],
+    "longname": "GFS-Wave 16 km (waves)",
+    "pro": false,
+    "wave": true,
+    "sst": false,
+    "maps": true,
+    "id_model_maps": 83,
+    "resolution": 16,
+    "priority": 1450000,
+    "virtual": false,
+    "var_map": {
+      "HTSGW": "m_wave,particles",
+      "PERPW": "m_waveen,particles",
+      "DIRPW": "m_wave,particles",
+      "SWELL1": "m_swell1,particles",
+      "SWPER1": "m_swell1en,particles",
+      "SWEN1": "m_swell1en,particles",
+      "SWELL2": "m_swell2,particles",
+      "SWPER2": "m_swell2en,particles",
+      "WVHGT": "m_wvhgt,particles",
+      "WVPER": "m_wven,particles"
+    }
+  },
+  "83": {
+    "id_model": 83,
+    "model_name": "GFS-Wave 25 km",
+    "model": "gfsw",
+    "hr_start": 0,
+    "hr_end": 378,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x240x0x240-2026092200x243x384x249x384",
+    "lat": [
+      -90,
+      90
+    ],
+    "lon": [
+      -180,
+      180
+    ],
+    "longname": "GFS-Wave 25 km (waves)",
+    "pro": false,
+    "wave": true,
+    "sst": false,
+    "maps": true,
+    "resolution": 25,
+    "priority": 1500000,
+    "virtual": false,
+    "var_map": {
+      "HTSGW": "m_wave,particles",
+      "PERPW": "m_waveen,particles",
+      "DIRPW": "m_wave,particles",
+      "SWELL1": "m_swell1,particles",
+      "SWPER1": "m_swell1en,particles",
+      "SWEN1": "m_swell1en,particles",
+      "SWELL2": "m_swell2,particles",
+      "SWPER2": "m_swell2en,particles",
+      "WVHGT": "m_wvhgt,particles",
+      "WVPER": "m_wven,particles"
+    }
+  },
+  "85": {
+    "id_model": 85,
+    "model_name": "GFS-Wave 9 km",
+    "model": "gfswa",
+    "hr_start": 0,
+    "hr_end": 378,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x240x0x240-2026092200x243x384x249x384",
+    "lat": [
+      50,
+      90
+    ],
+    "lon": [
+      -180,
+      180
+    ],
+    "longname": "GFS-Wave 9 km (waves)",
+    "pro": false,
+    "wave": true,
+    "sst": false,
+    "maps": true,
+    "id_model_maps": 83,
+    "resolution": 9,
+    "priority": 1550000,
+    "virtual": false,
+    "var_map": {
+      "HTSGW": "m_wave,particles",
+      "PERPW": "m_waveen,particles",
+      "DIRPW": "m_wave,particles",
+      "SWELL1": "m_swell1,particles",
+      "SWPER1": "m_swell1en,particles",
+      "SWEN1": "m_swell1en,particles",
+      "SWELL2": "m_swell2,particles",
+      "SWPER2": "m_swell2en,particles",
+      "WVHGT": "m_wvhgt,particles",
+      "WVPER": "m_wven,particles"
+    }
+  },
+  "117": {
+    "id_model": 117,
+    "model_name": "IFS-HRES 9 km",
+    "model": "ifs",
+    "hr_start": 0,
+    "hr_end": 360,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x360x0x360",
+    "lat": [
+      -90,
+      90
+    ],
+    "lon": [
+      -180,
+      179.95
+    ],
+    "longname": "IFS-HRES 9 km (World)",
+    "pro": false,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 9,
+    "priority": 1700000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "118": {
+    "id_model": 118,
+    "model_name": "IFS-WAM 9 km",
+    "model": "ifsw",
+    "hr_start": 0,
+    "hr_end": 360,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x360x0x360",
+    "lat": [
+      -78.05,
+      84.45
+    ],
+    "lon": [
+      -180,
+      179.95
+    ],
+    "longname": "IFS-WAM 9 km (waves)",
+    "pro": false,
+    "wave": true,
+    "sst": false,
+    "maps": true,
+    "resolution": 9,
+    "priority": 1800000,
+    "virtual": false,
+    "var_map": {
+      "HTSGW": "m_wave,particles",
+      "PERPW": "m_waveen,particles",
+      "DIRPW": "m_wave,particles",
+      "SWELL1": "m_swell1,particles",
+      "SWPER1": "m_swell1en,particles",
+      "SWEN1": "m_swell1en,particles",
+      "SWELL2": "m_swell2,particles",
+      "SWPER2": "m_swell2en,particles",
+      "WVHGT": "m_wvhgt,particles",
+      "WVPER": "m_wven,particles"
+    }
+  },
+  "102": {
+    "id_model": 102,
+    "model_name": "WRF 1.5 km",
+    "model": "huwrf",
+    "hr_start": 0,
+    "hr_end": 36,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x36x0x36",
+    "lat": [
+      44.321,
+      49.944
+    ],
+    "lon": [
+      13.928,
+      24.533
+    ],
+    "longname": "WRF 1.5 km (Hungary)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1.5,
+    "priority": 3700000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "32": {
+    "id_model": 32,
+    "model_name": "WRF 3 km",
+    "model": "wrfczs",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x48x0x48",
+    "lat": [
+      46.903,
+      52.42
+    ],
+    "lon": [
+      10.04,
+      21.392
+    ],
+    "longname": "WRF 3 km (CZ)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 4000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "108": {
+    "id_model": 108,
+    "model_name": "ALADIN 1 km",
+    "model": "alacz",
+    "hr_start": 0,
+    "hr_end": 72,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x72x0x72",
+    "lat": [
+      48.494,
+      51.106
+    ],
+    "lon": [
+      11.993,
+      19.013
+    ],
+    "longname": "ALADIN 1 km (CZ)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 4500000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "37": {
+    "id_model": 37,
+    "model_name": "WRF 3 km",
+    "model": "wrfgis",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x48x0x48",
+    "lat": [
+      33.666,
+      40.122
+    ],
+    "lon": [
+      -10.871,
+      0.287
+    ],
+    "longname": "WRF 3 km (Gibraltar)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 5000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "90": {
+    "id_model": 90,
+    "model_name": "WRF 3 km",
+    "model": "wrfil",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x24x0x24-2026092200x25x48x25x48",
+    "lat": [
+      25.983,
+      35.97
+    ],
+    "lon": [
+      30.433,
+      38.377
+    ],
+    "longname": "WRF 3 km (Israel+)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 5500000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "98": {
+    "id_model": 98,
+    "model_name": "WRF 3 km",
+    "model": "wrfgri",
+    "hr_start": 0,
+    "hr_end": 42,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x24x0x24-2026092200x25x48x31x48",
+    "lat": [
+      33.912,
+      40.756
+    ],
+    "lon": [
+      18.581,
+      30.622
+    ],
+    "longname": "WRF 3 km (Aegean Sea)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 5600000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "42": {
+    "id_model": 42,
+    "model_name": "WRF 3 km",
+    "model": "wrfcas",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x48x0x48",
+    "lat": [
+      26.008,
+      30.993
+    ],
+    "lon": [
+      -19.038,
+      -11.485
+    ],
+    "longname": "WRF 3 km (Canary)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 7000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "52": {
+    "id_model": 52,
+    "model_name": "AROME-FR 1.3 km",
+    "model": "aromehd",
+    "hr_start": 1,
+    "hr_end": 51,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x1x51x1x51",
+    "lat": [
+      37.5,
+      55.4
+    ],
+    "lon": [
+      -12,
+      16
+    ],
+    "longname": "AROME-FR 1.3 km (France+)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1.3,
+    "priority": 7700000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "114": {
+    "id_model": 114,
+    "model_name": "ICON-CH 1 km",
+    "model": "iconch1",
+    "hr_start": 0,
+    "hr_end": 33,
+    "hr_step": 1,
+    "initdate": "2026-09-22 09:00:00",
+    "initstamp": 1790067600,
+    "rundef": "2026092209x0x33x0x33",
+    "lat": [
+      42.101,
+      50.43
+    ],
+    "lon": [
+      -0.716,
+      17.597
+    ],
+    "longname": "ICON-CH 1 km (Switzerland+)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 7720000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "103": {
+    "id_model": 103,
+    "model_name": "MET Nordic 1 km",
+    "model": "metno",
+    "hr_start": 0,
+    "hr_end": 58,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x58x0x58",
+    "lat": [
+      52.29,
+      73.863
+    ],
+    "lon": [
+      -11.78,
+      41.78
+    ],
+    "longname": "MET Nordic 1 km (Scandinavia)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 7730000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "SMER": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "TCDC": "m_tcdca1,isobars",
+      "APCP1": "m_tcdca1,isobars"
+    }
+  },
+  "48": {
+    "id_model": 48,
+    "model_name": "HARM-NL 2 km",
+    "model": "harmnl",
+    "hr_start": 0,
+    "hr_end": 60,
+    "hr_step": 1,
+    "initdate": "2026-09-22 09:00:00",
+    "initstamp": 1790067600,
+    "rundef": "2026092209x0x60x0x60",
+    "lat": [
+      48.988,
+      56.011
+    ],
+    "lon": [
+      -0.015,
+      11.305
+    ],
+    "longname": "HARM-NL 2 km (Netherlands)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2,
+    "priority": 7735000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "109": {
+    "id_model": 109,
+    "model_name": "HARM-DK 2 km",
+    "model": "harmdk",
+    "hr_start": 0,
+    "hr_end": 60,
+    "hr_step": 1,
+    "initdate": "2026-09-22 09:00:00",
+    "initstamp": 1790067600,
+    "rundef": "2026092209x0x60x0x60",
+    "lat": [
+      37.694,
+      69.915
+    ],
+    "lon": [
+      -43.2,
+      40.086
+    ],
+    "longname": "HARM-DK 2 km (NW Europe)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2,
+    "priority": 7740000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "101": {
+    "id_model": 101,
+    "model_name": "UKV 2 km",
+    "model": "ukv",
+    "hr_start": 0,
+    "hr_end": 114,
+    "hr_step": 1,
+    "initdate": "2026-09-22 09:00:00",
+    "initstamp": 1790067600,
+    "rundef": "2026092209x0x54x0x54-2026092203x0x120x63x120",
+    "lat": [
+      44.5,
+      63.014
+    ],
+    "lon": [
+      -24.534,
+      15.29
+    ],
+    "longname": "UKV 2 km (UK)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2,
+    "priority": 7750000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "44": {
+    "id_model": 44,
+    "model_name": "ICON 2.2 km",
+    "model": "cosmode",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 09:00:00",
+    "initstamp": 1790067600,
+    "rundef": "2026092209x0x48x0x48",
+    "lat": [
+      43.17,
+      58.09
+    ],
+    "lon": [
+      -3.95,
+      20.35
+    ],
+    "longname": "ICON 2.2 (Germany+)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.2,
+    "priority": 8000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "107": {
+    "id_model": 107,
+    "model_name": "ALADIN 2.3 km",
+    "model": "alace",
+    "hr_start": 0,
+    "hr_end": 72,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x72x0x72",
+    "lat": [
+      38.589,
+      57.221
+    ],
+    "lon": [
+      -4.676,
+      34.365
+    ],
+    "longname": "ALADIN 2.3 km (Central Europe+)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.3,
+    "priority": 8100000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "104": {
+    "id_model": 104,
+    "model_name": "ICON-2I 2.2 km",
+    "model": "cosmo2i",
+    "hr_start": 0,
+    "hr_end": 72,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x72x0x72",
+    "lat": [
+      33.697,
+      48.91
+    ],
+    "lon": [
+      2.988,
+      22.004
+    ],
+    "longname": "ICON-2I 2.2 km (Italy)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.2,
+    "priority": 8200000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "907": {
+    "id_model": 907,
+    "model_name": "WRF* 1 km",
+    "model": "uwrfpt",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x30x1x30",
+    "lat": [
+      36.516,
+      40.039
+    ],
+    "lon": [
+      -10.098,
+      -7.53
+    ],
+    "longname": "WRF* 1 km (South Portugal)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8250000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "908": {
+    "id_model": 908,
+    "model_name": "WRF* 1 km",
+    "model": "uwrftar",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x30x1x30",
+    "lat": [
+      35.57,
+      36.996
+    ],
+    "lon": [
+      -6.771,
+      -4.006
+    ],
+    "longname": "WRF* 1 km (Tarifa)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8255000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "91": {
+    "id_model": 91,
+    "model_name": "AROME-HU 2.5 km",
+    "model": "aromehu",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x48x0x48",
+    "lat": [
+      44.888,
+      49.513
+    ],
+    "lon": [
+      14.288,
+      24.313
+    ],
+    "longname": "AROME-HU 2.5 km (Hungary)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8300000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "SMER": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "TCDC": "m_tcdca1,isobars",
+      "APCP1s": "m_tcdca1,isobars"
+    }
+  },
+  "92": {
+    "id_model": 92,
+    "model_name": "AROME-FR 2.5 km",
+    "model": "aromeio",
+    "hr_start": 1,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x48x1x48",
+    "lat": [
+      -25.913,
+      -3.438
+    ],
+    "lon": [
+      32.738,
+      67.613
+    ],
+    "longname": "AROME-FR 2.5 km (Indian Ocean)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8400000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "95": {
+    "id_model": 95,
+    "model_name": "AROME-FR 2.5 km",
+    "model": "aromepo",
+    "hr_start": 1,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x48x1x48",
+    "lat": [
+      -25.263,
+      -12.588
+    ],
+    "lon": [
+      -157.513,
+      -144.488
+    ],
+    "longname": "AROME-FR 2.5 km (French Polynesia)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8410000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "93": {
+    "id_model": 93,
+    "model_name": "AROME-FR 2.5 km",
+    "model": "aromean",
+    "hr_start": 1,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x48x1x48",
+    "lat": [
+      9.688,
+      22.913
+    ],
+    "lon": [
+      -75.313,
+      -51.688
+    ],
+    "longname": "AROME-FR 2.5 km (Caribbean)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8420000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "94": {
+    "id_model": 94,
+    "model_name": "AROME-FR 2.5 km",
+    "model": "aromenc",
+    "hr_start": 1,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x48x1x48",
+    "lat": [
+      -26.013,
+      -13.738
+    ],
+    "lon": [
+      158.488,
+      171.513
+    ],
+    "longname": "AROME-FR 2.5 km (New Caledonia)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8430000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "96": {
+    "id_model": 96,
+    "model_name": "AROME-FR 2.5 km",
+    "model": "aromegu",
+    "hr_start": 1,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x48x1x48",
+    "lat": [
+      1.038,
+      8.963
+    ],
+    "lon": [
+      -56.763,
+      -46.288
+    ],
+    "longname": "AROME-FR 2.5 km (French Guiana)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8440000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "99": {
+    "id_model": 99,
+    "model_name": "HARM-FI 2.5 km",
+    "model": "harmfi",
+    "hr_start": 0,
+    "hr_end": 66,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x66x0x66",
+    "lat": [
+      49.749,
+      75.238
+    ],
+    "lon": [
+      -18.13,
+      54.252
+    ],
+    "longname": "HARM-FI 2.5 km (Scandinavia)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8550000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "120": {
+    "id_model": 120,
+    "model_name": "AROME-AT 2.5 km",
+    "model": "aromeat",
+    "hr_start": 1,
+    "hr_end": 60,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x1x60x1x60",
+    "lat": [
+      42.96,
+      51.828
+    ],
+    "lon": [
+      5.484,
+      22.121
+    ],
+    "longname": "AROME-AT 2.5 km (Austria)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8580000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "SMER": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "TCDC": "m_tcdca1,isobars",
+      "APCP1s": "m_tcdca1,isobars"
+    }
+  },
+  "914": {
+    "id_model": 914,
+    "model_name": "WRF* 1 km",
+    "model": "uwrfct",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x1x30x1x30",
+    "lat": [
+      -34.968,
+      -32.454
+    ],
+    "lon": [
+      17.41,
+      19.634
+    ],
+    "longname": "WRF* 1 km (Cape Town)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8600000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "97": {
+    "id_model": 97,
+    "model_name": "Zephr-HD 1 km",
+    "model": "swrfalp",
+    "hr_start": 4,
+    "hr_end": 66,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x4x18x4x18x2026092205-2026092200x28x42x28x42-2026092112x64x78x64x78",
+    "lat": [
+      42.623,
+      49.377
+    ],
+    "lon": [
+      2.763,
+      17.638
+    ],
+    "longname": "Zephr-HD 1 km (Alps)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8700000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "63": {
+    "id_model": 63,
+    "model_name": "Zephr-HD 2 km",
+    "model": "swrfnz",
+    "hr_start": 18,
+    "hr_end": 127,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x18x32x18x32-2026092200x42x56x42x56-2026092200x66x80x66x80-2026092200x90x104x90x104-2026092200x113x127x113x127",
+    "lat": [
+      -49.471,
+      -33.559
+    ],
+    "lon": [
+      163.74,
+      179.947
+    ],
+    "longname": "Zephr-HD 2 km (New Zealand)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2,
+    "priority": 8710000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "70": {
+    "id_model": 70,
+    "model_name": "Zephr-HD 2.6 km",
+    "model": "swrfjp",
+    "hr_start": 3,
+    "hr_end": 137,
+    "hr_step": 1,
+    "initdate": "2026-09-21 18:00:00",
+    "initstamp": 1790013600,
+    "rundef": "2026092118x3x17x3x17x2026092123-2026092200x21x35x21x35-2026092118x51x65x51x65-2026092112x81x95x81x95-2026092112x105x119x105x119-2026092206x111x125x111x125",
+    "lat": [
+      26.294,
+      47.951
+    ],
+    "lon": [
+      126.366,
+      151.218
+    ],
+    "longname": "Zephr-HD 2.6 km (Japan)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.6,
+    "priority": 8715000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "64": {
+    "id_model": 64,
+    "model_name": "Zephr-HD 2.6 km",
+    "model": "swrfeu",
+    "hr_start": 4,
+    "hr_end": 138,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x4x18x4x18x2026092205-2026092118x34x48x34x48-2026092118x58x72x58x72-2026092206x70x84x70x84-2026092118x106x120x106x120-2026092118x130x144x130x144",
+    "lat": [
+      35.358,
+      65.561
+    ],
+    "lon": [
+      -23.173,
+      37.133
+    ],
+    "longname": "Zephr-HD 2.6 km (Europe)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.6,
+    "priority": 8720000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "74": {
+    "id_model": 74,
+    "model_name": "Zephr-HD 2.7 km",
+    "model": "swrfsa",
+    "hr_start": 4,
+    "hr_end": 138,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x4x18x4x18x2026092206-2026092200x28x42x28x42-2026092200x52x66x52x66-2026092118x82x96x82x96-2026092200x100x114x100x114-2026092118x130x144x130x144",
+    "lat": [
+      -35.85,
+      -16.999
+    ],
+    "lon": [
+      11.492,
+      34.475
+    ],
+    "longname": "Zephr-HD 2.7 km (South Africa)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.7,
+    "priority": 8721000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "75": {
+    "id_model": 75,
+    "model_name": "Zephr-HD 2.5 km",
+    "model": "swrfeau",
+    "hr_start": 8,
+    "hr_end": 142,
+    "hr_step": 1,
+    "initdate": "2026-09-21 12:00:00",
+    "initstamp": 1789992000,
+    "rundef": "2026092112x8x22x8x22x2026092118-2026092200x20x34x20x34-2026092118x50x64x50x64-2026092200x68x82x68x82-2026092112x104x118x104x118-2026092200x116x130x116x130",
+    "lat": [
+      -43.993,
+      -19.223
+    ],
+    "lon": [
+      131.074,
+      154.51
+    ],
+    "longname": "Zephr-HD 2.5 km (Eastern Australia)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 8721500,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "119": {
+    "id_model": 119,
+    "model_name": "Zephr-HD 2.6 km",
+    "model": "swrfme",
+    "hr_start": 3,
+    "hr_end": 137,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x3x17x3x17x2026092205-2026092200x27x41x27x41-2026092200x51x65x51x65-2026092200x75x89x75x89-2026092200x99x113x99x113-2026092118x129x143x129x143",
+    "lat": [
+      27.64,
+      35.82
+    ],
+    "lon": [
+      30.785,
+      39.952
+    ],
+    "longname": "Zephr-HD 2.6 km (Middle East)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.6,
+    "priority": 8724000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "71": {
+    "id_model": 71,
+    "model_name": "Zephr-HD 3 km",
+    "model": "swrfuse",
+    "hr_start": 10,
+    "hr_end": 144,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x10x24x10x24-2026092118x40x54x40x54-2026092112x70x84x70x84-2026092118x88x102x88x102-2026092206x100x114x100x114-2026092200x130x144x130x144",
+    "lat": [
+      22.738,
+      53.043
+    ],
+    "lon": [
+      -100.241,
+      -66.717
+    ],
+    "longname": "Zephr-HD 3 km (East US)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 8725000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "69": {
+    "id_model": 69,
+    "model_name": "Zephr-HD 3.3 km",
+    "model": "swrfar",
+    "hr_start": 3,
+    "hr_end": 137,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x3x17x3x17x2026092211-2026092112x45x59x45x59-2026092118x63x77x63x77-2026092200x81x95x81x95-2026092118x111x125x111x125-2026092200x129x143x129x143",
+    "lat": [
+      -44.745,
+      -23.691
+    ],
+    "lon": [
+      -75.55,
+      -53.743
+    ],
+    "longname": "Zephr-HD 3.3 km (Argentina)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3.3,
+    "priority": 8727000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "62": {
+    "id_model": 62,
+    "model_name": "Zephr-HD 3.3 km",
+    "model": "swrfwa",
+    "hr_start": 4,
+    "hr_end": 138,
+    "hr_step": 1,
+    "initdate": "2026-09-21 18:00:00",
+    "initstamp": 1790013600,
+    "rundef": "2026092118x4x18x4x18x2026092202-2026092118x28x42x28x42-2026092118x52x66x52x66-2026092118x76x90x76x90-2026092112x106x120x106x120-2026092206x112x126x112x126",
+    "lat": [
+      -36.267,
+      -23.23
+    ],
+    "lon": [
+      112.073,
+      123.983
+    ],
+    "longname": "Zephr-HD 3.3 km (Western Australia)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3.3,
+    "priority": 8730000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "72": {
+    "id_model": 72,
+    "model_name": "Zephr-HD 3 km",
+    "model": "swrfusw",
+    "hr_start": 19,
+    "hr_end": 153,
+    "hr_step": 1,
+    "initdate": "2026-09-21 18:00:00",
+    "initstamp": 1790013600,
+    "rundef": "2026092118x19x33x19x33-2026092200x37x51x37x51-2026092200x61x75x61x75-2026092200x85x99x85x99-2026092112x121x135x121x135-2026092200x133x147x133x147",
+    "lat": [
+      24.99,
+      55.402
+    ],
+    "lon": [
+      -128.751,
+      -82.78
+    ],
+    "longname": "Zephr-HD 3 km (West US)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 8733000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "68": {
+    "id_model": 68,
+    "model_name": "Zephr-HD 5 km",
+    "model": "swrfbr",
+    "hr_start": 3,
+    "hr_end": 138,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x3x18x3x18x2026092211-2026092118x39x54x39x54-2026092118x63x78x63x78-2026092118x87x102x87x102-2026092112x117x132x117x132-2026092200x129x144x129x144",
+    "lat": [
+      -34.702,
+      2.362
+    ],
+    "lon": [
+      -64.324,
+      -31.854
+    ],
+    "longname": "Zephr-HD 5 km (Brazil)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 5,
+    "priority": 8800000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "80": {
+    "id_model": 80,
+    "model_name": "Zephr-HD 3.3 km",
+    "model": "swrfind",
+    "hr_start": 17,
+    "hr_end": 151,
+    "hr_step": 1,
+    "initdate": "2026-09-21 06:00:00",
+    "initstamp": 1789970400,
+    "rundef": "2026092106x17x31x17x31-2026092200x23x37x23x37-2026092118x53x67x53x67-2026092118x77x91x77x91-2026092112x107x121x107x121-2026092112x131x145x131x145",
+    "lat": [
+      4.646,
+      25.598
+    ],
+    "lon": [
+      96.096,
+      115.005
+    ],
+    "longname": "Zephr-HD 3.3 km (Indochina)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3.3,
+    "priority": 8820000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "902": {
+    "id_model": 902,
+    "model_name": "WRF* 1 km",
+    "model": "uwrfhru",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x1x30x1x30",
+    "lat": [
+      41.899,
+      45.768
+    ],
+    "lon": [
+      13.009,
+      18.37
+    ],
+    "longname": "WRF* 1 km (Croatia)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8850000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "903": {
+    "id_model": 903,
+    "model_name": "WRF* 1 km",
+    "model": "uwrffue",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x30x1x30",
+    "lat": [
+      27.783,
+      29.503
+    ],
+    "lon": [
+      -14.625,
+      -13.248
+    ],
+    "longname": "WRF* 1 km (Fue/Lan)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8851000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "904": {
+    "id_model": 904,
+    "model_name": "WRF* 1 km",
+    "model": "uwrfgc",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x1x30x1x30",
+    "lat": [
+      27.498,
+      28.856
+    ],
+    "lon": [
+      -17.148,
+      -15.092
+    ],
+    "longname": "WRF* 1 km (GC/Ten)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8852000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "905": {
+    "id_model": 905,
+    "model_name": "WRF* 1 km",
+    "model": "uwrfgrrk",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x1x30x1x30",
+    "lat": [
+      35.747,
+      37.403
+    ],
+    "lon": [
+      26.658,
+      28.598
+    ],
+    "longname": "WRF* 1 km (Rho/Kos)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8853000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "906": {
+    "id_model": 906,
+    "model_name": "WRF* 1 km",
+    "model": "uwrfgrpn",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x1x30x1x30",
+    "lat": [
+      36.39,
+      37.638
+    ],
+    "lon": [
+      24.667,
+      26.171
+    ],
+    "longname": "WRF* 1 km (Par/Nax)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8854000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "123": {
+    "id_model": 123,
+    "model_name": "WRF 1 km",
+    "model": "wrfcau",
+    "hr_start": 0,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x30x0x30",
+    "lat": [
+      27.294,
+      29.619
+    ],
+    "lon": [
+      -17.225,
+      -12.971
+    ],
+    "longname": "WRF 1 km (Canary)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 8860000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "21": {
+    "id_model": 21,
+    "model_name": "WRF 9 km",
+    "model": "wrfeuh",
+    "hr_start": 0,
+    "hr_end": 78,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x78x0x78",
+    "lat": [
+      33.251,
+      59.677
+    ],
+    "lon": [
+      -21.119,
+      41.107
+    ],
+    "longname": "WRF 9 km (Europe)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 9,
+    "priority": 9000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "23": {
+    "id_model": 23,
+    "model_name": "WRF 9 km",
+    "model": "wrfegh",
+    "hr_start": 0,
+    "hr_end": 78,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x78x0x78",
+    "lat": [
+      24.596,
+      35.333
+    ],
+    "lon": [
+      29.359,
+      38.639
+    ],
+    "longname": "WRF 9 km (Egypt)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 9,
+    "priority": 10000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "22": {
+    "id_model": 22,
+    "model_name": "WRF 9 km",
+    "model": "wrfcah",
+    "hr_start": 0,
+    "hr_end": 78,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x78x0x78",
+    "lat": [
+      22.421,
+      35.638
+    ],
+    "lon": [
+      -22.666,
+      -5.673
+    ],
+    "longname": "WRF 9 km (Canary)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 9,
+    "priority": 11000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "57": {
+    "id_model": 57,
+    "model_name": "HARMONIE 5 km",
+    "model": "harmeu",
+    "hr_start": 0,
+    "hr_end": 60,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x60x0x60",
+    "lat": [
+      37.713,
+      69.575
+    ],
+    "lon": [
+      -42.083,
+      38.77
+    ],
+    "longname": "HARMONIE 5 km (EU)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 5,
+    "priority": 11500000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "43": {
+    "id_model": 43,
+    "model_name": "ICON 7 km",
+    "model": "iconeu",
+    "hr_start": 0,
+    "hr_end": 78,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x78x0x78",
+    "lat": [
+      29.469,
+      70.531
+    ],
+    "lon": [
+      -23.531,
+      62.531
+    ],
+    "longname": "ICON 7 km (Europe)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 7,
+    "priority": 12000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "46": {
+    "id_model": 46,
+    "model_name": "EWAM 5 km",
+    "model": "ewam",
+    "hr_start": 0,
+    "hr_end": 78,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x78x0x78",
+    "lat": [
+      30,
+      66
+    ],
+    "lon": [
+      -10.5,
+      42
+    ],
+    "longname": "EWAM 5 km (waves Europe) ",
+    "pro": true,
+    "wave": true,
+    "sst": false,
+    "maps": true,
+    "resolution": 5,
+    "priority": 13000000,
+    "virtual": false,
+    "var_map": {
+      "HTSGW": "m_wave,particles",
+      "PERPW": "m_waveen,particles",
+      "DIRPW": "m_wave,particles",
+      "SWELL1": "m_swell1,particles",
+      "SWPER1": "m_swell1en,particles",
+      "SWEN1": "m_swell1en,particles",
+      "WVHGT": "m_wvhgt,particles",
+      "WVPER": "m_wven,particles"
+    }
+  },
+  "36": {
+    "id_model": 36,
+    "model_name": "WRF 9 km",
+    "model": "wrfsa",
+    "hr_start": 0,
+    "hr_end": 78,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x78x0x78",
+    "lat": [
+      -39.024,
+      -18.538
+    ],
+    "lon": [
+      10.282,
+      35.712
+    ],
+    "longname": "WRF 9 km (South Africa)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 9,
+    "priority": 14000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "39": {
+    "id_model": 39,
+    "model_name": "WRF 9 km",
+    "model": "wrfea",
+    "hr_start": 0,
+    "hr_end": 78,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x78x0x78",
+    "lat": [
+      17.146,
+      47.361
+    ],
+    "lon": [
+      104.108,
+      153.884
+    ],
+    "longname": "WRF 9 km (East Asia)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 9,
+    "priority": 15000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "29": {
+    "id_model": 29,
+    "model_name": "WRF 12 km",
+    "model": "wrfarg",
+    "hr_start": 0,
+    "hr_end": 78,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x78x0x78",
+    "lat": [
+      -49.779,
+      -18.835
+    ],
+    "lon": [
+      -83.43,
+      -34.578
+    ],
+    "longname": "WRF 12 km (Argentina)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 12,
+    "priority": 16000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "55": {
+    "id_model": 55,
+    "model_name": "HRRR 3 km",
+    "model": "hrrr",
+    "hr_start": 0,
+    "hr_end": 32,
+    "hr_step": 1,
+    "initdate": "2026-09-22 10:00:00",
+    "initstamp": 1790071200,
+    "rundef": "2026092210x0x18x0x18-2026092206x0x36x23x36",
+    "lat": [
+      21.138,
+      52.616
+    ],
+    "lon": [
+      -134.095,
+      -60.917
+    ],
+    "longname": "HRRR 3 km (US)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 17250000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "54": {
+    "id_model": 54,
+    "model_name": "HRDPS 2.5 km",
+    "model": "hrdps",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x48x0x48",
+    "lat": [
+      27.284,
+      70.616
+    ],
+    "lon": [
+      -152.735,
+      -40.694
+    ],
+    "longname": "HRDPS 2.5 km (Canada)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 2.5,
+    "priority": 17300000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "SMER": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "TCDC": "m_tcdca1,isobars",
+      "APCP1s": "m_tcdca1,isobars"
+    }
+  },
+  "56": {
+    "id_model": 56,
+    "model_name": "RAP 13 km",
+    "model": "rap",
+    "hr_start": 0,
+    "hr_end": 21,
+    "hr_step": 1,
+    "initdate": "2026-09-22 11:00:00",
+    "initstamp": 1790074800,
+    "rundef": "2026092211x0x21x0x21",
+    "lat": [
+      16.281,
+      58.365
+    ],
+    "lon": [
+      -139.856,
+      -57.381
+    ],
+    "longname": "RAP 13 km (US)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 13,
+    "priority": 17400000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "38": {
+    "id_model": 38,
+    "model_name": "HRW 3 km",
+    "model": "usnmm",
+    "hr_start": 0,
+    "hr_end": 60,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x60x0x60",
+    "lat": [
+      20.008,
+      53.542
+    ],
+    "lon": [
+      -135.457,
+      -59.56
+    ],
+    "longname": "HRW 3 km (US)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 4,
+    "priority": 18000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "34": {
+    "id_model": 34,
+    "model_name": "NAM 3 km",
+    "model": "namhis",
+    "hr_start": 1,
+    "hr_end": 36,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x1x36x1x36",
+    "lat": [
+      18.073,
+      23.088
+    ],
+    "lon": [
+      -161.525,
+      -153.869
+    ],
+    "longname": "NAM 3 km (Hawaii)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 3,
+    "priority": 19000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "911": {
+    "id_model": 911,
+    "model_name": "WRF* 1 km",
+    "model": "uwrfhw",
+    "hr_start": 1,
+    "hr_end": 30,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x1x30x1x30",
+    "lat": [
+      20.109,
+      22.044
+    ],
+    "lon": [
+      -158.521,
+      -155.758
+    ],
+    "longname": "WRF* 1 km (Maui/Oahu)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 1,
+    "priority": 19300000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "87": {
+    "id_model": 87,
+    "model_name": "HRW-FV3 3 km",
+    "model": "hifv3",
+    "hr_start": 0,
+    "hr_end": 60,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x60x0x60",
+    "lat": [
+      16.378,
+      24.028
+    ],
+    "lon": [
+      -162.373,
+      -152.338
+    ],
+    "longname": "HRW-FV3 3 km (Hawaii)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 5,
+    "priority": 19500000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "24": {
+    "id_model": 24,
+    "model_name": "HRW-ARW 3 km",
+    "model": "hiarw",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x48x0x48",
+    "lat": [
+      16.4,
+      24.005
+    ],
+    "lon": [
+      -162.35,
+      -152.36
+    ],
+    "longname": "HRW-ARW 3 km (Hawaii)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 5,
+    "priority": 20000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "89": {
+    "id_model": 89,
+    "model_name": "HRW-FV3 3 km",
+    "model": "prfv3",
+    "hr_start": 0,
+    "hr_end": 60,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x60x0x60",
+    "lat": [
+      13.478,
+      22.838
+    ],
+    "lon": [
+      -76.613,
+      -61.313
+    ],
+    "longname": "HRW-FV3 3 km (Caribbean)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 5,
+    "priority": 20500000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "33": {
+    "id_model": 33,
+    "model_name": "HRW-ARW 3 km",
+    "model": "prarw",
+    "hr_start": 0,
+    "hr_end": 48,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x48x0x48",
+    "lat": [
+      13.5,
+      22.815
+    ],
+    "lon": [
+      -76.59,
+      -61.335
+    ],
+    "longname": "HRW-ARW 3 km (Caribbean)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 5,
+    "priority": 21000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1": "m_cdca,isobars"
+    }
+  },
+  "45": {
+    "id_model": 45,
+    "model_name": "ICON 13 km",
+    "model": "icon",
+    "hr_start": 0,
+    "hr_end": 174,
+    "hr_step": 1,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x120x0x120-2026092200x0x180x129x180",
+    "lat": [
+      -89.913,
+      89.915
+    ],
+    "lon": [
+      -180,
+      180
+    ],
+    "longname": "ICON 13 km (World)",
+    "pro": false,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 13,
+    "priority": 22000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP1s": "m_cdca,isobars"
+    }
+  },
+  "59": {
+    "id_model": 59,
+    "model_name": "GDPS 15 km",
+    "model": "gdps",
+    "hr_start": 0,
+    "hr_end": 240,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x240x0x240",
+    "lat": [
+      -90,
+      90
+    ],
+    "lon": [
+      -180,
+      179.925
+    ],
+    "longname": "GDPS 15 km (World)",
+    "pro": false,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 15,
+    "priority": 22500000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "SMER": "m_windspd,particles",
+      "TMP": "m_t2m",
+      "TCDC": "m_tcdca1,isobars",
+      "APCP1": "m_tcdca1,isobars"
+    }
+  },
+  "60": {
+    "id_model": 60,
+    "model_name": "GDWPS 25 km",
+    "model": "gdwps",
+    "hr_start": 0,
+    "hr_end": 240,
+    "hr_step": 1,
+    "initdate": "2026-09-22 00:00:00",
+    "initstamp": 1790035200,
+    "rundef": "2026092200x0x240x0x240",
+    "lat": [
+      -90,
+      90
+    ],
+    "lon": [
+      -179.75,
+      180
+    ],
+    "longname": "GDWPS 25 km (waves)",
+    "pro": false,
+    "wave": true,
+    "sst": false,
+    "maps": true,
+    "resolution": 25,
+    "priority": 23500000,
+    "virtual": false,
+    "var_map": {
+      "HTSGW": "m_wave,particles",
+      "PERPW": "m_waveen,particles",
+      "DIRPW": "m_wave,particles",
+      "SWELL1": "m_swell1,particles",
+      "SWPER1": "m_swell1en,particles",
+      "SWEN1": "m_swell1en,particles",
+      "SWELL2": "m_swell2,particles",
+      "SWPER2": "m_swell2en,particles",
+      "WVHGT": "m_wvhgt,particles",
+      "WVPER": "m_wven,particles"
+    }
+  },
+  "4": {
+    "id_model": 4,
+    "model_name": "NAM 12 km",
+    "model": "nam",
+    "hr_start": 0,
+    "hr_end": 84,
+    "hr_step": 3,
+    "initdate": "2026-09-22 06:00:00",
+    "initstamp": 1790056800,
+    "rundef": "2026092206x0x84x0x84",
+    "lat": [
+      12.19,
+      61.309
+    ],
+    "lon": [
+      -152.879,
+      -49.416
+    ],
+    "longname": "NAM 12 km (North America)",
+    "pro": true,
+    "wave": false,
+    "sst": false,
+    "maps": true,
+    "resolution": 12,
+    "priority": 24000000,
+    "virtual": false,
+    "var_map": {
+      "WINDSPD": "m_windspd,particles",
+      "GUST": "m_gust,particles",
+      "MWINDSPD": "m_windspd,particles",
+      "TMPE": "m_t2m",
+      "CDC": "m_cdca,isobars",
+      "APCP": "m_cdca,isobars"
+    }
+  }
+}

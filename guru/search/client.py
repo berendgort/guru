@@ -39,7 +39,10 @@ class Client:
         }
         resp = self._session.get(base, params=params, headers=headers, timeout=REQUEST_TIMEOUT)
         if resp.status_code >= 400:
-            raise GuruHTTPError(f"HTTP {resp.status_code} for {params.get('q')}: {resp.text[:200]}")
+            raise GuruHTTPError(
+                f"HTTP {resp.status_code} for {params.get('q')}: {resp.text[:200]}",
+                status_code=resp.status_code,
+            )
         try:
             data = resp.json()
         except Exception as exc:  # noqa: BLE001

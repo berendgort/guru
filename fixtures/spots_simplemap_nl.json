@@ -1,0 +1,1728 @@
+{
+  "count": 287,
+  "spots": [
+    [
+      674602,
+      "Beachclub Blankenberge, Beachclub",
+      51.319732,
+      3.139896
+    ],
+    [
+      48333,
+      "Blankenberge",
+      51.32,
+      3.13
+    ],
+    [
+      1247345,
+      "Blankenberge, Blankenberge",
+      51.313772,
+      3.111442
+    ],
+    [
+      146937,
+      "C\u00e9roux Mousty",
+      50.660344,
+      4.510231
+    ],
+    [
+      48335,
+      "De Haan",
+      51.28,
+      3.03
+    ],
+    [
+      953511,
+      "Deinze, Windsurfing Deinze",
+      50.95749,
+      3.53271
+    ],
+    [
+      217,
+      "Duinbergen",
+      51.344625,
+      3.246947
+    ],
+    [
+      1200496,
+      "Fort Isabella",
+      51.33372,
+      3.3658
+    ],
+    [
+      1000009,
+      "Galgenweel Antwerpen, Galgenweel Antwerpen",
+      51.211195,
+      4.373141
+    ],
+    [
+      1162368,
+      "Haacht, Belgium, Weerstation Haacht",
+      50.975442,
+      4.638449
+    ],
+    [
+      48331,
+      "Heist",
+      51.34,
+      3.23
+    ],
+    [
+      1098483,
+      "IANTWE63, RT",
+      51.217675,
+      4.435013
+    ],
+    [
+      456409,
+      "Lac de Genval",
+      50.7293,
+      4.5192
+    ],
+    [
+      1171148,
+      "Lispersteenweg Boechout, Bart Pues",
+      51.159769,
+      4.530739
+    ],
+    [
+      55854,
+      "Maaseik",
+      51.1523,
+      5.8321
+    ],
+    [
+      1293357,
+      "Mortsel, flimsydracula",
+      51.16949,
+      4.455832
+    ],
+    [
+      961293,
+      "Schulensmeer, 4BFT",
+      50.963154,
+      5.146851
+    ],
+    [
+      48329,
+      "Surfers Paradise",
+      51.35,
+      3.28
+    ],
+    [
+      1231921,
+      "Tielt, MeteoTielt - Weerstation Tielt",
+      50.999107,
+      3.317225
+    ],
+    [
+      48334,
+      "Wenduine",
+      51.29,
+      3.05
+    ],
+    [
+      867836,
+      "Wenduine, Surfing Elephant",
+      51.304517,
+      3.085946
+    ],
+    [
+      48332,
+      "Zeebrugge",
+      51.33,
+      3.17
+    ],
+    [
+      847082,
+      "Zeebrugge, Zeebrugge Dam Instrumentation",
+      51.354167,
+      3.17222
+    ],
+    [
+      1247335,
+      "Zeebrugge, Zeebrugge, Januskop",
+      51.360244,
+      3.186832
+    ],
+    [
+      456403,
+      "Zilvermeer",
+      51.231022,
+      5.172672
+    ],
+    [
+      676007,
+      "Zoute",
+      51.360286,
+      3.322767
+    ],
+    [
+      1275207,
+      "DGCSG Finkenberg",
+      50.5909835,
+      7.409912
+    ],
+    [
+      1275272,
+      "DGCSG Krausberg-Ahr",
+      50.52804,
+      7.05177
+    ],
+    [
+      1332050,
+      "Elbsee D\u00fcsseldorf, Windbird 2337",
+      51.183322,
+      6.908646
+    ],
+    [
+      1292095,
+      "Windbird 1440, Windbird 1440",
+      50.661131,
+      3.184222
+    ],
+    [
+      67604,
+      "Baldeneysee",
+      51.4,
+      7.05
+    ],
+    [
+      48239,
+      "Baltrum",
+      53.73,
+      7.38
+    ],
+    [
+      259,
+      "Blausteinsee",
+      50.8,
+      6.2
+    ],
+    [
+      500855,
+      "Borkum",
+      53.58,
+      6.68
+    ],
+    [
+      48246,
+      "Borkum, Nordstrand",
+      53.61,
+      6.71
+    ],
+    [
+      48247,
+      "Borkum, Surfstrand",
+      53.6,
+      6.67
+    ],
+    [
+      765866,
+      "DE, Ruppichteroth, Delta-Club",
+      50.78091,
+      7.37791
+    ],
+    [
+      1019834,
+      "Deutschland, NRW, Morschenich, Flugpl. Morschenich",
+      50.873598,
+      6.550373
+    ],
+    [
+      48248,
+      "Dollart",
+      53.29,
+      7.23
+    ],
+    [
+      1332051,
+      "Elbsee D\u00fcsseldorf, Windbird 2337",
+      51.182499,
+      6.909523
+    ],
+    [
+      130537,
+      "Elfrather See",
+      51.382067,
+      6.625442
+    ],
+    [
+      1223040,
+      "Flugplatz M\u00f6nchsheide",
+      50.509037,
+      7.256112
+    ],
+    [
+      1223039,
+      "Flugplatz M\u00f6nchsheide, Windbird 1744",
+      50.509037,
+      7.256112
+    ],
+    [
+      106165,
+      "Grosses Meer",
+      53.430833,
+      7.294444
+    ],
+    [
+      500854,
+      "Hafen, Juist",
+      53.67,
+      7
+    ],
+    [
+      87912,
+      "Halterner Stausee",
+      51.75,
+      7.22
+    ],
+    [
+      1086598,
+      "Herten, Halde Hoheward",
+      51.57115,
+      7.15942
+    ],
+    [
+      48245,
+      "Juist",
+      53.68,
+      6.99
+    ],
+    [
+      500852,
+      "Juist Wattseite",
+      53.67,
+      7
+    ],
+    [
+      1329312,
+      "Kaarster See, Windbird 2072",
+      51.230388,
+      6.573603
+    ],
+    [
+      1329311,
+      "Kaarster See, Windbird 2072",
+      51.230388,
+      6.573603
+    ],
+    [
+      500848,
+      "Knockster Tief",
+      53.34,
+      7.02
+    ],
+    [
+      1252939,
+      "M\u00f6nchengladbach-Odenkirchen, Kamphausener H\u00f6he",
+      51.135799,
+      6.465433
+    ],
+    [
+      500845,
+      "Ne\u00dfmersiel",
+      53.69,
+      7.36
+    ],
+    [
+      500846,
+      "Norddeich",
+      53.62,
+      7.15
+    ],
+    [
+      20,
+      "Norderney",
+      53.8,
+      7.2
+    ],
+    [
+      48241,
+      "Norderney, Detmold",
+      53.72,
+      7.17
+    ],
+    [
+      48242,
+      "Norderney, Januskopf",
+      53.71,
+      7.16
+    ],
+    [
+      48243,
+      "Norderney, Kaiserwiese",
+      53.71,
+      7.14
+    ],
+    [
+      48240,
+      "Norderney, Wei\u00dfe D\u00fcne",
+      53.72,
+      7.25
+    ],
+    [
+      48244,
+      "Norderney, Yachthafen",
+      53.7,
+      7.16
+    ],
+    [
+      500853,
+      "Pegel, Norderney",
+      53.7,
+      7.16
+    ],
+    [
+      107894,
+      "Rursee",
+      50.630953,
+      6.394042
+    ],
+    [
+      316203,
+      "Silbersee II ",
+      51.796978,
+      7.218933
+    ],
+    [
+      438085,
+      "Tenderingssee",
+      51.598161,
+      6.721703
+    ],
+    [
+      500847,
+      "Upleward",
+      53.42,
+      7.01
+    ],
+    [
+      1223334,
+      "Vockrather Acker",
+      51.14076,
+      6.626461
+    ],
+    [
+      1223332,
+      "Vockrather Acker, Windbird 1753",
+      51.14076,
+      6.626461
+    ],
+    [
+      1309966,
+      "Wekeln, Wekeln",
+      51.254692,
+      6.534448
+    ],
+    [
+      500851,
+      "Weststrand, Langeoog",
+      53.75,
+      7.47
+    ],
+    [
+      1246595,
+      "Windbird 1780, Windbird 1780",
+      51.207088,
+      6.739348
+    ],
+    [
+      1354447,
+      "Windbird 2205, Windbird 2205",
+      51.317909,
+      7.187354
+    ],
+    [
+      1354446,
+      "Windbird 2205, Windbird 2205",
+      51.317909,
+      7.187354
+    ],
+    [
+      55675,
+      "Xantener Freizeitcentrum",
+      51.698889,
+      6.425
+    ],
+    [
+      95148,
+      "Zuelpicher See",
+      50.68,
+      6.67
+    ],
+    [
+      500873,
+      "Abbertstrand",
+      52.51,
+      5.85
+    ],
+    [
+      1137721,
+      "Afferden, Weerstation Afferden",
+      51.6,
+      6.01
+    ],
+    [
+      439922,
+      "Akersloot",
+      52.559761,
+      4.746094
+    ],
+    [
+      48278,
+      "Almere Haven",
+      52.34,
+      5.2
+    ],
+    [
+      4863,
+      "Almere / Muiderberg",
+      52.35,
+      5.22
+    ],
+    [
+      9401,
+      "Ameland",
+      53.45,
+      5.77
+    ],
+    [
+      48254,
+      "Ameland, Ballum Strand",
+      53.46,
+      5.68
+    ],
+    [
+      48256,
+      "Ameland, Burensteiger",
+      53.45,
+      5.86
+    ],
+    [
+      48257,
+      "Ameland, Nes Pier Oost",
+      53.44,
+      5.8
+    ],
+    [
+      48258,
+      "Ameland, Nes Pier West",
+      53.44,
+      5.75
+    ],
+    [
+      48255,
+      "Ameland, Noordzeestrand",
+      53.46,
+      5.79
+    ],
+    [
+      3602,
+      "Amstelmeer",
+      52.885986,
+      4.924481
+    ],
+    [
+      46947,
+      "Andijk",
+      52.77,
+      5.23
+    ],
+    [
+      1309755,
+      "BD1, BD1",
+      51.975488,
+      5.735023
+    ],
+    [
+      54279,
+      "Belter Wijde",
+      52.685497,
+      6.08065
+    ],
+    [
+      48294,
+      "Bergen aan Zee",
+      52.66,
+      4.63
+    ],
+    [
+      54277,
+      "Beulakker Wijde, De dode boom",
+      52.713428,
+      6.053206
+    ],
+    [
+      54275,
+      "Beulakker Wijde, De Ronduite",
+      52.688861,
+      6.045722
+    ],
+    [
+      500875,
+      "Bloemendaal",
+      52.42,
+      4.55
+    ],
+    [
+      48308,
+      "Blokkedam",
+      51.96,
+      4.02
+    ],
+    [
+      48327,
+      "Borssele",
+      51.41,
+      3.73
+    ],
+    [
+      53738,
+      "Braassemermeer",
+      52.199997,
+      4.645833
+    ],
+    [
+      48263,
+      "Breezanddijk",
+      52.99,
+      5.16
+    ],
+    [
+      97,
+      "Brouwersdam",
+      51.765653,
+      3.846536
+    ],
+    [
+      1352741,
+      "Brouwersdam, Kiteschool Brouwersdam",
+      51.765855,
+      3.853667
+    ],
+    [
+      586879,
+      "Brouwersdam, Natural High Flight Zone",
+      51.76043,
+      3.846073
+    ],
+    [
+      48319,
+      "Brouwersdam  - Surfcentrum",
+      51.75,
+      3.86
+    ],
+    [
+      532078,
+      "Brouwersdam, Zeil- & Surfcentrum Brouwersdam",
+      51.753994,
+      3.851502
+    ],
+    [
+      48328,
+      "Cadzand Bad",
+      51.38,
+      3.39
+    ],
+    [
+      48290,
+      "Callantsoog",
+      52.85,
+      4.7
+    ],
+    [
+      48292,
+      "Camperduin",
+      52.72,
+      4.64
+    ],
+    [
+      48296,
+      "Castricum aan Zee",
+      52.56,
+      4.61
+    ],
+    [
+      48264,
+      "De Houw",
+      53.09,
+      5.38
+    ],
+    [
+      48249,
+      "Delfzijl",
+      53.35,
+      6.91
+    ],
+    [
+      500865,
+      "Dellewal, Terschelling",
+      53.37,
+      5.23
+    ],
+    [
+      4854,
+      "Den Helder",
+      52.964928,
+      4.73685
+    ],
+    [
+      187498,
+      "Den Oever",
+      52.937672,
+      5.035858
+    ],
+    [
+      48320,
+      "De Punt",
+      51.78,
+      3.87
+    ],
+    [
+      48309,
+      "De Slufter",
+      51.92,
+      3.99
+    ],
+    [
+      500859,
+      "Dijkmanshuizen, Texel",
+      53.06,
+      4.87
+    ],
+    [
+      48324,
+      "Domburg",
+      51.56,
+      3.48
+    ],
+    [
+      3643,
+      "Dordrecht",
+      51.73,
+      4.67
+    ],
+    [
+      48276,
+      "Edam",
+      52.54,
+      5.05
+    ],
+    [
+      1256709,
+      "Eelde - Hoppenkampsweg, Weerstation Eelde",
+      53.132767,
+      6.560373
+    ],
+    [
+      32161,
+      "Egmond aan Zee",
+      52.614064,
+      4.621303
+    ],
+    [
+      1277974,
+      "Egmond aan Zee, WebcamEgmond",
+      52.615257,
+      4.625962
+    ],
+    [
+      500872,
+      "Elburg Strand",
+      52.45,
+      5.82
+    ],
+    [
+      500871,
+      "Ellerstrand",
+      52.44,
+      5.79
+    ],
+    [
+      46944,
+      "Enkhuizen",
+      52.715878,
+      5.2891
+    ],
+    [
+      971917,
+      "Ertveldplas, WSV Viking",
+      51.707207,
+      5.292779
+    ],
+    [
+      48283,
+      "Flevostrand",
+      52.39,
+      5.64
+    ],
+    [
+      500857,
+      "Formerum, Terschelling",
+      53.38,
+      5.31
+    ],
+    [
+      48266,
+      "Gaast",
+      53.01,
+      5.41
+    ],
+    [
+      1135422,
+      "Gooi en Eemland vereniging van modelvliegers, GeE van Modelvliegers",
+      52.309112,
+      5.334353
+    ],
+    [
+      500868,
+      "Gouwsee",
+      52.46,
+      5.05
+    ],
+    [
+      275775,
+      "Gouwzee ",
+      52.448525,
+      5.071958
+    ],
+    [
+      1156916,
+      "Grave, Weatherstation Grave",
+      51.751582,
+      5.755606
+    ],
+    [
+      147,
+      "Grevelingendam",
+      51.68,
+      4.15
+    ],
+    [
+      500880,
+      "Groenedijk, Ouddorp",
+      51.82,
+      3.88
+    ],
+    [
+      500864,
+      "Groene Strand, Terschelling",
+      53.36,
+      5.21
+    ],
+    [
+      500876,
+      "Groote Keeten",
+      52.86,
+      4.7
+    ],
+    [
+      1309764,
+      "Hallum, WS-Hallum",
+      53.308662,
+      5.788296
+    ],
+    [
+      48282,
+      "Harderwijk",
+      52.35,
+      5.61
+    ],
+    [
+      941191,
+      "Harderwijk, Wolderwijdweer.nl",
+      52.358691,
+      5.615263
+    ],
+    [
+      554978,
+      "Hardinxveld-Gessendam, Wolfseind",
+      51.826804,
+      4.830272
+    ],
+    [
+      48293,
+      "Hargen aan Zee",
+      52.71,
+      4.64
+    ],
+    [
+      48313,
+      "Haringvlietdam",
+      51.84,
+      4.08
+    ],
+    [
+      500860,
+      "Harlingen",
+      53.17,
+      5.42
+    ],
+    [
+      250388,
+      "Heegermeer",
+      52.954081,
+      5.580711
+    ],
+    [
+      500881,
+      "Herkingen",
+      51.71,
+      4.08
+    ],
+    [
+      500870,
+      "Hierden",
+      52.38,
+      5.67
+    ],
+    [
+      48268,
+      "Hindeloopen",
+      52.94,
+      5.4
+    ],
+    [
+      1338364,
+      "Hindeloopen, Kiteboarding Club",
+      52.934372,
+      5.404242
+    ],
+    [
+      48307,
+      "Hoek van Holland",
+      51.99,
+      4.1
+    ],
+    [
+      1117497,
+      "Hoek van Holland, BeachLine Events",
+      51.99268,
+      4.11609
+    ],
+    [
+      48284,
+      "Hoophuizen",
+      52.38,
+      5.7
+    ],
+    [
+      60383,
+      "Hoorn",
+      52.618056,
+      5.075
+    ],
+    [
+      48289,
+      "Huisduinen",
+      52.95,
+      4.72
+    ],
+    [
+      500869,
+      "Huizen",
+      52.31,
+      5.26
+    ],
+    [
+      708184,
+      "Hupe-Holiday Domburg, Aanloop 28 Domburg",
+      51.558393,
+      3.49634
+    ],
+    [
+      74112,
+      "Ijlst",
+      53.008611,
+      5.61
+    ],
+    [
+      48299,
+      "IJmuiden aan Zee",
+      52.45482,
+      4.555229
+    ],
+    [
+      500874,
+      "IJmuiderslag",
+      52.45,
+      4.56
+    ],
+    [
+      19,
+      "IJsselmeer (north)",
+      53.03,
+      5.33
+    ],
+    [
+      3601,
+      "IJsselmeer (south)",
+      52.6,
+      5.53
+    ],
+    [
+      837800,
+      "Julianadorp, Meteo-Julianandorp",
+      52.88435,
+      4.743558
+    ],
+    [
+      103245,
+      "Kagerplassen",
+      52.202558,
+      4.550744
+    ],
+    [
+      1248974,
+      "Kamperland - Domein het Camperveer, Camperveer 4",
+      51.560435,
+      3.686416
+    ],
+    [
+      48303,
+      "Katwijk aan Zee",
+      52.21,
+      4.39
+    ],
+    [
+      48305,
+      "Kijkduin",
+      52.07,
+      4.22
+    ],
+    [
+      67661,
+      "Kijkuit",
+      51.734289,
+      3.948542
+    ],
+    [
+      500866,
+      "Kinnum, Terschelling",
+      53.37,
+      5.27
+    ],
+    [
+      500867,
+      "Kornwerderzand",
+      53.07,
+      5.34
+    ],
+    [
+      115652,
+      "Kraaijenbergse Plassen",
+      51.746694,
+      5.815544
+    ],
+    [
+      4848,
+      "Krabbendijke",
+      51.43,
+      4.13
+    ],
+    [
+      360472,
+      "Langeraarse Plassen",
+      52.189789,
+      4.716261
+    ],
+    [
+      1163316,
+      "Langeraarse Plassen, Surfclub Ter Aar",
+      52.197571,
+      4.727367
+    ],
+    [
+      100,
+      "Lauwersmeer",
+      53.4,
+      6.2
+    ],
+    [
+      48251,
+      "Lauwersoog",
+      53.41,
+      6.18
+    ],
+    [
+      48250,
+      "Lauwersoog Haven",
+      53.41,
+      6.22
+    ],
+    [
+      500863,
+      "Lauwersoog Waddenzee",
+      53.41,
+      6.16
+    ],
+    [
+      495480,
+      "Leekstermeer",
+      53.177647,
+      6.427689
+    ],
+    [
+      26078,
+      "Loosdrechtse Plassen",
+      52.18,
+      5.07
+    ],
+    [
+      604332,
+      "Loosdrechtseplassen - 1e plas - KWVL Starttoren, KWV Loosdrecht",
+      52.204878,
+      5.085068
+    ],
+    [
+      359233,
+      "Maastricht",
+      50.8514,
+      5.6956
+    ],
+    [
+      4879,
+      "Maasvlakte",
+      51.95,
+      4.05
+    ],
+    [
+      48265,
+      "Makkum",
+      53.05,
+      5.38
+    ],
+    [
+      1123482,
+      "Markelo, Weerstation Markelo",
+      52.233681,
+      6.50022
+    ],
+    [
+      48274,
+      "Medemblik",
+      52.74,
+      5.16
+    ],
+    [
+      641870,
+      "Meteo Delfzijl, Meteo Delfzijl",
+      53.324026,
+      6.899267
+    ],
+    [
+      1286633,
+      "Meteostation Angelslo, Meteostation Angelslo",
+      52.780518,
+      6.940271
+    ],
+    [
+      817772,
+      "Middelburg, Meteo Middelburg",
+      51.483203,
+      3.623142
+    ],
+    [
+      1093890,
+      "Middelburg, StroopNL",
+      51.494422,
+      3.605699
+    ],
+    [
+      3642,
+      "Mirns",
+      52.853861,
+      5.450508
+    ],
+    [
+      1078896,
+      "Molenaarsgraaf, Ockersland",
+      51.874869,
+      4.825524
+    ],
+    [
+      48269,
+      "Molkwerum",
+      52.9,
+      5.39
+    ],
+    [
+      1029418,
+      "Monster, Westbeach",
+      52.036342,
+      4.1723
+    ],
+    [
+      742876,
+      "Mooie Nel, Haarlemsche Jachtclub",
+      52.405397,
+      4.668648
+    ],
+    [
+      1237807,
+      "Muidenhaven, Muiden- KNZ&RV",
+      52.336719,
+      5.067839
+    ],
+    [
+      48277,
+      "Muiderberg",
+      52.33,
+      5.13
+    ],
+    [
+      864974,
+      "Nederland, Aalsmeer, WSCA weerstation",
+      52.25203,
+      4.75819
+    ],
+    [
+      48321,
+      "Neeltje Jans",
+      51.63,
+      3.69
+    ],
+    [
+      1222122,
+      "Nijmegen-Oost, GW4407",
+      51.83964,
+      5.871867
+    ],
+    [
+      1213447,
+      "Noorderplassen-West  Almere",
+      52.385209,
+      5.184201
+    ],
+    [
+      575,
+      "Noordwijk aan Zee",
+      52.24845,
+      4.429764
+    ],
+    [
+      654560,
+      "Noordwijk aan Zee, Vuurtoren Noordwijk",
+      52.249179,
+      4.432586
+    ],
+    [
+      48301,
+      "Noordwijkerhout",
+      52.27,
+      4.45
+    ],
+    [
+      48314,
+      "Numansdorp",
+      51.72,
+      4.42
+    ],
+    [
+      187,
+      "Oesterdam",
+      51.43,
+      4.22
+    ],
+    [
+      444404,
+      "Oldambtmeer",
+      53.172192,
+      7.026272
+    ],
+    [
+      500858,
+      "Oosterend, Terschelling",
+      53.4,
+      5.4
+    ],
+    [
+      48252,
+      "Oostmahorn",
+      53.39,
+      6.15
+    ],
+    [
+      316,
+      "Oostvoorne",
+      51.911814,
+      4.054186
+    ],
+    [
+      48311,
+      "Oostvoornse Meer",
+      51.92,
+      4.08
+    ],
+    [
+      625806,
+      "Oostwouder 't Zand, OTS",
+      52.8468,
+      4.7596
+    ],
+    [
+      181964,
+      "Ouddorp",
+      51.823,
+      3.8722
+    ],
+    [
+      500862,
+      "Paal 3",
+      53.49,
+      6.14
+    ],
+    [
+      513436,
+      "Palendijk",
+      52.269308,
+      5.355869
+    ],
+    [
+      59330,
+      "Pampus Haven",
+      52.381667,
+      5.122222
+    ],
+    [
+      1327351,
+      "Pampus Island, Pampus",
+      52.364478,
+      5.068838
+    ],
+    [
+      232209,
+      "Paterswoldsemeer (Groningen)",
+      53.160833,
+      6.571111
+    ],
+    [
+      48291,
+      "Petten",
+      52.78,
+      4.67
+    ],
+    [
+      48285,
+      "Polsmaten",
+      52.4,
+      5.75
+    ],
+    [
+      943710,
+      "Purmerbos/Purmerbuurt, Weerstation Purmerbuurt",
+      52.495601,
+      4.987074
+    ],
+    [
+      500882,
+      "Renesse, Kijkduin",
+      51.74,
+      3.79
+    ],
+    [
+      919406,
+      "Rijnsaterwoude, Rijnsaterwoude",
+      52.19613,
+      4.668969
+    ],
+    [
+      48286,
+      "Riviera",
+      52.44,
+      5.8
+    ],
+    [
+      500879,
+      "Rockanje",
+      51.88,
+      4.04
+    ],
+    [
+      5356,
+      "Roermond",
+      51.18,
+      5.97
+    ],
+    [
+      1286503,
+      "Sas van Gent, Weerstation Sas van Gent",
+      51.22544,
+      3.790465
+    ],
+    [
+      994330,
+      "Scheemda, weerstation Scheemda",
+      53.176507,
+      6.981014
+    ],
+    [
+      46940,
+      "Schellinkhout",
+      52.629064,
+      5.128808
+    ],
+    [
+      46940,
+      "Schellinkhout",
+      52.629064,
+      5.128808
+    ],
+    [
+      572,
+      "Scheveningen",
+      52.106628,
+      4.265431
+    ],
+    [
+      48253,
+      "Schiermonikoog",
+      53.5,
+      6.17
+    ],
+    [
+      500861,
+      "Schiermonnikoog",
+      53.49,
+      6.19
+    ],
+    [
+      500856,
+      "Schiermonnikoog West End",
+      53.49,
+      6.12
+    ],
+    [
+      121099,
+      "Schildmeer",
+      53.268908,
+      6.819078
+    ],
+    [
+      142073,
+      "Schokkerhaven",
+      52.612533,
+      5.742117
+    ],
+    [
+      48310,
+      "Slufter Bay",
+      51.91,
+      4.01
+    ],
+    [
+      1151049,
+      "Snackpoint wimpie schotsman, Snackpoint wimpie",
+      51.569121,
+      3.653446
+    ],
+    [
+      56879,
+      "Sneekermeer",
+      53.022778,
+      5.731944
+    ],
+    [
+      48270,
+      "Stavoren",
+      52.87,
+      5.37
+    ],
+    [
+      355,
+      "Strand Horst",
+      52.329347,
+      5.581806
+    ],
+    [
+      48279,
+      "Strand Nulde",
+      52.26,
+      5.52
+    ],
+    [
+      1298396,
+      "Stroe, Weerstation Stroe (gld)",
+      52.193513,
+      5.676902
+    ],
+    [
+      1285356,
+      "Surfcenter IJburg, Surfcenter IJburg",
+      52.358001,
+      5.013002
+    ],
+    [
+      48306,
+      "Ter Heijde - Monster",
+      52.04,
+      4.18
+    ],
+    [
+      4850,
+      "Terschelling",
+      53.4,
+      5.2
+    ],
+    [
+      48260,
+      "Terschelling, West aan Zee",
+      53.39,
+      5.21
+    ],
+    [
+      245933,
+      "Teuge",
+      52.240886,
+      6.046
+    ],
+    [
+      48262,
+      "Texel",
+      53.1,
+      4.75
+    ],
+    [
+      1121340,
+      "Texel Paal 33",
+      53.174984,
+      4.86987
+    ],
+    [
+      212904,
+      "Texel - Paal 9",
+      53.017675,
+      4.708672
+    ],
+    [
+      48316,
+      "T'Hekje",
+      51.84,
+      3.95
+    ],
+    [
+      780830,
+      "The Netherlands, Den Haag, HKZV strandslag 10",
+      52.087734,
+      4.244843
+    ],
+    [
+      662112,
+      "Tilburg Reeshof, Wil Evertz",
+      51.588926,
+      5.001322
+    ],
+    [
+      1288419,
+      "Tilburg, Weerstation Tilburg Reeshof",
+      51.579313,
+      5.010356
+    ],
+    [
+      48272,
+      "Trintelhaven",
+      52.59,
+      5.46
+    ],
+    [
+      48297,
+      "Uitgeestermeer",
+      52.53,
+      4.73
+    ],
+    [
+      1179724,
+      "Ulrum, Weerstation Ulrum",
+      53.360401,
+      6.333349
+    ],
+    [
+      1211296,
+      "Vaassen (GE), Weerstation De Griftsemolen",
+      52.296646,
+      5.997438
+    ],
+    [
+      1188770,
+      "Veendam, meteoparkstadveendam",
+      53.11361,
+      6.878043
+    ],
+    [
+      584,
+      "Veerse Meer",
+      51.583467,
+      3.652086
+    ],
+    [
+      28083,
+      "Veluwemeer",
+      52.38,
+      5.68
+    ],
+    [
+      991807,
+      "Veluwemeer, Harderstrand Noord",
+      52.389378,
+      5.640433
+    ],
+    [
+      48261,
+      "Vlieland",
+      53.29,
+      5
+    ],
+    [
+      48326,
+      "Vlissingen",
+      51.45,
+      3.55
+    ],
+    [
+      984134,
+      "Vlugtenburg",
+      52.002108,
+      4.1288
+    ],
+    [
+      500877,
+      "Voordijk",
+      52.85,
+      4.7
+    ],
+    [
+      48323,
+      "Vrouwenpolder",
+      51.59,
+      3.63
+    ],
+    [
+      48317,
+      "Vuurtoren",
+      51.81,
+      3.86
+    ],
+    [
+      500878,
+      "Wassenaar",
+      52.16,
+      4.35
+    ],
+    [
+      1258624,
+      "Weerstation Budel, Weerstation Budel",
+      51.26469,
+      5.562002
+    ],
+    [
+      1256388,
+      "Weerstation Nieuwkoop, Weerstation Nieuwkoop",
+      52.137248,
+      4.767275
+    ],
+    [
+      1319818,
+      "Welsum, WelsumWeather",
+      52.311023,
+      6.084694
+    ],
+    [
+      146926,
+      "Westeinderplassen",
+      52.241886,
+      4.723778
+    ],
+    [
+      48325,
+      "Westkapelle",
+      51.53,
+      3.44
+    ],
+    [
+      48259,
+      "West Terschelling",
+      53.37,
+      5.18
+    ],
+    [
+      1120682,
+      "Wijk aan Zee",
+      52.493834,
+      4.584151
+    ],
+    [
+      113,
+      "Wijk aan Zee, Noordpier",
+      52.469329,
+      4.556018
+    ],
+    [
+      1175458,
+      "Wijk bij Duurstede, WbD-wadl-NL",
+      51.968969,
+      5.318122
+    ],
+    [
+      964569,
+      "Windsurfing Berkendonk, Windsurfing Berkendonk",
+      51.472947,
+      5.723189
+    ],
+    [
+      48267,
+      "Workum",
+      52.97,
+      5.41
+    ],
+    [
+      19439,
+      "Zandvoort",
+      52.385597,
+      4.530708
+    ],
+    [
+      1219081,
+      "Zandvoort, Boulevard Zandvoort NL",
+      52.37978,
+      4.529579
+    ],
+    [
+      48281,
+      "Zeewolde Strand",
+      52.34,
+      5.55
+    ],
+    [
+      517965,
+      "Zevenhuizerplas",
+      51.9806,
+      4.5713
+    ],
+    [
+      48315,
+      "Zuid-Beijerland",
+      51.74,
+      4.37
+    ],
+    [
+      1154,
+      "Zuidlaardermeer",
+      53.12,
+      6.7
+    ],
+    [
+      1274968,
+      "Neukirchen-Vluyn",
+      51.45858,
+      6.56275
+    ],
+    [
+      1275087,
+      "971",
+      52.88912,
+      4.9127
+    ]
+  ],
+  "_note": "NL bbox subset of q=spots&opt=simplemap"
+}

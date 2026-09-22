@@ -1,12 +1,21 @@
 """Exceptions."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from guru.models.forecast import Spot
+
 
 class GuruError(Exception):
     """Base."""
 
 
 class GuruHTTPError(GuruError):
-    pass
+    def __init__(self, message: str, *, status_code: int | None = None) -> None:
+        super().__init__(message)
+        self.status_code = status_code
 
 
 class GuruParseError(GuruError):
@@ -15,3 +24,11 @@ class GuruParseError(GuruError):
 
 class GuruNotFoundError(GuruError):
     pass
+
+
+class GuruAmbiguousError(GuruError):
+    """Multiple spots matched a name; caller must pick an id."""
+
+    def __init__(self, message: str, *, candidates: list[Spot]) -> None:
+        super().__init__(message)
+        self.candidates = candidates

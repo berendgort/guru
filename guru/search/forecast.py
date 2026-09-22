@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from guru.models.aliases import resolve_model
 from guru.models.forecast import Forecast, ForecastHour, Spot, hour_time, init_to_datetime
-from guru.models.models import resolve_model
 from guru.search.client import IAPI_CZ, get_client
 from guru.search.exceptions import GuruParseError
 from guru.search.spots import get_spot
@@ -16,18 +16,26 @@ def get_forecast(
     *,
     model: str | int = "gfs",
     hours: int | None = 48,
+    spot: Spot | None = None,
 ) -> Forecast:
+    """Fetch a forecast. ``hours`` truncates to the first N forecast *steps*."""
     model_id, model_name = resolve_model(model)
-    spot = get_spot(spot_id)
+    resolved = spot if spot is not None else get_spot(spot_id)
     data = get_client().get_json(
         params={"q": "forecast", "id_spot": spot_id, "id_model": model_id},
         referer=f"https://www.windguru.cz/{spot_id}",
         base=IAPI_CZ,
     )
-    return _decode(data, spot=spot, model_id=model_id, model_name=model_name, hours=hours)
+    return decode_forecast(
+        data,
+        spot=resolved,
+        model_id=model_id,
+        model_name=model_name,
+        hours=hours,
+    )
 
 
-def _decode(
+def decode_forecast(
     data: dict[str, Any],
     *,
     spot: Spot,
@@ -35,6 +43,7 @@ def _decode(
     model_name: str,
     hours: int | None,
 ) -> Forecast:
+    """Pure decode of a ``q=forecast`` payload (fixture-friendly)."""
     fcst = data.get("fcst")
     if not isinstance(fcst, dict):
         raise GuruParseError(f"Missing fcst; keys={list(data.keys())}")

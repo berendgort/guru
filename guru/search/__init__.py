@@ -1,4 +1,13 @@
+from guru.search.blend import get_best_forecast
 from guru.search.forecast import get_forecast
-from guru.search.spots import get_spot, search_spots
+from guru.search.near import spots_near
+from guru.search.spots import get_spot, resolve_spot, search_spots
 
-__all__ = ["get_forecast", "get_spot", "search_spots"]
+__all__ = [
+    "get_best_forecast",
+    "get_forecast",
+    "get_spot",
+    "resolve_spot",
+    "search_spots",
+    "spots_near",
+]

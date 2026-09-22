@@ -1,12 +1,12 @@
 [project]
 name = "windguru"
-version = "0.1.0"
-description = "Windguru CLI and Python library — reverse-engineered forecast access (fli-style)"
+version = "0.2.0"
+description = "Windguru CLI, MCP server, and Python library — reverse-engineered forecast access (fli-style)"
 authors = [{ name = "Berend Gort", email = "berend.gort@gmail.com" }]
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
-keywords = ["windguru", "forecast", "wind", "kitesurf", "cli", "weather"]
+keywords = ["windguru", "forecast", "wind", "kitesurf", "cli", "mcp", "weather"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -27,13 +27,24 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+mcp = [
+    "fastmcp>=3.2",
+    "mcp>=1.2.0",
+]
 dev = [
+    "build>=1.2.0",
     "pytest>=8.3.4",
     "ruff>=0.8.4",
+    "twine>=6.0.0",
+]
+all = [
+    "windguru[mcp]",
 ]
 
 [project.scripts]
 guru = "guru.cli.main:cli"
+guru-mcp = "guru.mcp._entry:run"
+guru-mcp-http = "guru.mcp._entry:run_http"
 
 [project.urls]
 Homepage = "https://github.com/berendgort/guru"

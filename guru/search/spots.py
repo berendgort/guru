@@ -2,9 +2,54 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from guru.models.forecast import Spot
 from guru.search.client import IAPI_CZ, get_client
-from guru.search.exceptions import GuruNotFoundError
+from guru.search.exceptions import GuruAmbiguousError, GuruNotFoundError, GuruParseError
+
+
+def _as_float(v: object) -> float | None:
+    if v is None or v == "":
+        return None
+    try:
+        return float(v)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None
+
+
+def fetch_forecast_spot(spot_id: int) -> dict[str, Any]:
+    return get_client().get_json(
+        params={"q": "forecast_spot", "id_spot": spot_id},
+        referer=f"https://www.windguru.cz/{spot_id}",
+        base=IAPI_CZ,
+    )
+
+
+def spot_from_forecast_spot(data: dict[str, Any], spot_id: int) -> Spot:
+    """Decode Spot from a ``forecast_spot`` payload."""
+    spots = data.get("spots") or {}
+    meta = spots.get(str(spot_id)) or spots.get(spot_id)
+    if not meta and data.get("tabs"):
+        tab = data["tabs"][0]
+        return Spot(
+            id=int(tab.get("id_spot") or spot_id),
+            name=f"spot-{spot_id}",
+            lat=_as_float(tab.get("lat")),
+            lon=_as_float(tab.get("lon")),
+        )
+    if not meta:
+        raise GuruNotFoundError(f"Spot {spot_id} not found")
+    if not isinstance(meta, dict):
+        raise GuruParseError(f"Invalid spot meta for {spot_id}")
+    return Spot(
+        id=int(meta.get("id_spot") or spot_id),
+        name=str(meta.get("spotname") or f"spot-{spot_id}"),
+        country=meta.get("country"),
+        lat=_as_float(meta.get("lat")),
+        lon=_as_float(meta.get("lon")),
+        alt=_as_float(meta.get("alt")),
+    )
 
 
 def search_spots(query: str, *, limit: int = 20) -> list[Spot]:
@@ -27,37 +72,31 @@ def search_spots(query: str, *, limit: int = 20) -> list[Spot]:
 
 
 def get_spot(spot_id: int) -> Spot:
-    data = get_client().get_json(
-        params={"q": "forecast_spot", "id_spot": spot_id},
-        referer=f"https://www.windguru.cz/{spot_id}",
-        base=IAPI_CZ,
-    )
-    spots = data.get("spots") or {}
-    meta = spots.get(str(spot_id)) or spots.get(spot_id)
-    if not meta and data.get("tabs"):
-        tab = data["tabs"][0]
-        return Spot(
-            id=int(tab.get("id_spot") or spot_id),
-            name=f"spot-{spot_id}",
-            lat=_f(tab.get("lat")),
-            lon=_f(tab.get("lon")),
-        )
-    if not meta:
-        raise GuruNotFoundError(f"Spot {spot_id} not found")
-    return Spot(
-        id=int(meta.get("id_spot") or spot_id),
-        name=str(meta.get("spotname") or f"spot-{spot_id}"),
-        country=meta.get("country"),
-        lat=_f(meta.get("lat")),
-        lon=_f(meta.get("lon")),
-        alt=_f(meta.get("alt")),
-    )
+    return spot_from_forecast_spot(fetch_forecast_spot(spot_id), spot_id)
 
 
-def _f(v: object) -> float | None:
-    if v is None or v == "":
-        return None
-    try:
-        return float(v)  # type: ignore[arg-type]
-    except (TypeError, ValueError):
-        return None
+def resolve_spot(spot: str, *, pick: int | None = None) -> Spot:
+    """Resolve a numeric id or unique name. Multiple hits → ``GuruAmbiguousError``."""
+    text = spot.strip()
+    if text.isdigit():
+        return get_spot(int(text))
+
+    hits = search_spots(text, limit=10)
+    if pick is not None:
+        if hits and pick not in {h.id for h in hits}:
+            raise GuruNotFoundError(
+                f"Spot id {pick} is not among matches for {spot!r}"
+            )
+        return get_spot(pick)
+
+    if not hits:
+        raise GuruNotFoundError(f"No spots matching {spot!r}")
+    if len(hits) == 1:
+        return get_spot(hits[0].id)
+    exact = [h for h in hits if h.name.lower() == text.lower()]
+    if len(exact) == 1:
+        return get_spot(exact[0].id)
+    raise GuruAmbiguousError(
+        f"Ambiguous spot {spot!r}: {len(hits)} matches — pass a numeric id or --pick <id>",
+        candidates=hits,
+    )
