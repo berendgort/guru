@@ -1,0 +1,30 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Editors / OS
+.venv/
+venv/
+.idea/
+.vscode/
+.DS_Store
+
+# Local capture dumps (keep fixtures/ tracked intentionally)
+/tmp/
+*.har
