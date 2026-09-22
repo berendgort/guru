@@ -385,7 +385,8 @@ def wire_cmd(
 ) -> None:
     """Auto-wire local STDIO guru-mcp into Cursor / Claude Desktop / Claude Code.
 
-    Agents run this — never ask the human to edit config or start a tunnel.
+    Only when needed: MCP-only host with no shell ``guru``, or guru MCP missing.
+    Default path is CLI — do not wire every session.
     """
     from guru.core.wire import wire_all, wire_status
 
@@ -417,12 +418,18 @@ def wire_cmd(
 def doctor_cmd(
     as_json: bool = typer.Option(False, "--json"),
     wire: bool = typer.Option(
-        True,
+        False,
         "--wire/--no-wire",
-        help="Auto-wire local STDIO MCP into agent hosts (default on).",
+        help="Wire local STDIO MCP adapters (OFF by default — only when needed).",
+    ),
+    probe: bool = typer.Option(
+        True,
+        "--probe/--no-probe",
+        help="Probe Windguru reachability (default on).",
     ),
 ) -> None:
-    """Env + version + PyPI upgrade check (+ auto MCP wire)."""
+    """Env + version + network probe + optional MCP wire."""
+    from guru.core.path import agent_path_payload, probe_windguru
     from guru.core.upgrade import upgrade_status
     from guru.core.wire import wire_all, wire_status
 
@@ -431,9 +438,12 @@ def doctor_cmd(
     except Exception:
         payload = {"ready": False, "missing": ["profile"], "path": None}
     upgrade = upgrade_status()
+    network = probe_windguru() if probe else {"skipped": True}
     wired = wire_all() if wire else wire_status()
     info = {
         "version": __version__,
+        "path": agent_path_payload(),
+        "network": network,
         "upgrade": upgrade,
         "GURU_TIMEOUT": os.environ.get("GURU_TIMEOUT", "30"),
         "GURU_IMPERSONATE": os.environ.get("GURU_IMPERSONATE", "chrome"),
@@ -445,6 +455,13 @@ def doctor_cmd(
         print_ok(info)
         return
     console.print(f"guru {__version__}")
+    reach = network.get("reachable")
+    if reach is True:
+        console.print("network: Windguru reachable")
+    elif reach is False:
+        console.print(
+            "[red]network: Windguru NOT reachable — use a local host agent[/red]"
+        )
     if upgrade.get("update_available"):
         console.print(
             f"[yellow]update available: {upgrade.get('pypi_latest')} — "
@@ -459,9 +476,9 @@ def doctor_cmd(
     console.print(f"{len(info['models'])} known model aliases")
     console.print(f"profile ready={payload.get('ready')} path={payload.get('path')}")
     if wired.get("ok"):
-        console.print(f"mcp wired → {wired.get('command')}")
+        console.print(f"mcp adapters → {wired.get('command')}")
     elif wire:
-        console.print(f"[yellow]mcp wire failed: {wired.get('error')}[/yellow]")
+        console.print(f"[yellow]mcp wire: {wired.get('error')}[/yellow]")
 
 
 def cli() -> None:

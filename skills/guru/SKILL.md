@@ -17,18 +17,12 @@ If the user shared https://github.com/berendgort/guru or asks to use guru / Wind
 
 ```bash
 pipx upgrade windguru || pipx install 'windguru[mcp]'
-# or: pip install -U 'windguru[mcp]'
-guru doctor --json    # upgrade.update_available
+guru doctor --json    # network.reachable + upgrade
 guru instruct --json
 guru profile --json
 ```
 
-If `upgrade.update_available` is true, upgrade **before** briefing.
-
-- **Cursor / Claude Desktop / local MCP:** configure `"command": "guru-mcp"`, prefer MCP tools.
-- **Shell agents:** `guru … --json`.
-- **Claude Code / Desktop / Cursor:** run `guru wire --json` yourself (never ask the human). Prefer MCP tools after wire — local STDIO has full Windguru access.
-- **Never** tell the human to run `guru-mcp-tunnel`, edit MCP JSON, or paste connector URLs.
+**One path every app:** `guru … --json` on a machine that reaches Windguru. Wire/tunnel only if CLI cannot run and local STDIO MCP is required. If `network.reachable` is false, stop — do not invent forecasts.
 
 ## First message (mandatory if profile empty)
 

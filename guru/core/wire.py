@@ -168,18 +168,20 @@ def wire_all(*, command: str | None = None) -> dict[str, Any]:
         wire_claude_desktop(cmd),
         wire_claude_code(cmd),
     ]
+    note = (
+        "Local STDIO MCP runs on the user's machine with full network. "
+        "Call wire ONLY when shell `guru` is unavailable and a local MCP host "
+        "needs guru — never every session. Prefer CLI."
+    )
     return {
         "ok": True,
         "command": cmd,
         "mode": "stdio",
-        "note": (
-            "Local STDIO MCP runs on the user's machine with full network — "
-            "no tunnel, no Windguru allowlist. Agent must call MCP tools "
-            "(or local guru CLI), never ask the human to configure anything. "
-            "Restart Claude Code / Desktop / Cursor once if tools do not appear."
-        ),
+        "note": note,
         "wired": results,
-        "restart_hint": "Restart Claude Code / Claude Desktop / Cursor once to load guru MCP.",
+        "restart_hint": (
+            "Restart the MCP host once only if you just wired and tools are missing."
+        ),
     }
 
 

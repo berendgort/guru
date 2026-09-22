@@ -1,47 +1,28 @@
-# MCP — `guru-mcp`
+# MCP — optional adapter (CLI is canonical)
 
-Same tools as the CLI. Prefer `weekend_spots` / `best_forecast` (advice on) over raw GFS.
-
-## Install
+**Universal path for every app:** local `guru … --json` on a machine that reaches Windguru.
+`guru-mcp` is the **same library** over STDIO for hosts that spawn MCP processes — not a second product, not a Claude-specific tunnel.
 
 ```bash
 pipx install 'windguru[mcp]'
-which guru-mcp   # use full path in MCP config if needed
+guru doctor --json          # probe + upgrade (does not wire MCP)
+guru weekend --json         # canonical
+guru-mcp                    # optional STDIO — same tools
+guru wire --json            # ONLY if shell guru unavailable + MCP host needs it
 ```
 
-## Why Claude shell can’t hit Windguru (and how we fix it)
+## Sandbox / allowlist failures
 
-Anthropic’s **cloud sandbox shell** cannot dial `www.windguru.cz`. We do **not** ask humans to run tunnels.
+If `doctor` / `instruct` reports `network.reachable: false`, the **runtime** cannot dial Windguru. MCP JSON and Cloudflare tunnels do not fix that. Move to a **local** agent host (Cursor Agent, Claude Code/Desktop on the laptop, Codex shell, etc.) and run `guru` there. Never invent forecasts. Never ask the human to paste connector URLs.
 
-**Turbo path:** the agent runs `guru wire` / `guru doctor` (or MCP `wire_mcp`). That installs local **STDIO** `guru-mcp` into Cursor / Claude Desktop / Claude Code. The MCP subprocess lives on the laptop → full network → Windguru works. Zero human config.
-
-| Situation | Fix (agent does it) |
-|-----------|---------------------|
-| Cursor / Claude **Desktop** / **Claude Code** | `guru wire --json` → local STDIO MCP |
-| Sandboxed shell can’t reach Windguru | Use wired MCP tools, not `curl` / raw shell |
-| Claude.ai web custom connector only | Last resort: `guru-mcp-tunnel` (agent-started); prefer Desktop/Code STDIO |
-
-## Run
+## Optional MCP
 
 | Command | Transport |
 |---------|-----------|
-| `guru-mcp` | STDIO — Cursor, Claude Desktop, Codex (local) |
-| `guru-mcp-http` | Streamable HTTP at `http://127.0.0.1:8000/mcp/` (`GURU_MCP_HOST` / `GURU_MCP_PORT`) |
-| `guru-mcp-tunnel` | HTTP + Cloudflare quick tunnel — prints `https://….trycloudflare.com/mcp/` for Claude connectors |
-
-Requires `cloudflared` on PATH for the tunnel command.
-
-### Which host?
-
-| Host | Wire |
-|------|------|
-| **Cursor** | STDIO `guru-mcp` in MCP settings / `.cursor/mcp.json` (primary) |
-| **Claude Desktop** | STDIO in `claude_desktop_config.json` — **not** the cloud sandbox |
-| **Claude Cowork / claude.ai / Code cloud** | Remote custom connector: `guru-mcp-tunnel` → paste URL |
-| **Codex / shell agents** | Prefer CLI `guru … --json`; or local STDIO MCP if the client supports it |
-| **ChatGPT cloud** | Needs a public HTTP MCP / Action you host — no local spawn |
-
-### Cursor / Claude Desktop (local STDIO)
+| `guru-mcp` | STDIO — any host that can spawn a local process |
+| `guru wire --json` | Opt-in only — when shell `guru` cannot run and local STDIO MCP is required |
+| `guru-mcp-http` | Local HTTP at `http://127.0.0.1:8000/mcp/` |
+| `guru-mcp-tunnel` | Escape hatch only — not the default path |
 
 ```json
 {
@@ -53,22 +34,14 @@ Requires `cloudflared` on PATH for the tunnel command.
 }
 ```
 
-### Claude Cowork / claude.ai (remote) — one command
+Agents use the CLI. Call `guru wire` / `wire_mcp` only when absolutely necessary (no shell `guru` + MCP host missing guru). Humans are not asked to edit configs.
 
-```bash
-pipx install 'windguru[mcp]'   # once
-# install cloudflared once: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/
-guru-mcp-tunnel
-```
-
-Copy the printed `https://….trycloudflare.com/mcp/` URL → Claude → Customize → Connectors → Add custom connector. Leave the tunnel running while you chat.
-
-Anthropic’s cloud dials **you**; your laptop still talks to Windguru. See [custom connectors / remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp).
 ## Tools
 
 | Tool | Args | Returns |
 |------|------|---------|
-| `instruct` | — | Agent recipe (intake → weekend / best) |
+| `instruct` | — | Agent recipe (intake → weekend / best) + `path` + `network` |
+| `wire_mcp` | `status_only?` | Optional local STDIO adapters |
 | `setup_profile` | `intake?`, sport, weight_kg, **level**, kites, wetsuits, home_lat/lon, drive_km, session_hours… | Merged profile |
 | `get_profile` | — | Profile + ready / range_ready / first_pass |
 | `weekend_spots` | `hours?` (default 96), `limit?`, `top?` (default 3) | Day `schedule` + ranked spots |
@@ -99,7 +72,7 @@ Client already retries with backoff. On `retryable: true`, wait seconds before a
 
 ## Agent rules
 
-1. Call `instruct` / `get_profile` / `doctor` — if `upgrade.update_available`, upgrade first.
+1. Call `instruct` / `get_profile` / `doctor` — check `network.reachable` and `upgrade.update_available`.
 2. If `first_pass`: show `intake.prompt_to_user` once (include **level**), then `setup_profile`.
 3. For “where can I kite?” call `weekend_spots` and narrate **`schedule`** for the whole horizon.
 4. For a named spot call `best_forecast` (advice on by default).

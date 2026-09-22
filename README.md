@@ -30,16 +30,11 @@ Onboard the rider on the **first message**, then answer kite questions with gear
    pipx upgrade windguru || pipx install 'windguru[mcp]'
    # or: pip install -U 'windguru[mcp]'   (activate venv first)
    ```
-   Check `guru doctor --json` → `upgrade.update_available`, or `guru instruct --json` → `data.upgrade`.
-2. Confirm: `guru doctor` and `guru instruct --json`.
+2. Run `guru doctor --json` — check `network.reachable` and `upgrade.update_available`.
 3. **Immediately check the profile.** If `first_pass` / `ready=false` / `range_ready=false`, your **first reply to the human** must be the intake prompt (include **level**). Do not run weekend/best yet.
-4. Wire tools for the host you are in:
-   - **Cursor / Claude Desktop / local Codex with MCP** → ensure MCP server `guru` runs `guru-mcp` (full path from `which guru-mcp` if needed). Then prefer MCP tools over shell.
-   - **Shell-capable agent (Cursor Agent, Codex, Claude with bash)** → run `guru … --json` if MCP is not configured yet.
-   - **Claude Code / Desktop / Cursor** → run `guru wire --json` (or `guru doctor`) **yourself** — wires local STDIO MCP with full Windguru network. Never ask the human to edit config or start a tunnel.
-   - **ChatGPT cloud** → same as Cowork for MCP (needs public HTTP), otherwise guide install + have the user paste `guru … --json` output, or use whatever shell/Code Interpreter the product gives you.
+4. **One path for every app:** run `guru … --json` on a host that reaches Windguru. If `network.reachable` is false, stop (sandbox); do not invent forecasts. Do **not** wire MCP or start tunnels unless shell `guru` is unavailable and a local STDIO MCP host actually needs it.
 
-MCP config (Cursor / Claude Desktop):
+Optional MCP (only if the host already uses MCP):
 
 ```json
 {
@@ -119,26 +114,17 @@ More: [`docs/mcp.md`](docs/mcp.md) · skill copy: [`skills/guru/SKILL.md`](skill
 ## Install
 
 ```bash
-pipx install windguru          # CLI: guru …
-pipx install 'windguru[mcp]'   # + MCP: guru-mcp / guru-mcp-http / guru-mcp-tunnel
-guru --help
+pipx install windguru          # CLI: guru …   ← canonical path for every app
+pipx install 'windguru[mcp]'   # + optional STDIO/HTTP adapters
+guru doctor --json
 ```
 
 Or with pip: `pip install windguru` / `pip install 'windguru[mcp]'`.
 
-PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `guru-mcp`, `guru-mcp-http`, `guru-mcp-tunnel`
+PyPI: [`windguru`](https://pypi.org/project/windguru/)
 
-### Host cheat sheet
+**Every app:** `guru … --json` on a host that reaches Windguru. Optional `guru-mcp` is the same library for STDIO hosts. Cloud sandboxes that block Windguru are unsupported — move to a local agent; do not tunnel by default.
 
-| Host | Wire |
-|------|------|
-| **Cursor** | MCP `guru-mcp` and/or shell `guru … --json` + optional [`skills/guru/SKILL.md`](skills/guru/SKILL.md) |
-| **Claude Desktop** | Local STDIO in `claude_desktop_config.json` |
-| **Claude Cowork / claude.ai / Code cloud** | `guru-mcp-tunnel` → paste URL as custom connector ([docs](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)) |
-| **Codex / shell agents** | `pipx install windguru` then `guru … --json` |
-| **ChatGPT cloud** | Public HTTP MCP/Action you host, or user runs CLI and pastes JSON |
-
-`guru-mcp-tunnel` = local HTTP MCP + Cloudflare quick tunnel (needs `cloudflared`). There is no hosted Windguru MCP in this repo — Claude’s cloud cannot dial Windguru directly.
 ## CLI
 
 | Command | Role |
@@ -151,7 +137,7 @@ PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `gur
 | `guru near --lat --lon` | Free map markers near a point |
 | `guru best <spot>` | Spot call + gear advice (default; `--no-advise` for raw) |
 | `guru forecast <spot> -m gfs` | Single model escape hatch |
-| `guru models` / `schema` / `doctor` | Discoverability |
+| `guru models` / `schema` / `doctor` / `wire` | Discoverability + network probe + optional MCP adapters |
 
 Ambiguous names fail with `error_type: ambiguous` + `candidates` (pass numeric id or `--pick`).
 

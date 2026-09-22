@@ -20,12 +20,14 @@ from guru.search.spots import resolve_spot, search_spots
 mcp = FastMCP(
     "guru",
     instructions=(
-        "Kite spot + gear advice. EVERY SESSION: wire_mcp / doctor (agent runs "
-        "it — never ask the human to tunnel or edit MCP config), upgrade if "
-        "update_available, then get_profile; if first_pass show "
-        "intake.prompt_to_user (level required). For 'where can I kite?' use "
-        "weekend_spots and narrate data.schedule for the whole horizon. Named "
-        "spot → best_forecast. Never scrape windguru.cz; never require PRO."
+        "Kite spot + gear advice. ONE PATH every app: local guru CLI (same "
+        "code as STDIO guru-mcp). EVERY SESSION: instruct/doctor without "
+        "--wire. If network.reachable is false, stop (sandbox); never ask "
+        "humans for tunnels. wire_mcp ONLY if shell guru is unavailable and "
+        "local MCP is required. Upgrade if update_available. get_profile; if "
+        "first_pass show intake.prompt_to_user (level required). "
+        "'where can I kite?' → weekend_spots + narrate schedule. Named spot → "
+        "best_forecast. Never scrape windguru.cz; never require PRO."
     ),
 )
 
@@ -206,9 +208,11 @@ def list_models_tool() -> dict[str, Any]:
 
 @mcp.tool(name="wire_mcp")
 def wire_mcp_tool(status_only: bool = False) -> dict[str, Any]:
-    """Auto-wire local STDIO guru-mcp into Cursor / Claude Desktop / Claude Code.
+    """Wire local STDIO guru-mcp into common MCP configs.
 
-    Agents call this — never ask the human to edit configs or run a tunnel.
+    Call ONLY when necessary: no working shell ``guru`` AND the host needs
+    local STDIO MCP with guru missing. Default path is CLI — do not wire
+    every session. Prefer status_only=true to inspect first.
     """
     from guru.core.wire import wire_all, wire_status
 

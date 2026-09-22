@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from guru.core.path import agent_path_payload, probe_windguru
 from guru.core.upgrade import upgrade_status
-from guru.core.wire import wire_status
 from guru.rider.intake import intake_payload
 from guru.rider.profile_store import load_profile, profile_payload
 
@@ -17,23 +17,24 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
             "pipx upgrade windguru   # or: pip install -U 'windguru[mcp]'"
         ),
         "detail": (
-            "EVERY SESSION: check data.upgrade.update_available (or guru doctor "
-            "--json). If true, upgrade windguru on the fly before briefing — "
-            "do not leave the user on a stale CLI."
+            "EVERY SESSION: if data.upgrade.update_available, upgrade before "
+            "briefing."
         ),
     },
     {
         "step": 0,
-        "action": "auto_wire_mcp",
-        "command": "guru wire --json   # also: guru doctor --json (wires by default)",
+        "action": "universal_local_path",
+        "command": "guru doctor --json   # probe + upgrade; do NOT pass --wire",
         "detail": (
-            "TURBO AUTOMATION: YOU run guru wire / doctor yourself. Never ask "
-            "the human to edit Claude/Cursor config, run guru-mcp-tunnel, or "
-            "paste connector URLs. Local STDIO guru-mcp has full network "
-            "(Windguru works). Prefer MCP tools after wire; if shell cannot "
-            "reach windguru.cz, do NOT invent forecasts — use wired MCP or "
-            "local guru CLI on the user's machine. Restart client once only "
-            "if tools missing after first wire."
+            "ONE PATH FOR EVERY APP: local `guru … --json` on a machine that "
+            "reaches Windguru. Optional STDIO `guru-mcp` is the same code. "
+            "YOU run install/doctor/setup/weekend — never ask the human to "
+            "configure apps, start tunnels, or paste URLs. If "
+            "data.network.reachable is false, stop: move to a local host "
+            "agent; do not invent forecasts. "
+            "guru wire / wire_mcp ONLY when absolutely necessary: you have no "
+            "working shell `guru` AND the host needs local STDIO MCP and guru "
+            "is missing. Never wire or tunnel by default."
         ),
     },
     {
@@ -82,11 +83,11 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
 ]
 
 INSTRUCT_SUMMARY = (
-    "Upgrade + auto-wire MCP (guru wire / doctor) yourself — never ask the "
-    "human to run tunnel/config commands. FIRST MESSAGE: collect rider "
-    "profile once (sport, weight, LEVEL, quiver, suits, home range). Then "
-    "weekend (~4-day schedule + top-3 models) or best. Narrate the week. "
-    "WINDGURU_DEFAULT only. No HTML scrape. No PRO."
+    "Universal path: local guru CLI on a host that reaches Windguru — same "
+    "for every app. Wire/tunnel ONLY if CLI cannot run and local STDIO MCP is "
+    "required. Agent runs doctor/setup/weekend; never ask humans for config. "
+    "FIRST MESSAGE: collect rider profile once (LEVEL required). Then weekend "
+    "or best. WINDGURU_DEFAULT only. No HTML scrape. No PRO."
 )
 
 
@@ -98,39 +99,40 @@ def instruct_payload() -> dict[str, Any]:
         status = None
         need_intake = True
 
-    upgrade = upgrade_status()
     return {
         "summary": INSTRUCT_SUMMARY,
+        "path": agent_path_payload(),
+        "network": probe_windguru(),
         "preset": "WINDGURU_DEFAULT",
         "top_models": 3,
         "weekend_hours": 96,
         "first_pass": need_intake,
-        "upgrade": upgrade,
-        "mcp_wire": wire_status(),
+        "upgrade": upgrade_status(),
         "intake": intake_payload(needed=need_intake),
         "profile_status": status,
         "steps": INSTRUCT_STEPS,
         "automation": {
             "rule": "agent_runs_all_commands",
+            "canonical": "guru … --json",
             "human_runs": [],
             "agent_runs": [
-                "pipx upgrade windguru",
-                "guru wire --json",
+                "pipx install 'windguru[mcp]'  # once",
                 "guru doctor --json",
                 "guru setup --intake …",
                 "guru weekend --json",
                 "guru best <id> --json",
             ],
             "never_ask_human": [
-                "edit Claude/Cursor MCP config",
-                "run guru-mcp-tunnel",
-                "paste Cloudflare connector URLs",
-                "install cloudflared",
+                "edit any app's MCP config",
+                "run guru-mcp-tunnel / cloudflared",
+                "paste connector URLs",
+                "install packages manually",
+                "run guru wire unless CLI is unavailable",
             ],
         },
         "examples": [
-            "pipx upgrade windguru",
-            "guru wire --json",
+            "pipx install 'windguru[mcp]'",
+            "guru doctor --json",
             "guru profile --json",
             (
                 "guru setup --intake 'sport=kitefoil weight=78 level=intermediate "
