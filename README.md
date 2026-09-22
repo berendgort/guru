@@ -17,13 +17,6 @@ guru --help
 guru instruct --json
 ```
 
-Until the PyPI release is live, install from GitHub:
-
-```bash
-pipx install 'windguru @ git+https://github.com/berendgort/guru.git'
-pipx install 'windguru[mcp] @ git+https://github.com/berendgort/guru.git'
-```
-
 PyPI name **`windguru`**, command **`guru`**, MCP **`guru-mcp`**.
 
 Or with pip:
@@ -31,6 +24,13 @@ Or with pip:
 ```bash
 pip install windguru
 pip install 'windguru[mcp]'
+```
+
+From a checkout / GitHub:
+
+```bash
+pipx install -e ".[mcp]"
+# or: pipx install 'windguru[mcp] @ git+https://github.com/berendgort/guru.git'
 ```
 
 ## MCP Server
