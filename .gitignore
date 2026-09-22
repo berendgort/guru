@@ -28,3 +28,4 @@ venv/
 # Local capture dumps (keep fixtures/ tracked intentionally)
 /tmp/
 *.har
+dist/

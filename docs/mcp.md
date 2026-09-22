@@ -6,6 +6,7 @@ Same library and error vocabulary as the CLI. Prefer `best_forecast` over raw GF
 
 ```bash
 pipx install 'windguru[mcp]'
+# until PyPI: pipx install 'windguru[mcp] @ git+https://github.com/berendgort/guru.git'
 # or from checkout: pipx install -e ".[mcp]"
 
 which guru-mcp   # use full path in MCP config if needed

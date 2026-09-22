@@ -12,7 +12,7 @@ license: MIT
 ## Primary path
 
 1. `pipx install 'windguru[mcp]'` (or from checkout: `pipx install -e ".[mcp]"`)
-2. Until PyPI is live: `pipx install 'git+https://github.com/berendgort/guru.git[mcp]'`
+2. Until PyPI is live: `pipx install 'windguru[mcp] @ git+https://github.com/berendgort/guru.git'`
 3. CLI: `guru`
 4. MCP STDIO: `guru-mcp`
 5. MCP HTTP: `guru-mcp-http` only when needed

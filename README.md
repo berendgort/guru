@@ -20,8 +20,8 @@ guru instruct --json
 Until the PyPI release is live, install from GitHub:
 
 ```bash
-pipx install 'git+https://github.com/berendgort/guru.git'
-pipx install 'git+https://github.com/berendgort/guru.git[mcp]'
+pipx install 'windguru @ git+https://github.com/berendgort/guru.git'
+pipx install 'windguru[mcp] @ git+https://github.com/berendgort/guru.git'
 ```
 
 PyPI name **`windguru`**, command **`guru`**, MCP **`guru-mcp`**.
