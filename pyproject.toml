@@ -1,6 +1,6 @@
 [project]
 name = "windguru"
-version = "0.3.6"
+version = "0.3.7"
 description = "Windguru CLI, MCP server, and Python library — kite spot + gear advice for riders and agents"
 authors = [{ name = "Berend Gort", email = "berend.gort@gmail.com" }]
 readme = "README.md"
@@ -45,6 +45,7 @@ all = [
 guru = "guru.cli.main:cli"
 guru-mcp = "guru.mcp._entry:run"
 guru-mcp-http = "guru.mcp._entry:run_http"
+guru-mcp-tunnel = "guru.mcp._entry:run_tunnel"
 
 [project.urls]
 Homepage = "https://github.com/berendgort/guru"

@@ -36,7 +36,7 @@ Onboard the rider on the **first message**, then answer kite questions with gear
 4. Wire tools for the host you are in:
    - **Cursor / Claude Desktop / local Codex with MCP** → ensure MCP server `guru` runs `guru-mcp` (full path from `which guru-mcp` if needed). Then prefer MCP tools over shell.
    - **Shell-capable agent (Cursor Agent, Codex, Claude with bash)** → run `guru … --json` if MCP is not configured yet.
-   - **Claude Cowork / claude.ai** → local STDIO MCP will not work. Either run CLI in a local terminal the user controls, or start `guru-mcp-http` and help them add a **public HTTPS** URL under Customize → Connectors. Do not pretend localhost is reachable from Anthropic’s cloud.
+   - **Claude Cowork / claude.ai / Code cloud** → Anthropic’s sandbox **cannot** reach `windguru.cz`. On the user’s machine run `guru-mcp-tunnel` and add the printed `https://….trycloudflare.com/mcp/` under Customize → Connectors. Do not pretend localhost or an allowlist patch will fix the cloud sandbox.
    - **ChatGPT cloud** → same as Cowork for MCP (needs public HTTP), otherwise guide install + have the user paste `guru … --json` output, or use whatever shell/Code Interpreter the product gives you.
 
 MCP config (Cursor / Claude Desktop):
@@ -120,13 +120,13 @@ More: [`docs/mcp.md`](docs/mcp.md) · skill copy: [`skills/guru/SKILL.md`](skill
 
 ```bash
 pipx install windguru          # CLI: guru …
-pipx install 'windguru[mcp]'   # + MCP: guru-mcp / guru-mcp-http
+pipx install 'windguru[mcp]'   # + MCP: guru-mcp / guru-mcp-http / guru-mcp-tunnel
 guru --help
 ```
 
 Or with pip: `pip install windguru` / `pip install 'windguru[mcp]'`.
 
-PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `guru-mcp`, `guru-mcp-http`
+PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `guru-mcp`, `guru-mcp-http`, `guru-mcp-tunnel`
 
 ### Host cheat sheet
 
@@ -134,11 +134,11 @@ PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `gur
 |------|------|
 | **Cursor** | MCP `guru-mcp` and/or shell `guru … --json` + optional [`skills/guru/SKILL.md`](skills/guru/SKILL.md) |
 | **Claude Desktop** | Local STDIO in `claude_desktop_config.json` |
-| **Claude Cowork / claude.ai** | Remote custom connector → public HTTPS to `guru-mcp-http` ([docs](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)) |
+| **Claude Cowork / claude.ai / Code cloud** | `guru-mcp-tunnel` → paste URL as custom connector ([docs](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)) |
 | **Codex / shell agents** | `pipx install windguru` then `guru … --json` |
 | **ChatGPT cloud** | Public HTTP MCP/Action you host, or user runs CLI and pastes JSON |
 
-`guru-mcp-http` listens at `http://127.0.0.1:8000/mcp/` — Cowork/claude.ai need that URL exposed publicly; there is no hosted Windguru MCP in this repo.
+`guru-mcp-tunnel` = local HTTP MCP + Cloudflare quick tunnel (needs `cloudflared`). There is no hosted Windguru MCP in this repo — Claude’s cloud cannot dial Windguru directly.
 ## CLI
 
 | Command | Role |

@@ -9,20 +9,35 @@ pipx install 'windguru[mcp]'
 which guru-mcp   # use full path in MCP config if needed
 ```
 
+## Why Claude can’t “just” hit Windguru
+
+Anthropic’s **cloud / Code sandbox** only dials an allowlisted set of hosts. `www.windguru.cz` is **not** on that list — we cannot whitelist it from this repo.
+
+**Fix from the guru side:** run Windguru fetches on *your* machine (full network), and let Claude call *you* via MCP.
+
+| Situation | Fix |
+|-----------|-----|
+| Cursor / Claude **Desktop** on your laptop | Local STDIO `guru-mcp` (process has your network) |
+| Claude **Cowork / claude.ai / Code cloud** | Public HTTPS → your laptop: `guru-mcp-tunnel` |
+| Paste-only chat | Run `guru weekend --json` locally and paste output |
+
 ## Run
 
 | Command | Transport |
 |---------|-----------|
 | `guru-mcp` | STDIO — Cursor, Claude Desktop, Codex (local) |
-| `guru-mcp-http` | Streamable HTTP at `http://127.0.0.1:8000/mcp/` — for remote connectors |
+| `guru-mcp-http` | Streamable HTTP at `http://127.0.0.1:8000/mcp/` (`GURU_MCP_HOST` / `GURU_MCP_PORT`) |
+| `guru-mcp-tunnel` | HTTP + Cloudflare quick tunnel — prints `https://….trycloudflare.com/mcp/` for Claude connectors |
+
+Requires `cloudflared` on PATH for the tunnel command.
 
 ### Which host?
 
 | Host | Wire |
 |------|------|
 | **Cursor** | STDIO `guru-mcp` in MCP settings / `.cursor/mcp.json` (primary) |
-| **Claude Desktop** | STDIO in `claude_desktop_config.json` |
-| **Claude Cowork / claude.ai** | Remote custom connector only — public HTTPS URL to `guru-mcp-http` (Anthropic’s cloud dials you; localhost alone is not enough) |
+| **Claude Desktop** | STDIO in `claude_desktop_config.json` — **not** the cloud sandbox |
+| **Claude Cowork / claude.ai / Code cloud** | Remote custom connector: `guru-mcp-tunnel` → paste URL |
 | **Codex / shell agents** | Prefer CLI `guru … --json`; or local STDIO MCP if the client supports it |
 | **ChatGPT cloud** | Needs a public HTTP MCP / Action you host — no local spawn |
 
@@ -38,13 +53,17 @@ which guru-mcp   # use full path in MCP config if needed
 }
 ```
 
-### Claude Cowork / claude.ai (remote)
+### Claude Cowork / claude.ai (remote) — one command
 
-1. `guru-mcp-http`
-2. Publish `https://<host>/mcp/` (tunnel or VPS) reachable from the public internet
-3. Customize → Connectors → Add custom connector → paste URL
+```bash
+pipx install 'windguru[mcp]'   # once
+# install cloudflared once: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/
+guru-mcp-tunnel
+```
 
-See Anthropic’s [custom connectors / remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp) notes: the connection originates from Anthropic’s cloud, not your laptop.
+Copy the printed `https://….trycloudflare.com/mcp/` URL → Claude → Customize → Connectors → Add custom connector. Leave the tunnel running while you chat.
+
+Anthropic’s cloud dials **you**; your laptop still talks to Windguru. See [custom connectors / remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp).
 ## Tools
 
 | Tool | Args | Returns |

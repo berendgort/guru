@@ -22,6 +22,18 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         ),
     },
     {
+        "step": 0,
+        "action": "claude_sandbox_network",
+        "command": "guru-mcp-tunnel   # needs cloudflared; paste URL into Claude Connectors",
+        "detail": (
+            "If the agent host cannot reach www.windguru.cz (Claude Code / "
+            "Cowork cloud allowlist), do NOT invent forecasts. On the user's "
+            "machine run guru-mcp-tunnel and connect Claude to the printed "
+            "https://….trycloudflare.com/mcp/ URL — or run guru weekend "
+            "locally and paste --json."
+        ),
+    },
+    {
         "step": 1,
         "action": "first_pass_intake",
         "command": "guru profile --json   # if ready=false → show data.intake.prompt_to_user",
@@ -70,6 +82,8 @@ INSTRUCT_SUMMARY = (
     "Upgrade windguru if outdated. FIRST MESSAGE: collect rider profile once "
     "(sport, weight, LEVEL, quiver, suits, home range). Then weekend "
     "(~4-day schedule + top-3 models) or best. Narrate the week. "
+    "If Claude cloud/Code sandbox cannot reach windguru.cz: run "
+    "guru-mcp-tunnel on the user's machine (or local guru CLI). "
     "WINDGURU_DEFAULT only. No HTML scrape. No PRO."
 )
 
