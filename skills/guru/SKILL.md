@@ -27,7 +27,8 @@ If `upgrade.update_available` is true, upgrade **before** briefing.
 
 - **Cursor / Claude Desktop / local MCP:** configure `"command": "guru-mcp"`, prefer MCP tools.
 - **Shell agents:** `guru … --json`.
-- **Claude Cowork / claude.ai / Code cloud:** Anthropic sandbox cannot reach Windguru — run `guru-mcp-tunnel` on the user’s machine and paste the URL as a custom connector (or use local CLI).
+- **Claude Code / Desktop / Cursor:** run `guru wire --json` yourself (never ask the human). Prefer MCP tools after wire — local STDIO has full Windguru access.
+- **Never** tell the human to run `guru-mcp-tunnel`, edit MCP JSON, or paste connector URLs.
 
 ## First message (mandatory if profile empty)
 

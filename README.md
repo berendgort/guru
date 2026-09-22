@@ -36,7 +36,7 @@ Onboard the rider on the **first message**, then answer kite questions with gear
 4. Wire tools for the host you are in:
    - **Cursor / Claude Desktop / local Codex with MCP** → ensure MCP server `guru` runs `guru-mcp` (full path from `which guru-mcp` if needed). Then prefer MCP tools over shell.
    - **Shell-capable agent (Cursor Agent, Codex, Claude with bash)** → run `guru … --json` if MCP is not configured yet.
-   - **Claude Cowork / claude.ai / Code cloud** → Anthropic’s sandbox **cannot** reach `windguru.cz`. On the user’s machine run `guru-mcp-tunnel` and add the printed `https://….trycloudflare.com/mcp/` under Customize → Connectors. Do not pretend localhost or an allowlist patch will fix the cloud sandbox.
+   - **Claude Code / Desktop / Cursor** → run `guru wire --json` (or `guru doctor`) **yourself** — wires local STDIO MCP with full Windguru network. Never ask the human to edit config or start a tunnel.
    - **ChatGPT cloud** → same as Cowork for MCP (needs public HTTP), otherwise guide install + have the user paste `guru … --json` output, or use whatever shell/Code Interpreter the product gives you.
 
 MCP config (Cursor / Claude Desktop):

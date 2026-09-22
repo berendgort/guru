@@ -376,18 +376,62 @@ def schema_cmd(
     print_ok({"name": key, "schema": schemas[key]})
 
 
+@app.command("wire")
+def wire_cmd(
+    as_json: bool = typer.Option(False, "--json"),
+    status_only: bool = typer.Option(
+        False, "--status", help="Check MCP wiring without writing."
+    ),
+) -> None:
+    """Auto-wire local STDIO guru-mcp into Cursor / Claude Desktop / Claude Code.
+
+    Agents run this — never ask the human to edit config or start a tunnel.
+    """
+    from guru.core.wire import wire_all, wire_status
+
+    try:
+        payload = wire_status() if status_only else wire_all()
+    except _CATCH as exc:
+        fail(exc, as_json=as_json)
+        return
+    if as_json:
+        print_ok(payload)
+        return
+    if not payload.get("ok", True) and not status_only:
+        console.print(f"[red]{payload.get('error')}[/red] — {payload.get('hint')}")
+        raise typer.Exit(1)
+    if status_only:
+        console.print(f"guru-mcp={payload.get('guru_mcp') or 'missing'}")
+        for c in payload.get("checks") or []:
+            mark = "ok" if c.get("present") else "—"
+            console.print(f"  {mark} {c['target']}: {c['path']}")
+        return
+    console.print(f"wired guru-mcp → {payload.get('command')}")
+    for w in payload.get("wired") or []:
+        flag = "updated" if w.get("changed") else "unchanged"
+        console.print(f"  {flag} {w.get('target')}: {w.get('path')}")
+    console.print(payload.get("restart_hint") or "")
+
+
 @app.command("doctor")
 def doctor_cmd(
     as_json: bool = typer.Option(False, "--json"),
+    wire: bool = typer.Option(
+        True,
+        "--wire/--no-wire",
+        help="Auto-wire local STDIO MCP into agent hosts (default on).",
+    ),
 ) -> None:
-    """Env + version + PyPI upgrade check."""
+    """Env + version + PyPI upgrade check (+ auto MCP wire)."""
     from guru.core.upgrade import upgrade_status
+    from guru.core.wire import wire_all, wire_status
 
     try:
         payload = profile_payload()
     except Exception:
         payload = {"ready": False, "missing": ["profile"], "path": None}
     upgrade = upgrade_status()
+    wired = wire_all() if wire else wire_status()
     info = {
         "version": __version__,
         "upgrade": upgrade,
@@ -395,6 +439,7 @@ def doctor_cmd(
         "GURU_IMPERSONATE": os.environ.get("GURU_IMPERSONATE", "chrome"),
         "models": list_models(),
         "profile": payload,
+        "mcp_wire": wired,
     }
     if as_json:
         print_ok(info)
@@ -413,6 +458,10 @@ def doctor_cmd(
     console.print(f"GURU_IMPERSONATE={info['GURU_IMPERSONATE']}")
     console.print(f"{len(info['models'])} known model aliases")
     console.print(f"profile ready={payload.get('ready')} path={payload.get('path')}")
+    if wired.get("ok"):
+        console.print(f"mcp wired → {wired.get('command')}")
+    elif wire:
+        console.print(f"[yellow]mcp wire failed: {wired.get('error')}[/yellow]")
 
 
 def cli() -> None:

@@ -9,17 +9,17 @@ pipx install 'windguru[mcp]'
 which guru-mcp   # use full path in MCP config if needed
 ```
 
-## Why Claude can’t “just” hit Windguru
+## Why Claude shell can’t hit Windguru (and how we fix it)
 
-Anthropic’s **cloud / Code sandbox** only dials an allowlisted set of hosts. `www.windguru.cz` is **not** on that list — we cannot whitelist it from this repo.
+Anthropic’s **cloud sandbox shell** cannot dial `www.windguru.cz`. We do **not** ask humans to run tunnels.
 
-**Fix from the guru side:** run Windguru fetches on *your* machine (full network), and let Claude call *you* via MCP.
+**Turbo path:** the agent runs `guru wire` / `guru doctor` (or MCP `wire_mcp`). That installs local **STDIO** `guru-mcp` into Cursor / Claude Desktop / Claude Code. The MCP subprocess lives on the laptop → full network → Windguru works. Zero human config.
 
-| Situation | Fix |
-|-----------|-----|
-| Cursor / Claude **Desktop** on your laptop | Local STDIO `guru-mcp` (process has your network) |
-| Claude **Cowork / claude.ai / Code cloud** | Public HTTPS → your laptop: `guru-mcp-tunnel` |
-| Paste-only chat | Run `guru weekend --json` locally and paste output |
+| Situation | Fix (agent does it) |
+|-----------|---------------------|
+| Cursor / Claude **Desktop** / **Claude Code** | `guru wire --json` → local STDIO MCP |
+| Sandboxed shell can’t reach Windguru | Use wired MCP tools, not `curl` / raw shell |
+| Claude.ai web custom connector only | Last resort: `guru-mcp-tunnel` (agent-started); prefer Desktop/Code STDIO |
 
 ## Run
 

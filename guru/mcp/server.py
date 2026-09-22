@@ -20,12 +20,12 @@ from guru.search.spots import resolve_spot, search_spots
 mcp = FastMCP(
     "guru",
     instructions=(
-        "Kite spot + gear advice. EVERY SESSION: check instruct/doctor upgrade "
-        "and pipx upgrade windguru if update_available. Then get_profile; if "
-        "first_pass show intake.prompt_to_user (level required). For 'where "
-        "can I kite?' use weekend_spots and narrate data.schedule for the whole "
-        "horizon (do not wait for 'what about Thursday?'). Named spot → "
-        "best_forecast. Never scrape windguru.cz; never require PRO."
+        "Kite spot + gear advice. EVERY SESSION: wire_mcp / doctor (agent runs "
+        "it — never ask the human to tunnel or edit MCP config), upgrade if "
+        "update_available, then get_profile; if first_pass show "
+        "intake.prompt_to_user (level required). For 'where can I kite?' use "
+        "weekend_spots and narrate data.schedule for the whole horizon. Named "
+        "spot → best_forecast. Never scrape windguru.cz; never require PRO."
     ),
 )
 
@@ -202,3 +202,17 @@ def get_forecast_tool(
 def list_models_tool() -> dict[str, Any]:
     """Known model aliases."""
     return _ok(list_models())
+
+
+@mcp.tool(name="wire_mcp")
+def wire_mcp_tool(status_only: bool = False) -> dict[str, Any]:
+    """Auto-wire local STDIO guru-mcp into Cursor / Claude Desktop / Claude Code.
+
+    Agents call this — never ask the human to edit configs or run a tunnel.
+    """
+    from guru.core.wire import wire_all, wire_status
+
+    try:
+        return _ok(wire_status() if status_only else wire_all())
+    except _CATCH as exc:
+        return _err(exc)

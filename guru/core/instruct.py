@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from guru.core.upgrade import upgrade_status
+from guru.core.wire import wire_status
 from guru.rider.intake import intake_payload
 from guru.rider.profile_store import load_profile, profile_payload
 
@@ -23,14 +24,16 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
     },
     {
         "step": 0,
-        "action": "claude_sandbox_network",
-        "command": "guru-mcp-tunnel   # needs cloudflared; paste URL into Claude Connectors",
+        "action": "auto_wire_mcp",
+        "command": "guru wire --json   # also: guru doctor --json (wires by default)",
         "detail": (
-            "If the agent host cannot reach www.windguru.cz (Claude Code / "
-            "Cowork cloud allowlist), do NOT invent forecasts. On the user's "
-            "machine run guru-mcp-tunnel and connect Claude to the printed "
-            "https://….trycloudflare.com/mcp/ URL — or run guru weekend "
-            "locally and paste --json."
+            "TURBO AUTOMATION: YOU run guru wire / doctor yourself. Never ask "
+            "the human to edit Claude/Cursor config, run guru-mcp-tunnel, or "
+            "paste connector URLs. Local STDIO guru-mcp has full network "
+            "(Windguru works). Prefer MCP tools after wire; if shell cannot "
+            "reach windguru.cz, do NOT invent forecasts — use wired MCP or "
+            "local guru CLI on the user's machine. Restart client once only "
+            "if tools missing after first wire."
         ),
     },
     {
@@ -79,11 +82,10 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
 ]
 
 INSTRUCT_SUMMARY = (
-    "Upgrade windguru if outdated. FIRST MESSAGE: collect rider profile once "
-    "(sport, weight, LEVEL, quiver, suits, home range). Then weekend "
-    "(~4-day schedule + top-3 models) or best. Narrate the week. "
-    "If Claude cloud/Code sandbox cannot reach windguru.cz: run "
-    "guru-mcp-tunnel on the user's machine (or local guru CLI). "
+    "Upgrade + auto-wire MCP (guru wire / doctor) yourself — never ask the "
+    "human to run tunnel/config commands. FIRST MESSAGE: collect rider "
+    "profile once (sport, weight, LEVEL, quiver, suits, home range). Then "
+    "weekend (~4-day schedule + top-3 models) or best. Narrate the week. "
     "WINDGURU_DEFAULT only. No HTML scrape. No PRO."
 )
 
@@ -104,11 +106,31 @@ def instruct_payload() -> dict[str, Any]:
         "weekend_hours": 96,
         "first_pass": need_intake,
         "upgrade": upgrade,
+        "mcp_wire": wire_status(),
         "intake": intake_payload(needed=need_intake),
         "profile_status": status,
         "steps": INSTRUCT_STEPS,
+        "automation": {
+            "rule": "agent_runs_all_commands",
+            "human_runs": [],
+            "agent_runs": [
+                "pipx upgrade windguru",
+                "guru wire --json",
+                "guru doctor --json",
+                "guru setup --intake …",
+                "guru weekend --json",
+                "guru best <id> --json",
+            ],
+            "never_ask_human": [
+                "edit Claude/Cursor MCP config",
+                "run guru-mcp-tunnel",
+                "paste Cloudflare connector URLs",
+                "install cloudflared",
+            ],
+        },
         "examples": [
             "pipx upgrade windguru",
+            "guru wire --json",
             "guru profile --json",
             (
                 "guru setup --intake 'sport=kitefoil weight=78 level=intermediate "
