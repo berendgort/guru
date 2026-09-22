@@ -7,10 +7,10 @@ from datetime import datetime
 from guru.core.rating import windguru_rating
 from guru.models.forecast import Forecast, ForecastHour, Spot
 from guru.models.profile import AdviceReport, AdviceWindow, Level, RiderProfile, Sport
+from guru.rider import voice
 from guru.rider.sizing import (
     hour_verdict,
     ideal_kite_m2,
-    kiter_checklist,
     pick_owned_kite,
     pick_owned_wetsuit,
     recommend_wetsuit,
@@ -53,12 +53,9 @@ def advise_forecast(
             level=profile.level.value if profile.level else None,
             model=forecast.model,
             missing_profile=missing,
-            summary=(
-                "Rider profile incomplete — run guru setup before gear advice. "
-                f"Missing: {', '.join(missing)}"
-            ),
+            summary=voice.incomplete_advice_summary(missing),
             sizing_rule="2.2*kg/kn; foil -40%; surfkite -15%; size for gusts",
-            checklist=kiter_checklist(gusty=False, drive_km=drive_km),
+            checklist=voice.checklist(gusty=False, drive_km=drive_km),
         )
 
     assert profile.sport is not None
@@ -132,7 +129,7 @@ def advise_forecast(
         overall = "no"
         for w in windows:
             if w.verdict == "marginal":
-                w.note = (w.note + "; " if w.note else "") + "far drive needs clearer GO"
+                w.note = voice.far_drive_note(w.note)
 
     summary = _summary(overall, windows, sport=sport, level=level, session_h=session_h)
 
@@ -143,7 +140,7 @@ def advise_forecast(
         model=forecast.model,
         windows=windows,
         sizing_rule=sizing_rule_text(sport),
-        checklist=kiter_checklist(gusty=any_gusty, drive_km=drive_km),
+        checklist=voice.checklist(gusty=any_gusty, drive_km=drive_km),
         missing_profile=[],
         summary=summary,
     )
@@ -163,30 +160,22 @@ def _hour_note(
     owned_suit: str | None,
     session_hours: float,
 ) -> str:
-    bits: list[str] = []
-    if quality == "smooth":
-        bits.append("smooth wind")
-    elif quality == "gusty":
-        bits.append("gusty — size for gusts")
-    if sport is Sport.KITEFOIL and wind_kn is not None and wind_kn < 12:
-        bits.append("foil light-wind ok")
-    if gap is not None and abs(gap) > 2.0:
-        bits.append(f"quiver gap {gap:+.1f} m² vs ideal {ideal}")
-    elif owned is not None and ideal is not None:
-        bits.append(f"rig {owned:g} m² (ideal ~{ideal:g})")
-    if owned_suit and rec_suit and _normalize_compare(owned_suit) != _normalize_compare(
-        rec_suit
-    ):
-        bits.append(f"suit: own {owned_suit}, chart wants {rec_suit} ({session_hours:g}h)")
-    elif owned_suit:
-        bits.append(f"suit {owned_suit} ({session_hours:g}h session)")
-    if level is Level.BEGINNER and wind_kn is not None and wind_kn >= 20:
-        bits.append("strong for beginner")
+    bits = voice.hour_bits(
+        quality=quality,
+        sport_foil_light=sport is Sport.KITEFOIL
+        and wind_kn is not None
+        and wind_kn < 12,
+        gap=gap,
+        ideal=ideal,
+        owned=owned,
+        owned_suit=owned_suit,
+        rec_suit=rec_suit,
+        session_hours=session_hours,
+        beginner_strong=level is Level.BEGINNER
+        and wind_kn is not None
+        and wind_kn >= 20,
+    )
     return "; ".join(bits) if bits else ""
-
-
-def _normalize_compare(raw: str) -> str:
-    return raw.strip().lower().replace(" ", "")
 
 
 def _collapse_windows(
@@ -291,7 +280,19 @@ def _summary(
     session_h: float,
 ) -> str:
     if overall == "no" or not windows:
-        return f"No rideable {sport.value} window for {level.value} in this forecast."
+        return voice.advice_summary(
+            "no",
+            start="",
+            end="",
+            wind_kn=0,
+            gust_kn=None,
+            stars="",
+            kite="",
+            suit="",
+            session_h=session_h,
+            sport=sport.value,
+            level=level.value,
+        )
     top = windows[0]
     kite = (
         f"{top.owned_kite_m2:g} m²"
@@ -300,13 +301,18 @@ def _summary(
     )
     suit = top.owned_wetsuit or top.wetsuit or "suit n/a"
     stars = top.rating if top.rating and top.rating != "—" else ""
-    star_bit = f" · {stars}" if stars else ""
-    return (
-        f"{overall.upper()}: {top.start}–{top.end} · "
-        f"{top.wind_kn:g} kt"
-        + (f" gust {top.gust_kn:g}" if top.gust_kn else "")
-        + star_bit
-        + f" · {kite} · {suit} · {session_h:g}h"
+    return voice.advice_summary(
+        overall,
+        start=top.start,
+        end=top.end,
+        wind_kn=top.wind_kn,
+        gust_kn=top.gust_kn,
+        stars=stars,
+        kite=kite,
+        suit=suit,
+        session_h=session_h,
+        sport=sport.value,
+        level=level.value,
     )
 
 

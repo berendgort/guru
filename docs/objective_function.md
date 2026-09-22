@@ -158,4 +158,4 @@ Manipulation test: would we still publish this objective if a kiter read the sco
 |------|---------|
 | 2026-09-22 | Product maximand is **spot + pleasure + offloaded thinking**, not forecast-API completeness. `weekend` / `best --advise` + one-shot intake are the spine. |
 | 2026-09-22 | CLI audit: `best` advice now **default on**; pass home→spot `drive_km` into advice (same honesty as weekend); instruct steps lead with weekend/best not spots/near. |
-| 2026-09-22 | Weekend defaults **96h + top-3 models** + `schedule` so agents narrate Thu without being asked; instruct/doctor force **auto-upgrade** from PyPI. |
+| 2026-09-22 | CLI/MCP **kite-bro voice** (`guru/rider/voice.py`): SEND IT / SOFT CALL / SIT IT OUT + beach vocab; machine verdicts unchanged; agents follow `instruct.voice` while keeping C1/C4 honesty. |

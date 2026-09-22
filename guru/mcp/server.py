@@ -20,14 +20,15 @@ from guru.search.spots import resolve_spot, search_spots
 mcp = FastMCP(
     "guru",
     instructions=(
-        "Kite spot + gear advice. ONE PATH every app: local guru CLI (same "
-        "code as STDIO guru-mcp). EVERY SESSION: instruct/doctor without "
-        "--wire. If network.reachable is false, stop (sandbox); never ask "
-        "humans for tunnels. wire_mcp ONLY if shell guru is unavailable and "
-        "local MCP is required. Upgrade if update_available. get_profile; if "
-        "first_pass show intake.prompt_to_user (level required). "
-        "'where can I kite?' → weekend_spots + narrate schedule. Named spot → "
-        "best_forecast. Never scrape windguru.cz; never require PRO."
+        "Kite spot + gear advice in kite-bro voice (SEND IT / SOFT CALL / "
+        "SIT IT OUT — see instruct.voice). ONE PATH every app: local guru CLI. "
+        "EVERY SESSION: instruct/doctor without --wire. If network.reachable "
+        "is false, follow on_unreachable; never ask humans for tunnels. "
+        "wire_mcp ONLY if shell guru unavailable. Upgrade if update_available. "
+        "get_profile; if first_pass show intake.prompt_to_user (level required). "
+        "'where can I kite?' → weekend_spots + narrate schedule in voice. "
+        "Named spot → best_forecast. Never scrape; never require PRO; never hype "
+        "a soft long haul."
     ),
 )
 

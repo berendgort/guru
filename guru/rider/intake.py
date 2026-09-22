@@ -21,7 +21,7 @@ INTAKE_FIELDS: list[dict[str, str]] = [
     {
         "key": "level",
         "ask": "Level (required)",
-        "hint": "beginner | intermediate | advanced — changes GO wind and sizing",
+        "hint": "beginner | intermediate | advanced — changes SEND IT wind and sizing",
     },
     {
         "key": "kites_m2",
@@ -68,8 +68,8 @@ REPLY_TEMPLATE = (
 )
 
 AGENT_PROMPT_TO_USER = """\
-Before any forecast: I need your kite profile (one reply — paste or fill).
-Level matters for GO wind and kite size.
+Yo — before I call a session I need your quiver (one reply, paste or fill).
+Level matters: it changes the SEND IT wind and which kite you rig.
 
 • sport: kitesurf / kitefoil / surfkite
 • weight_kg

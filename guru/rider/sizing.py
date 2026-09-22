@@ -254,17 +254,7 @@ def sizing_rule_text(sport: Sport) -> str:
 
 
 def kiter_checklist(*, gusty: bool, drive_km: float | None = None) -> list[str]:
-    """How kiters think before leaving (CLEAR / kitesurfbase habits)."""
-    items = [
-        "Confirm average + gusts (size for gusts, not lulls)",
-        "At beach: watch 5 min — direction, consistency, downwind hazards",
-        "Prefer side-shore / side-onshore; treat offshore as advanced-only",
-        "Cross-check top models agree before a long drive",
-    ]
-    if gusty:
-        items.append("Gusty → smaller kite / more depower / shorter session")
-    if drive_km is not None and drive_km > 90:
-        items.append(
-            f"Long drive (~{drive_km:.0f} km) → require a clear GO, not marginal"
-        )
-    return items
+    """How kiters think before leaving — beach-bro register (see voice)."""
+    from guru.rider import voice
+
+    return voice.checklist(gusty=gusty, drive_km=drive_km)

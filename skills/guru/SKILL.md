@@ -46,7 +46,7 @@ sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 sessio
 - “Where can I kite?” → `guru weekend --json` / `weekend_spots`
 - Narrate **`data.schedule`** day-by-day (covers ~4 days / top-3 models) — do **not** wait for “what about Thursday?”
 - Named spot → `guru best <id> --json` / `best_forecast`
-- Narrate like a kiter: GO/MARGINAL/NO-GO, plan, kt+gusts, kite, suit, beach 5‑min check
+- Narrate like a kite bro (`data.voice`): SEND IT / SOFT CALL / SIT IT OUT, plan, kt+gusts, rig, suit, beach 5‑min check. Honesty > hype.
 
 ## Hard rules
 

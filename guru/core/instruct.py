@@ -8,6 +8,7 @@ from guru.core.path import agent_path_payload, probe_windguru
 from guru.core.upgrade import upgrade_status
 from guru.rider.intake import intake_payload
 from guru.rider.profile_store import load_profile, profile_payload
+from guru.rider.voice import voice_payload
 
 INSTRUCT_STEPS: list[dict[str, Any]] = [
     {
@@ -73,19 +74,21 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "action": "think_like_a_kiter",
         "command": None,
         "detail": (
-            "Narrate schedule + spots: size for gusts, model_agree, suit for "
-            "session length, beach 5 min check. Lead with the week plan, not "
-            "only today's best spot."
+            "Narrate like a kite bro (data.voice): SEND IT / SOFT CALL / "
+            "SIT IT OUT. Lead with week plan + spot + kite + suit; size for "
+            "gusts; model_agree; beach 5 min check. Never dump raw model tables. "
+            "Honesty > hype — long haul only on clear SEND IT."
         ),
     },
 ]
 
 INSTRUCT_SUMMARY = (
-    "Universal path: local guru CLI on a host that reaches Windguru — same "
-    "for every app. Wire/tunnel ONLY if CLI cannot run and local STDIO MCP is "
-    "required. Agent runs doctor/setup/weekend; never ask humans for config. "
-    "FIRST MESSAGE: collect rider profile once (LEVEL required). Then weekend "
-    "or best. WINDGURU_DEFAULT only. No HTML scrape. No PRO."
+    "Universal path: local guru CLI on a host that reaches Windguru. "
+    "Voice: kite bro (SEND IT / SOFT CALL / SIT IT OUT) — honest, never hype "
+    "a long haul. Wire/tunnel ONLY if CLI cannot run. Agent runs "
+    "doctor/setup/weekend; never ask humans for config. FIRST MESSAGE: "
+    "collect rider profile once (LEVEL required). Then weekend or best. "
+    "WINDGURU_DEFAULT only. No HTML scrape. No PRO."
 )
 
 
@@ -103,6 +106,7 @@ def instruct_payload() -> dict[str, Any]:
     return {
         "summary": INSTRUCT_SUMMARY,
         "path": agent_path_payload(),
+        "voice": voice_payload(),
         "network": network,
         "preset": "WINDGURU_DEFAULT",
         "top_models": 3,

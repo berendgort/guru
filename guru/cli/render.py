@@ -8,6 +8,7 @@ from guru.cli.console import console
 from guru.models.blend import BestForecast
 from guru.models.forecast import Forecast, Spot, wind_dir_cardinal
 from guru.models.profile import AdviceReport, RiderProfile, WeekendReport
+from guru.rider.voice import call_label
 
 
 def print_spots_table(spots: list[Spot], *, title: str) -> None:
@@ -69,7 +70,9 @@ def print_best(best: BestForecast, advice: AdviceReport | None = None) -> None:
 
 
 def print_advice(advice: AdviceReport) -> None:
-    console.print(f"[bold]Advice[/bold] · {advice.verdict} · {advice.summary}")
+    console.print(
+        f"[bold]Call[/bold] · {call_label(advice.verdict)} · {advice.summary}"
+    )
     if advice.missing_profile:
         console.print(f"[yellow]Missing profile: {', '.join(advice.missing_profile)}[/yellow]")
         return
@@ -114,7 +117,9 @@ def print_advice(advice: AdviceReport) -> None:
 
 
 def print_weekend(report: WeekendReport) -> None:
-    console.print(f"[bold]Weekend[/bold] · {report.verdict} · {report.summary}")
+    console.print(
+        f"[bold]Weekend[/bold] · {call_label(report.verdict)} · {report.summary}"
+    )
     if report.range_label:
         console.print(f"Range: {report.range_label}")
     console.print(

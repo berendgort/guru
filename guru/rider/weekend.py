@@ -12,8 +12,8 @@ from guru.models.profile import (
     WeekendReport,
     WeekendSpotAdvice,
 )
+from guru.rider import voice
 from guru.rider.advice import advise_forecast
-from guru.rider.sizing import kiter_checklist
 from guru.search.blend import get_best_forecast
 from guru.search.near import haversine_km, spots_near
 from guru.search.spots import get_spot
@@ -74,18 +74,11 @@ def scan_weekend(
 ) -> WeekendReport:
     """Rank rideable spots + day-by-day schedule (top WINDGURU_DEFAULT models)."""
     missing = profile.missing_fields() + profile.missing_range_fields()
-    thinking = kiter_checklist(gusty=False, drive_km=profile.drive_km)
-    thinking.insert(
-        0,
-        f"Scan drive range over ~{hours}h with top {top_models} models; "
-        "emit a day schedule so riders see Thu/Fri without re-asking",
-    )
-    thinking.insert(
-        0,
-        "Farther trips need clearer GO; prefer model agreement",
-    )
-    if profile.range_label:
-        thinking.insert(0, f"Home range: {profile.range_label}")
+    thinking = voice.thinking_headers(
+        hours=hours,
+        top_models=top_models,
+        range_label=profile.range_label,
+    ) + voice.checklist(gusty=False, drive_km=profile.drive_km)
 
     if missing:
         return WeekendReport(
@@ -97,7 +90,7 @@ def scan_weekend(
             hours=hours,
             top_models=top_models,
             missing_profile=missing,
-            summary=f"Need profile + home range — missing: {', '.join(missing)}",
+            summary=voice.weekend_incomplete(missing),
             thinking=thinking,
         )
 
@@ -181,22 +174,39 @@ def scan_weekend(
 
     overall = results[0].verdict if results else "no"
     if schedule:
-        # Prefer schedule lead for human summary (covers whole horizon)
         lead = schedule[0]
         days = ", ".join(f"{s.weekday} {s.name}" for s in schedule[:4])
-        summary = (
-            f"{overall.upper()} · next: {lead.weekday} {lead.name} "
-            f"~{lead.drive_km or '?'} km — {lead.summary} "
-            f"| plan: {days}"
+        summary = voice.weekend_summary(
+            overall=overall,
+            lead_weekday=lead.weekday,
+            lead_name=lead.name,
+            lead_drive=lead.drive_km,
+            lead_line=lead.summary,
+            plan_days=days,
         )
     elif results:
         top = results[0]
-        summary = (
-            f"{overall.upper()}: {top.name} ({top.spot_id}) "
-            f"~{top.drive_km or '?'} km — {top.summary}"
+        summary = voice.weekend_summary(
+            overall=overall,
+            lead_weekday=None,
+            lead_name=None,
+            lead_drive=None,
+            lead_line=None,
+            plan_days=None,
+            top_name=top.name,
+            top_id=top.spot_id,
+            top_drive=top.drive_km,
+            top_line=top.summary,
         )
     else:
-        summary = "No rideable spot in your drive range for this forecast window."
+        summary = voice.weekend_summary(
+            overall="no",
+            lead_weekday=None,
+            lead_name=None,
+            lead_drive=None,
+            lead_line=None,
+            plan_days=None,
+        )
 
     return WeekendReport(
         verdict=overall,
@@ -246,11 +256,15 @@ def _slot_summary(name: str, w: AdviceWindow, agree: int) -> str:
         if w.owned_kite_m2 is not None
         else (f"~{w.kite_m2:g} m²" if w.kite_m2 else "kite n/a")
     )
-    gust = f" gust {w.gust_kn:g}" if w.gust_kn is not None else ""
-    stars = f" · {w.rating}" if w.rating and w.rating != "—" else ""
-    return (
-        f"{w.verdict.upper()}: {w.start}–{w.end} · {w.wind_kn:g} kt{gust}"
-        f"{stars} · {kite} · {agree}/3 models"
+    return voice.slot_line(
+        verdict=w.verdict,
+        start=w.start,
+        end=w.end,
+        wind_kn=w.wind_kn,
+        gust_kn=w.gust_kn,
+        stars=w.rating,
+        kite=kite,
+        agree=agree,
     )
 
 

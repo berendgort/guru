@@ -5,6 +5,7 @@ from __future__ import annotations
 from rich.text import Text
 
 from guru.cli.console import console
+from guru.rider.voice import BANNER_TAG
 
 # Format A — bright neon ice (#67E8F9)
 _BANNER_ROWS = (
@@ -27,10 +28,5 @@ def print_banner() -> None:
     console.print()
     for row in _BANNER_ROWS:
         console.print(Text(row, style=_STYLE))
-    console.print(
-        Text(
-            "  GURU-CLI  ·  kite spots · gear advice · thinking offloaded",
-            style=_TAG,
-        )
-    )
+    console.print(Text(f"  {BANNER_TAG}", style=_TAG))
     console.print()
