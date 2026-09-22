@@ -27,14 +27,12 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "command": "guru doctor --json   # probe + upgrade; do NOT pass --wire",
         "detail": (
             "ONE PATH FOR EVERY APP: local `guru … --json` on a machine that "
-            "reaches Windguru. Optional STDIO `guru-mcp` is the same code. "
-            "YOU run install/doctor/setup/weekend — never ask the human to "
-            "configure apps, start tunnels, or paste URLs. If "
-            "data.network.reachable is false, stop: move to a local host "
-            "agent; do not invent forecasts. "
-            "guru wire / wire_mcp ONLY when absolutely necessary: you have no "
-            "working shell `guru` AND the host needs local STDIO MCP and guru "
-            "is missing. Never wire or tunnel by default."
+            "reaches Windguru. YOU run all commands — human_runs is always []. "
+            "If data.network.reachable is false: follow data.on_unreachable "
+            "(intake in-chat only if needed; one sentence to switch to a local "
+            "agent host). NEVER ask the human to install/run guru or paste "
+            "bash. Wire/tunnel ONLY if shell guru is unavailable AND a local "
+            "STDIO MCP host needs guru missing — never by default."
         ),
     },
     {
@@ -99,10 +97,13 @@ def instruct_payload() -> dict[str, Any]:
         status = None
         need_intake = True
 
+    network = probe_windguru()
+    unreachable = network.get("reachable") is False
+
     return {
         "summary": INSTRUCT_SUMMARY,
         "path": agent_path_payload(),
-        "network": probe_windguru(),
+        "network": network,
         "preset": "WINDGURU_DEFAULT",
         "top_models": 3,
         "weekend_hours": 96,
@@ -111,22 +112,38 @@ def instruct_payload() -> dict[str, Any]:
         "intake": intake_payload(needed=need_intake),
         "profile_status": status,
         "steps": INSTRUCT_STEPS,
+        "on_unreachable": {
+            "active": unreachable,
+            "do": [
+                "If first_pass: show intake.prompt_to_user once and wait for key=value",
+                "One short sentence: this chat runtime cannot reach Windguru — "
+                "continue in a local agent (Cursor / local Claude Code) that "
+                "runs guru itself",
+            ],
+            "do_not": [
+                "Ask the human to install or run guru/pipx",
+                "Paste bash install/setup/weekend blocks for the human",
+                "Invent forecasts or gear advice",
+                "Start tunnels or ask for connector URLs",
+            ],
+        },
         "automation": {
             "rule": "agent_runs_all_commands",
             "canonical": "guru … --json",
             "human_runs": [],
             "agent_runs": [
-                "pipx install 'windguru[mcp]'  # once",
+                "pipx install 'windguru[mcp]'  # once, agent only",
                 "guru doctor --json",
                 "guru setup --intake …",
                 "guru weekend --json",
                 "guru best <id> --json",
             ],
             "never_ask_human": [
+                "install or upgrade windguru/pipx",
+                "run any guru command",
                 "edit any app's MCP config",
                 "run guru-mcp-tunnel / cloudflared",
-                "paste connector URLs",
-                "install packages manually",
+                "paste connector URLs or CLI JSON",
                 "run guru wire unless CLI is unavailable",
             ],
         },

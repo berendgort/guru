@@ -22,7 +22,7 @@ guru instruct --json
 guru profile --json
 ```
 
-**One path every app:** `guru … --json` on a machine that reaches Windguru. Wire/tunnel only if CLI cannot run and local STDIO MCP is required. If `network.reachable` is false, stop — do not invent forecasts.
+**One path every app:** `guru … --json` on a machine that reaches Windguru. If `network.reachable` is false: follow `on_unreachable` — never ask the human to install/run guru; intake in-chat only if needed; one sentence to switch to a local agent host.
 
 ## First message (mandatory if profile empty)
 

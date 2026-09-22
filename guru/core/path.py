@@ -34,11 +34,24 @@ def probe_windguru() -> dict[str, Any]:
             "reachable": False,
             "error": f"{type(exc).__name__}: {exc}",
             "fix": (
-                "This runtime cannot reach Windguru (sandbox/allowlist/offline). "
-                "Use a local agent host that can run `guru` or STDIO `guru-mcp` "
-                "on the user's machine. Do not invent forecasts. Do not ask the "
-                "human to start tunnels or paste connector URLs."
+                "UNREACHABLE RUNTIME: this agent shell cannot dial Windguru. "
+                "Do NOT invent forecasts. Do NOT ask the human to install "
+                "pipx/guru, run terminal commands, start tunnels, or paste "
+                "CLI output. Still collect intake in-chat if first_pass "
+                "(show intake.prompt_to_user once). Then say in one short "
+                "sentence that forecasts need a local agent host that reaches "
+                "Windguru (e.g. Cursor Agent / Claude Code on their laptop / "
+                "this same repo opened locally) — the agent there runs "
+                "`guru weekend` itself. Never dump bash blocks for the human."
             ),
+            "human_runs": [],
+            "agent_must_not": [
+                "ask human to pipx install / upgrade",
+                "ask human to run guru setup/weekend/best",
+                "ask human to paste terminal JSON",
+                "start guru-mcp-tunnel or paste connector URLs",
+                "invent wind/kite advice without live data",
+            ],
         }
 
 

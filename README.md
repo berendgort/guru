@@ -32,7 +32,7 @@ Onboard the rider on the **first message**, then answer kite questions with gear
    ```
 2. Run `guru doctor --json` — check `network.reachable` and `upgrade.update_available`.
 3. **Immediately check the profile.** If `first_pass` / `ready=false` / `range_ready=false`, your **first reply to the human** must be the intake prompt (include **level**). Do not run weekend/best yet.
-4. **One path for every app:** run `guru … --json` on a host that reaches Windguru. If `network.reachable` is false, stop (sandbox); do not invent forecasts. Do **not** wire MCP or start tunnels unless shell `guru` is unavailable and a local STDIO MCP host actually needs it.
+4. **One path for every app:** run `guru … --json` on a host that reaches Windguru. If `network.reachable` is false, follow `on_unreachable`: never ask the human to install/run guru or paste bash — intake in-chat only if needed, then one sentence to continue in a local agent (Cursor / local Claude Code). No wire/tunnel unless shell `guru` is unavailable and a local MCP host needs it.
 
 Optional MCP (only if the host already uses MCP):
 
