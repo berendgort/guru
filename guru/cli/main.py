@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import os
 
+import click
 import typer
+from typer.core import TyperGroup
 
 from guru import __version__
+from guru.cli.banner import print_banner
 from guru.cli.console import console
 from guru.cli.errors import fail, print_ok
 from guru.cli.render import (
@@ -38,8 +41,20 @@ from guru.search.spots import resolve_spot, search_spots
 
 _CATCH = (GuruError, ValueError, OSError)
 
+
+class _GuruGroup(TyperGroup):
+    """Print the brand mark above ``--help``."""
+
+    def format_help(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
+        print_banner()
+        super().format_help(ctx, formatter)
+
+
 app = typer.Typer(
     name="guru",
+    cls=_GuruGroup,
     help=(
         "Kite spot + gear advice for riders and agents. "
         "Happy path: setup (intake) → `guru weekend` or `guru best <spot>` "
