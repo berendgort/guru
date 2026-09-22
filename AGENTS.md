@@ -5,7 +5,7 @@ You are working on **guru**: a Windguru CLI/library/MCP reverse-engineered the s
 ## Calling guru from an agent
 
 ```bash
-pipx install 'windguru[mcp]'
+pipx install 'windguru[mcp]'   # PyPI — do not require a git clone
 guru instruct --json
 guru spots "<place>" --json          # or: guru near --lat --lon --json
 guru best <id_spot> --json           # WINDGURU_DEFAULT → top 3 forecasts
@@ -46,7 +46,7 @@ Keep a local checkout of fli (`git clone https://github.com/punitarani/fli /tmp/
 ## Product shape
 
 ```text
-pipx install windguru
+pipx install windguru          # or: pipx install 'windguru[mcp]'
 guru spots <query>
 guru near --lat Y --lon X
 guru best <id|name> [--top 3] [--hours N] [--json]
