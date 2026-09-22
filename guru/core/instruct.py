@@ -15,11 +15,12 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "step": 0,
         "action": "auto_upgrade",
         "command": (
-            "pipx upgrade windguru   # or: pip install -U 'windguru[mcp]'"
+            "pipx upgrade windguru || pipx install --force 'windguru[mcp]'"
         ),
         "detail": (
-            "EVERY SESSION: if data.upgrade.update_available, upgrade before "
-            "briefing."
+            "EVERY SESSION: if data.upgrade.update_available (PyPI *newer* than "
+            "installed), upgrade before briefing. Never downgrade if installed "
+            "is ahead of a stale pypi_latest. Need >= 0.3.12 for kite-bro voice."
         ),
     },
     {
@@ -136,8 +137,8 @@ def instruct_payload() -> dict[str, Any]:
             "canonical": "guru … --json",
             "human_runs": [],
             "agent_runs": [
-                "pipx install 'windguru[mcp]'  # once, agent only",
-                "guru doctor --json",
+                "pipx upgrade windguru || pipx install --force 'windguru[mcp]'",
+                "guru doctor --json   # need installed >= 0.3.12 for kite-bro voice",
                 "guru setup --intake …",
                 "guru weekend --json",
                 "guru best <id> --json",

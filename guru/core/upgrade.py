@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import urllib.error
 import urllib.request
 from importlib.metadata import PackageNotFoundError, version
@@ -16,12 +17,28 @@ def _installed_version() -> str:
         return "0.0.0"
 
 
+def _parse_ver(raw: str) -> tuple[int, ...]:
+    nums = re.findall(r"\d+", raw.split("+", 1)[0].split("-", 1)[0])
+    return tuple(int(x) for x in nums) if nums else (0,)
+
+
+def is_newer(candidate: str, current: str) -> bool:
+    """True only if candidate is strictly newer than current (semver-ish)."""
+    return _parse_ver(candidate) > _parse_ver(current)
+
+
 def pypi_latest_version(*, timeout: float = 4.0) -> str | None:
     """Return latest windguru version on PyPI, or None if unreachable."""
     try:
-        with urllib.request.urlopen(
-            "https://pypi.org/pypi/windguru/json", timeout=timeout
-        ) as resp:
+        req = urllib.request.Request(
+            "https://pypi.org/pypi/windguru/json",
+            headers={
+                "Accept": "application/json",
+                "Cache-Control": "no-cache",
+                "User-Agent": "windguru-doctor/upgrade-check",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.load(resp)
         ver = data.get("info", {}).get("version")
         return str(ver) if ver else None
@@ -33,18 +50,20 @@ def upgrade_status() -> dict[str, Any]:
     """Machine-readable upgrade hint for agents."""
     latest = pypi_latest_version()
     current = _installed_version()
-    update = bool(latest and latest != current)
+    # Only flag upgrade when PyPI is *newer* — never when CDN lags behind us.
+    update = bool(latest and is_newer(latest, current))
     return {
         "installed": current,
         "pypi_latest": latest,
         "update_available": update,
         "upgrade_commands": [
             "pipx upgrade windguru",
-            "pipx install 'windguru[mcp]'  # if MCP missing",
+            "pipx install --force 'windguru[mcp]'  # pin refresh if CDN lagged",
             "pip install -U 'windguru[mcp]'",
         ],
         "rule": (
-            "On every new kite session: if update_available, run an upgrade "
-            "command first, then continue. Prefer pipx when the user uses pipx."
+            "On every new kite session: if update_available (PyPI newer than "
+            "installed), upgrade first, then continue. Prefer pipx. If doctor "
+            "shows installed ahead of a stale pypi_latest, do NOT downgrade."
         ),
     }
