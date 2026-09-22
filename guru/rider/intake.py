@@ -70,6 +70,7 @@ REPLY_TEMPLATE = (
 AGENT_PROMPT_TO_USER = """\
 Yo — before I call a session I need your quiver (one reply, paste or fill).
 Level matters: it changes the SEND IT wind and which kite you rig.
+(Onboarding > debugging a session with the wrong kite.)
 
 • sport: kitesurf / kitefoil / surfkite
 • weight_kg

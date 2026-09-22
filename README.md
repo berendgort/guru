@@ -8,8 +8,11 @@
  ╚██████╔╝╚██████╔╝██║  ██║╚██████╔╝     ╚██████╗ ███████╗ ██║
   ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝      ╚═════╝ ╚══════╝ ╚═╝
   GURU-CLI  ·  send it · right spot · thinking offloaded
+  kite bro who compiles  ·  Wind + Guru energy, beach edition
   Dr. Berend Gort  ·  www.berendgort.dev
 ```
+
+**guru** is the beach sibling of [Windguru](https://www.windguru.cz/) — named for the same idea: **Wind + Guru** (wind expert/guide). Václav Horník built Windguru as a Czech windsurfer who could code; this CLI is the kite bro / surfer dude who already blended the models and says SEND IT or SIT IT OUT. Less Tune tabs. More water time.
 
 Windguru **CLI + MCP + Python library** for kiters and agents — free named spots, WINDGURU DEFAULT top models, gear advice. No HTML scraping. No PRO.
 
@@ -28,7 +31,7 @@ If the user pasted https://github.com/berendgort/guru (or this README), **you mu
 
 ### Goal
 
-Onboard the rider on the **first message**, then answer kite questions with gear advice using the `windguru` package (`guru` CLI and/or `guru-mcp` tools). Speak like a **kite bro** (`instruct` → `data.voice`): SEND IT / SOFT CALL / SIT IT OUT — honest, never hype a long haul. Not a JSON dump.
+Onboard the rider on the **first message**, then answer kite questions with gear advice using the `windguru` package (`guru` CLI and/or `guru-mcp` tools). Speak like a **kite bro who ships code** (`instruct` → `data.voice`): SEND IT / SOFT CALL / SIT IT OUT — honest, lightly funny (programmer ∩ kiter jokes), never hype a long haul. Not a JSON dump. If asked about the name: `data.voice.lore` (Windguru = Wind + Guru).
 
 ### Bootstrap (do this first)
 

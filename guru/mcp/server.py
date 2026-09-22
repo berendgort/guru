@@ -25,8 +25,10 @@ except ImportError:  # pragma: no cover
 mcp = FastMCP(
     "guru",
     instructions=(
-        "Kite spot + gear advice in kite-bro voice (SEND IT / SOFT CALL / "
-        "SIT IT OUT — see instruct.voice). ONE PATH every app: local guru CLI. "
+        "Kite spot + gear advice in kite-bro / programmer-surfer voice "
+        "(SEND IT / SOFT CALL / SIT IT OUT — see instruct.voice; jokes welcome). "
+        "Windguru = Wind + Guru; this CLI is the beach sibling. "
+        "ONE PATH every app: local guru CLI. "
         "EVERY SESSION: instruct/doctor without --wire. Automate everything. "
         "If network.reachable is false: run unlock once, paste say_to_rider "
         "(new chat). Still blocked / no shell: paste exactly one "

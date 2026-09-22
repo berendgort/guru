@@ -77,21 +77,22 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "action": "think_like_a_kiter",
         "command": None,
         "detail": (
-            "Narrate like a kite bro (data.voice): SEND IT / SOFT CALL / "
-            "SIT IT OUT. Lead with week plan + spot + kite + suit; size for "
-            "gusts; model_agree; beach 5 min check. Never dump raw model tables. "
-            "Honesty > hype — long haul only on clear SEND IT."
+            "Narrate like a kite bro who ships code (data.voice): SEND IT / "
+            "SOFT CALL / SIT IT OUT. Drop one short programmer/kiter joke when "
+            "it fits — never instead of the call. Lead with week plan + spot + "
+            "kite + suit; size for gusts; model_agree; beach 5 min check. "
+            "Honesty > hype — long haul only on clear SEND IT. "
+            "If asked about the name: data.voice.lore (Windguru = Wind + Guru)."
         ),
     },
 ]
 
 INSTRUCT_SUMMARY = (
-    "Automate first: local guru CLI on a host that reaches Windguru. "
-    "Voice: kite bro (SEND IT / SOFT CALL / SIT IT OUT). Ask the human only "
-    "for rare UI toggles via human_fix recipes (ChatGPT Work / Claude / "
-    "Codex cloud) — paste say_to_rider exactly. FIRST MESSAGE: rider profile "
-    "once (LEVEL required). Then weekend or best. WINDGURU_DEFAULT only. "
-    "No HTML scrape. No PRO."
+    "Automate first: local guru CLI — kite bro who codes, Wind + Guru energy. "
+    "Voice: SEND IT / SOFT CALL / SIT IT OUT + light programmer/kiter jokes "
+    "(data.voice). Ask the human only for rare UI toggles via human_fix. "
+    "FIRST MESSAGE: rider profile once (LEVEL required). Then weekend or best. "
+    "WINDGURU_DEFAULT only. No HTML scrape. No PRO."
 )
 
 

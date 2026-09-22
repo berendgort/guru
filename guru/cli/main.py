@@ -61,9 +61,10 @@ app = typer.Typer(
     name="guru",
     cls=_GuruGroup,
     help=(
-        "Kite spot + gear advice for riders and agents. "
-        "Happy path: setup (intake) → `guru weekend` or `guru best <spot>` "
-        "(advice on by default). Run `guru instruct --json` for the recipe."
+        "Kite bro who codes — spot + gear calls for riders and agents. "
+        "Named like Windguru (Wind + Guru): less Tune tabs, more water time. "
+        "Happy path: setup (intake) → `guru weekend` or `guru best <spot>`. "
+        "Run `guru instruct --json` for the recipe."
     ),
     no_args_is_help=True,
     add_completion=False,
@@ -74,10 +75,19 @@ app = typer.Typer(
 def version_cmd(
     as_json: bool = typer.Option(False, "--json", help="Machine-readable envelope"),
 ) -> None:
+    from guru.rider.voice import joke, tagline
+
     if as_json:
-        print_ok({"version": __version__})
+        print_ok(
+            {
+                "version": __version__,
+                "tagline": tagline(seed=__version__),
+                "joke": joke(seed=__version__),
+            }
+        )
     else:
-        console.print(__version__)
+        console.print(f"{__version__}  ·  {tagline(seed=__version__)}")
+        console.print(f"[dim]{joke(seed=__version__)}[/dim]")
 
 
 @app.command("instruct")
@@ -414,7 +424,7 @@ def unlock_cmd(
         print_ok(payload)
         return
     if payload.get("skipped"):
-        console.print("[dim]already reachable — unlock skipped[/dim]")
+        console.print("[dim]already reachable — unlock skipped (stoke already online)[/dim]")
         return
     console.print(payload.get("say_to_rider") or "unlocked")
     for key in ("claude_network", "codex_network", "network"):
@@ -502,21 +512,24 @@ def doctor_cmd(
         print_ok(info)
         return
     console.print(f"guru {__version__}")
+    from guru.rider.voice import joke
+
     reach = network.get("reachable")
     if reach is True:
-        console.print("network: Windguru reachable")
+        console.print(f"network: Windguru reachable — {joke(about='doctor_ok')}")
     elif reach is False:
         console.print(
-            "[red]network: Windguru NOT reachable — use a local host agent[/red]"
+            f"[red]network: Windguru NOT reachable[/red] — {joke(about='doctor_bad')}"
         )
     if upgrade.get("update_available"):
         console.print(
             f"[yellow]update available: {upgrade.get('pypi_latest')} — "
-            f"pipx upgrade windguru[/yellow]"
+            f"pipx upgrade windguru (hot reload the guru)[/yellow]"
         )
     else:
         console.print(
-            f"pypi={upgrade.get('pypi_latest') or '?'} · up to date"
+            f"pypi={upgrade.get('pypi_latest') or '?'} · up to date · "
+            f"{joke(about='general', seed='doctor')}"
         )
     console.print(f"GURU_TIMEOUT={info['GURU_TIMEOUT']}")
     console.print(f"GURU_IMPERSONATE={info['GURU_IMPERSONATE']}")

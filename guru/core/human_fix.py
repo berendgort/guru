@@ -42,9 +42,10 @@ def human_fix_payload() -> dict[str, Any]:
                 "id": "restart_after_unlock",
                 "when": "guru unlock just succeeded on this laptop",
                 "say_to_rider": (
-                    "Wind's unlocked on your laptop. One step left: start a "
-                    "**new chat** in this app (close this one → New chat), "
-                    "then ask: where can I kite?"
+                    "Wind's unlocked on your laptop — "
+                    "Allowlist patched like a hotfixed harness line. "
+                    "One step left: start a **new chat** in this app "
+                    "(close this one → New chat), then ask: where can I kite?"
                 ),
             },
             "chatgpt_work_network": {
@@ -54,7 +55,8 @@ def human_fix_payload() -> dict[str, Any]:
                     "(Settings toggle — agent cannot flip it)"
                 ),
                 "say_to_rider": (
-                    "Quick fix in ChatGPT Work (one toggle):\n"
+                    "Can't reach the wind temple from this Work chat — "
+                    "quick fix (one toggle):\n"
                     "1. Open **Settings → Data controls → Work network access**\n"
                     "2. Turn **ON** “Allow public internet access”\n"
                     "3. Wait for the current run to finish, then start a "
@@ -72,7 +74,8 @@ def human_fix_payload() -> dict[str, Any]:
                 ),
                 "domains": list(WINDGURU_CLOUD_DOMAINS),
                 "say_to_rider": (
-                    "Quick fix in Codex cloud (~30 seconds):\n"
+                    "Cloud sandbox ate the wind packets — quick fix in Codex "
+                    "(~30 seconds):\n"
                     "1. Open **Environments** → select the environment this "
                     "chat uses → **Internet access** / Agent internet\n"
                     "2. Set Agent internet access → **On**\n"
@@ -92,7 +95,8 @@ def human_fix_payload() -> dict[str, Any]:
                 ),
                 "domains": list(WINDGURU_HOSTS),
                 "say_to_rider": (
-                    "Quick fix in Claude:\n"
+                    "Claude's sandbox is gatekeeping the gust column — "
+                    "quick fix:\n"
                     "1. In Claude Code type **/config** → open the "
                     "**Sandbox** tab → **Network → Allowed domains**\n"
                     "   (or on claude.ai: Settings → Claude Code)\n"
@@ -109,9 +113,10 @@ def human_fix_payload() -> dict[str, Any]:
                     "settings — always safe"
                 ),
                 "say_to_rider": (
-                    "Yo — this chat can't open the wind charts. Fastest path: "
-                    "open **Cursor on this laptop** and ask “where can I kite?” "
-                    "— same quiver, live wind, no settings hunt."
+                    "Yo — this chat can't open the wind charts (404: stoke). "
+                    "Fastest path: open **Cursor on this laptop** and ask "
+                    "“where can I kite?” — same quiver, live wind, no "
+                    "settings hunt."
                 ),
             },
         },
