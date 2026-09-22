@@ -9,14 +9,16 @@ license: MIT
 
 # guru install and usage skill
 
-## Primary path
+## Primary path (PyPI)
 
-1. `pipx install 'windguru[mcp]'` (or from checkout: `pipx install -e ".[mcp]"`)
-2. CLI: `guru`
-3. MCP STDIO: `guru-mcp`
-4. MCP HTTP: `guru-mcp-http` only when needed
+```bash
+pipx install windguru              # CLI
+pipx install 'windguru[mcp]'       # CLI + MCP
+guru --help
+guru-mcp
+```
 
-Do not default to cloning the repo unless the user wants to contribute.
+Do **not** clone the repo unless the user wants to contribute. Prefer PyPI.
 
 ## Agent workflow (always)
 
@@ -45,4 +47,4 @@ Ambiguous spot: `error_type: "ambiguous"` + `candidates[]`.
 }
 ```
 
-Find the binary with `which guru-mcp` after pipx ensurepath.
+Find the binary with `which guru-mcp` after `pipx ensurepath`.

@@ -2,77 +2,30 @@
 
 Windguru **CLI + MCP + Python library**. Same idea as [`fli`](https://github.com/punitarani/fli): reverse-engineered JSON, zero HTML scraping, agent-first.
 
+[![PyPI](https://img.shields.io/pypi/v/windguru.svg)](https://pypi.org/project/windguru/)
+[![Python](https://img.shields.io/pypi/pyversions/windguru.svg)](https://pypi.org/project/windguru/)
+
 > Free only — named spots + WINDGURU DEFAULT Tune top-3. No PRO lat/lon click-forecast.
 
 ## Install
 
 ```bash
-# CLI (recommended)
 pipx install windguru
-
-# CLI + MCP server
-pipx install 'windguru[mcp]'
-
 guru --help
-guru instruct --json
 ```
 
-PyPI name **`windguru`**, command **`guru`**, MCP **`guru-mcp`**.
-
-Or with pip:
-
-```bash
-pip install windguru
-pip install 'windguru[mcp]'
-```
-
-From a checkout / GitHub:
-
-```bash
-pipx install -e ".[mcp]"
-# or: pipx install 'windguru[mcp] @ git+https://github.com/berendgort/guru.git'
-```
-
-## MCP Server
+Need MCP (Cursor / Claude Desktop)?
 
 ```bash
 pipx install 'windguru[mcp]'
-
-# STDIO (Cursor / Claude Desktop)
 guru-mcp
-
-# HTTP (streamable)
-guru-mcp-http  # http://127.0.0.1:8000/mcp/
 ```
 
-### Connecting to Claude Desktop / Cursor
+Or with pip: `pip install windguru` / `pip install 'windguru[mcp]'`.
 
-```json
-{
-  "mcpServers": {
-    "guru": {
-      "command": "guru-mcp"
-    }
-  }
-}
-```
+PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `guru-mcp`, `guru-mcp-http`
 
-> Tip: if the binary is not on PATH, use the full path from `which guru-mcp`
-> (often `~/.local/bin/guru-mcp`).
-
-### MCP tools
-
-| Tool | Description |
-|------|-------------|
-| `instruct` | Agent recipe (WINDGURU_DEFAULT → top 3) |
-| `search_spots` | Named spot search |
-| `near_spots` | Free map markers near lat/lon |
-| `resolve_spot` | Name/id → spot (`ambiguous` + candidates) |
-| `best_forecast` | Tune weights → top models → forecasts |
-| `get_forecast` | Single-model escape hatch |
-| `list_models` | Known aliases |
-
-## Agent recipe
+## Quick start
 
 ```bash
 guru instruct --json
@@ -85,6 +38,38 @@ guru best 48309 -H 24 --json   # De Slufter
 `guru best` always uses **WINDGURU_DEFAULT** Tune weights and returns the **top 3** models + forecasts. Prefer that over raw GFS.
 
 JSON envelope: `{"ok": true|false, "api_version": 1, "data"|error fields}`. Shared `error_type` / `retryable` with MCP.
+
+## MCP (Cursor / Claude Desktop)
+
+```bash
+pipx install 'windguru[mcp]'
+guru-mcp          # STDIO
+guru-mcp-http     # http://127.0.0.1:8000/mcp/
+```
+
+```json
+{
+  "mcpServers": {
+    "guru": {
+      "command": "guru-mcp"
+    }
+  }
+}
+```
+
+> If needed, use the full path from `which guru-mcp` (often `~/.local/bin/guru-mcp`).
+
+| Tool | Description |
+|------|-------------|
+| `instruct` | Agent recipe (WINDGURU_DEFAULT → top 3) |
+| `search_spots` | Named spot search |
+| `near_spots` | Free map markers near lat/lon |
+| `resolve_spot` | Name/id → spot (`ambiguous` + candidates) |
+| `best_forecast` | Tune weights → top models → forecasts |
+| `get_forecast` | Single-model escape hatch |
+| `list_models` | Known aliases |
+
+More: [`docs/mcp.md`](docs/mcp.md).
 
 ## CLI
 
@@ -110,7 +95,16 @@ print(best.models[0].name, best.models[0].weight_pct)
 print(best.forecasts[0].hours[0].wind_kn)
 ```
 
-## Architecture
+## Develop
+
+```bash
+git clone https://github.com/berendgort/guru.git
+cd guru
+pipx install -e ".[dev,mcp]"
+# or: python -m venv .venv && source .venv/bin/activate && pip install -e ".[dev,mcp]"
+pytest -q
+ruff check .
+```
 
 | Layer | Path | Role |
 |-------|------|------|
@@ -120,14 +114,13 @@ print(best.forecasts[0].hours[0].wind_kn)
 | Search | `guru/search/` | HTTP (`curl_cffi`), blend_math, near, forecast |
 | Models | `guru/models/` | Pydantic + aliases only |
 | Wire | [`docs/WIRE.md`](docs/WIRE.md) | Captured `iapi.php` |
-| MCP | [`docs/mcp.md`](docs/mcp.md) | `guru-mcp` setup + tools |
 
 Read [`AGENTS.md`](AGENTS.md) before extending. Capture Network → fixtures → tests.
 
 Engineering standards (kept in-repo):
 
-- [`docs/code_quality.md`](docs/code_quality.md) — Korotkevich / Tourist bar (layers, size caps, pure core)
-- [`docs/data_engineering_standards.md`](docs/data_engineering_standards.md) — Gray / Stonebraker bar (one writer, clocks, contracts)
+- [`docs/code_quality.md`](docs/code_quality.md) — Korotkevich / Tourist bar
+- [`docs/data_engineering_standards.md`](docs/data_engineering_standards.md) — Gray / Stonebraker bar
 
 ## Disclaimer
 
