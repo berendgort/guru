@@ -22,34 +22,26 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
     },
     {
         "step": 1,
-        "action": "search_spots",
-        "command": 'guru spots "<name>" --json',
+        "action": "weekend_or_best",
+        "command": "guru weekend --json   # or: guru best <id> --json  (advice on by default)",
         "detail": (
-            "Search named Windguru spots. If multiple matches, pick an id "
-            "(do not guess)."
+            "Ask 'where can I kite?' → guru weekend (ranks drive-range spots; "
+            "far trips need clear GO). Named spot → guru best <id> (verdict + "
+            "kite/suit; use --no-advise only for raw models)."
         ),
     },
     {
         "step": 2,
-        "action": "near_spots",
-        "command": "guru near --lat <lat> --lon <lon> --json",
+        "action": "resolve_spot_if_needed",
+        "command": 'guru spots "<name>" --json   # or: guru near --lat --lon --json',
         "detail": (
-            "Or find free named spots near coordinates (map markers). "
-            "Never use PRO lat/lon click-forecast."
+            "If you need an id: search named spots or free map markers near "
+            "coords. On ambiguous, pick from candidates — never silent "
+            "first-match. Never use PRO lat/lon click-forecast."
         ),
     },
     {
         "step": 3,
-        "action": "weekend_or_best",
-        "command": "guru weekend --json   # or: guru best <id> --advise --json",
-        "detail": (
-            "Ask 'where can I kite this weekend?' → guru weekend (ranks drive-range "
-            "spots; far trips need clear GO). Single spot → best --advise "
-            "(kite size, gust quality, 2–4h wetsuit)."
-        ),
-    },
-    {
-        "step": 4,
         "action": "think_like_a_kiter",
         "command": None,
         "detail": (
@@ -63,7 +55,7 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
 INSTRUCT_SUMMARY = (
     "FIRST MESSAGE: collect rider profile once (sport, weight, LEVEL, quiver, "
     "suits, home range) via intake.prompt_to_user — level is required. Then "
-    "weekend or best --advise. WINDGURU_DEFAULT only. Think like a kiter. "
+    "weekend or best (advice on). WINDGURU_DEFAULT only. Think like a kiter. "
     "No HTML scrape. No PRO."
 )
 
@@ -92,7 +84,7 @@ def instruct_payload() -> dict[str, Any]:
                 "drive_km=200 range=Trabucador → Leucate' --json"
             ),
             "guru weekend --json",
-            "guru best 201 --advise --json",
+            "guru best 201 --json",
         ],
         "profile": {
             "path": "~/.config/guru/profile.json",

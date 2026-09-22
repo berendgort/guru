@@ -50,6 +50,12 @@ def print_best(best: BestForecast, advice: AdviceReport | None = None) -> None:
     console.print(
         f"[bold]{best.spot.name}[/bold] · preset {best.preset} · top {len(best.models)}"
     )
+    if advice is not None:
+        print_advice(advice)
+        # Lead with the call; show top model hours only (raw dump is --no-advise)
+        if best.forecasts:
+            print_forecast(best.forecasts[0])
+        return
     table = Table(title="WINDGURU DEFAULT weights")
     table.add_column("#")
     table.add_column("Model")
@@ -58,8 +64,6 @@ def print_best(best: BestForecast, advice: AdviceReport | None = None) -> None:
     for m in best.models:
         table.add_row(str(m.rank), m.name, str(m.id_model), f"{m.weight_pct:.1f}")
     console.print(table)
-    if advice is not None:
-        print_advice(advice)
     for fc in best.forecasts:
         print_forecast(fc)
 

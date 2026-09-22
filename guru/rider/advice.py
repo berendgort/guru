@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from guru.models.forecast import Forecast, ForecastHour
+from guru.models.forecast import Forecast, ForecastHour, Spot
 from guru.models.profile import AdviceReport, AdviceWindow, Level, RiderProfile, Sport
 from guru.rider.sizing import (
     hour_verdict,
@@ -18,6 +18,22 @@ from guru.rider.sizing import (
 )
 
 _VERDICT_RANK = {"go": 2, "marginal": 1, "no": 0, "incomplete": -1}
+
+
+def drive_km_from_home(profile: RiderProfile, spot: Spot) -> float | None:
+    """Haversine home→spot when both have coordinates; else None."""
+    from guru.search.near import haversine_km
+
+    if (
+        profile.home_lat is None
+        or profile.home_lon is None
+        or spot.lat is None
+        or spot.lon is None
+    ):
+        return None
+    return haversine_km(
+        profile.home_lat, profile.home_lon, spot.lat, spot.lon
+    )
 
 
 def advise_forecast(

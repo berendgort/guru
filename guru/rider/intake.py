@@ -106,6 +106,8 @@ def intake_payload(*, needed: bool = True) -> dict[str, Any]:
             "weight_kg",
             "kites_m2",
             "wetsuits",
+            "home",
+            "drive_km",
         ],
         "setup_from_reply": ("guru setup --intake '<user paste>' --json"),
     }

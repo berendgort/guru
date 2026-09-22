@@ -20,9 +20,11 @@ from guru.search.spots import resolve_spot, search_spots
 mcp = FastMCP(
     "guru",
     instructions=(
-        "Windguru free forecast tools. Call instruct first. "
-        "Ensure rider profile (setup_profile) then best_forecast with advise=true. "
-        "Never scrape windguru.cz; never require PRO."
+        "Kite spot + gear advice. Call instruct / get_profile first. "
+        "If first_pass: show intake.prompt_to_user (level required), then "
+        "setup_profile. For 'where can I kite?' use weekend_spots. For a named "
+        "spot use best_forecast (advise=true by default). Never scrape "
+        "windguru.cz; never require PRO."
     ),
 )
 
@@ -39,7 +41,7 @@ def _err(exc: BaseException) -> dict[str, Any]:
 
 @mcp.tool(name="instruct")
 def instruct() -> dict[str, Any]:
-    """Agent recipe: setup profile → spots/near → best --advise."""
+    """Agent recipe: first-pass intake → weekend_spots / best_forecast."""
     return _ok(instruct_payload())
 
 
@@ -148,7 +150,9 @@ def best_forecast_tool(
     pick: int | None = None,
     advise: bool = True,
 ) -> dict[str, Any]:
-    """WINDGURU DEFAULT → top models → forecasts (+ rider advice by default)."""
+    """WINDGURU_DEFAULT → verdict + gear advice (advise on; set false for raw)."""
+    from guru.rider.advice import drive_km_from_home
+
     try:
         resolved = resolve_spot(spot, pick=pick)
         best = get_best_forecast(resolved.id, top=top, hours=hours)
@@ -156,7 +160,11 @@ def best_forecast_tool(
         if advise:
             if not best.forecasts:
                 raise ValueError("No forecast hours to advise on")
-            advice = advise_forecast(best.forecasts[0], load_profile())
+            profile = load_profile()
+            drive = drive_km_from_home(profile, resolved)
+            advice = advise_forecast(
+                best.forecasts[0], profile, drive_km=drive
+            )
             payload = {**payload, "advice": dump_model(advice)}
         return _ok(payload)
     except _CATCH as exc:

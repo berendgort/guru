@@ -80,4 +80,8 @@ def test_cli_setup_and_instruct(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     body = json.loads(instruct.stdout)["data"]
     assert body["steps"][0]["action"] == "first_pass_intake"
     assert "intake" in body
-    assert any("advise" in (s.get("command") or "") for s in body["steps"])
+    assert any(
+        s.get("action") == "weekend_or_best"
+        or "weekend" in (s.get("command") or "")
+        for s in body["steps"]
+    )

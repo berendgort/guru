@@ -47,7 +47,7 @@ sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 sessio
 ## After onboarded
 
 - “Where can I kite?” → `guru weekend --json` / `weekend_spots`
-- Named spot → resolve id; on `ambiguous` use `candidates`. Then `guru best <id> --advise --json` / `best_forecast(advise=true)`
+- Named spot → resolve id; on `ambiguous` use `candidates`. Then `guru best <id> --json` / `best_forecast` (advice on by default)
 - Narrate like a kiter: GO/MARGINAL/NO-GO, spot, window, kt+gusts, kite from quiver, 2–4h wetsuit, beach 5‑min check. No raw JSON dump.
 
 ## Hard rules

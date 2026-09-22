@@ -143,14 +143,14 @@ PyPI: [`windguru`](https://pypi.org/project/windguru/) · commands: `guru`, `gur
 
 | Command | Role |
 |---------|------|
-| `guru setup` | Rider + home range (sport / weight / quiver / drive_km) |
+| `guru setup` | Rider + home range (sport / weight / **level** / quiver / drive_km) |
 | `guru profile` | Show profile + missing fields |
 | `guru weekend` | Where can I kite? Rank spots in drive range |
 | `guru instruct` | Teach agents the workflow |
-| `guru spots <q>` | Name search |
+| `guru spots <q>` | Name search (resolve id) |
 | `guru near --lat --lon` | Free map markers near a point |
-| `guru best <spot> --advise` | WINDGURU_DEFAULT → top 3 → gear advice |
-| `guru forecast <spot> -m gfs` | Single model |
+| `guru best <spot>` | Spot call + gear advice (default; `--no-advise` for raw) |
+| `guru forecast <spot> -m gfs` | Single model escape hatch |
 | `guru models` / `schema` / `doctor` | Discoverability |
 
 Ambiguous names fail with `error_type: ambiguous` + `candidates` (pass numeric id or `--pick`).
@@ -158,12 +158,17 @@ Ambiguous names fail with `error_type: ambiguous` + `candidates` (pass numeric i
 ## Library
 
 ```python
-from guru import search_spots, get_best_forecast, spots_near
+from guru import get_best_forecast, search_spots
+from guru.rider.advice import advise_forecast, drive_km_from_home
+from guru.rider.profile_store import load_profile
 
 spots = search_spots("castelldefels")
 best = get_best_forecast(201, top=3, hours=24)
-print(best.models[0].name, best.models[0].weight_pct)
-print(best.forecasts[0].hours[0].wind_kn)
+profile = load_profile()
+advice = advise_forecast(
+    best.forecasts[0], profile, drive_km=drive_km_from_home(profile, best.spot)
+)
+print(advice.verdict, advice.summary)
 ```
 
 ## Develop

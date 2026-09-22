@@ -157,3 +157,4 @@ Manipulation test: would we still publish this objective if a kiter read the sco
 | When | Finding |
 |------|---------|
 | 2026-09-22 | Product maximand is **spot + pleasure + offloaded thinking**, not forecast-API completeness. `weekend` / `best --advise` + one-shot intake are the spine. |
+| 2026-09-22 | CLI audit: `best` advice now **default on**; pass home→spot `drive_km` into advice (same honesty as weekend); instruct steps lead with weekend/best not spots/near. |

@@ -41,9 +41,9 @@ _CATCH = (GuruError, ValueError, OSError)
 app = typer.Typer(
     name="guru",
     help=(
-        "Windguru CLI for humans and AI agents. "
-        "Prefer `guru best <spot> --advise --json` after `guru setup`. "
-        "Run `guru instruct --json` for the Cursor recipe."
+        "Kite spot + gear advice for riders and agents. "
+        "Happy path: setup (intake) → `guru weekend` or `guru best <spot>` "
+        "(advice on by default). Run `guru instruct --json` for the recipe."
     ),
     no_args_is_help=True,
     add_completion=False,
@@ -64,7 +64,7 @@ def version_cmd(
 def instruct_cmd(
     as_json: bool = typer.Option(True, "--json/--no-json", help="JSON recipe (default on)"),
 ) -> None:
-    """Explain setup → spots → best --advise for agents."""
+    """Explain intake → weekend / best --advise for agents."""
     payload = instruct_payload()
     if as_json:
         print_ok(payload)
@@ -256,11 +256,15 @@ def best_cmd(
     ),
     pick: int | None = typer.Option(None, "--pick", help="Disambiguate by spot id"),
     advise: bool = typer.Option(
-        False, "--advise", help="Attach rider gear advice from guru setup profile"
+        True,
+        "--advise/--no-advise",
+        help="Rider gear advice (default on — use --no-advise for raw models only)",
     ),
     as_json: bool = typer.Option(False, "--json"),
 ) -> None:
-    """WINDGURU DEFAULT Tune → top models by weight → those forecasts."""
+    """Spot call: WINDGURU_DEFAULT + GO/MARGINAL/NO-GO gear advice (default)."""
+    from guru.rider.advice import drive_km_from_home
+
     try:
         resolved = resolve_spot(spot, pick=pick)
         best = get_best_forecast(resolved.id, top=top, hours=hours)
@@ -270,7 +274,8 @@ def best_cmd(
             top_fc = best.forecasts[0] if best.forecasts else None
             if top_fc is None:
                 raise ValueError("No forecast hours to advise on")
-            advice = advise_forecast(top_fc, profile)
+            drive = drive_km_from_home(profile, resolved)
+            advice = advise_forecast(top_fc, profile, drive_km=drive)
     except _CATCH as exc:
         fail(exc, as_json=as_json)
     if as_json:
@@ -319,13 +324,13 @@ def models_cmd(
 @app.command("schema")
 def schema_cmd(
     name: str = typer.Argument(
-        "forecast", help="spot | forecast | best | profile | advice | error | instruct"
+        "forecast", help="spot | forecast | best | profile | advice | weekend | error | instruct"
     ),
 ) -> None:
     """Dump JSON Schema for agent payloads."""
     from guru.models.blend import BestForecast
     from guru.models.forecast import Forecast, Spot
-    from guru.models.profile import AdviceReport, RiderProfile
+    from guru.models.profile import AdviceReport, RiderProfile, WeekendReport
 
     schemas = {
         "spot": Spot.model_json_schema(),
@@ -333,6 +338,7 @@ def schema_cmd(
         "best": BestForecast.model_json_schema(),
         "profile": RiderProfile.model_json_schema(),
         "advice": AdviceReport.model_json_schema(),
+        "weekend": WeekendReport.model_json_schema(),
         "instruct": {"type": "object", "description": "see guru instruct --json"},
         "error": ERROR_SCHEMA,
     }

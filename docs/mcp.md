@@ -1,6 +1,6 @@
 # MCP — `guru-mcp`
 
-Same library and error vocabulary as the CLI. Prefer `best_forecast` over raw GFS.
+Same tools as the CLI. Prefer `weekend_spots` / `best_forecast` (advice on) over raw GFS.
 
 ## Install
 
@@ -49,14 +49,14 @@ See Anthropic’s [custom connectors / remote MCP](https://support.claude.com/en
 
 | Tool | Args | Returns |
 |------|------|---------|
-| `instruct` | — | Agent recipe (setup → best advise) |
-| `setup_profile` | sport, weight, kites, wetsuits, home_lat/lon, drive_km, session_hours… | Merged profile |
-| `get_profile` | — | Profile + ready / range_ready |
+| `instruct` | — | Agent recipe (intake → weekend / best) |
+| `setup_profile` | `intake?`, sport, weight_kg, **level**, kites, wetsuits, home_lat/lon, drive_km, session_hours… | Merged profile |
+| `get_profile` | — | Profile + ready / range_ready / first_pass |
 | `weekend_spots` | `hours?`, `limit?` | Ranked spots in drive range + advice |
 | `search_spots` | `query`, `limit?` | Named spots (no lat/lon) |
 | `near_spots` | `lat`, `lon`, `radius_km?`, `limit?` | Free map markers near a point |
 | `resolve_spot` | `spot`, `pick?` | Spot id/name → spot |
-| `best_forecast` | `spot`, `top?`, `hours?`, `pick?`, `advise?` | Weights + forecasts + `advice` |
+| `best_forecast` | `spot`, `top?`, `hours?`, `pick?`, `advise?` (default true) | Weights + forecasts + `advice` |
 | `get_forecast` | `spot`, `model?`, `hours?`, `pick?` | Single-model escape hatch |
 | `list_models` | — | Known aliases → id_model |
 
@@ -80,10 +80,10 @@ Client already retries with backoff. On `retryable: true`, wait seconds before a
 
 ## Agent rules
 
-1. Call `instruct` once if unfamiliar.
-2. Ensure rider + home range (`get_profile` / `setup_profile`).
-3. For “where can I kite?” call `weekend_spots`; else resolve a named spot.
-4. Call `best_forecast` with `advise=true` for a single spot.
+1. Call `instruct` / `get_profile` first.
+2. If `first_pass`: show `intake.prompt_to_user` once (include **level**), then `setup_profile`.
+3. For “where can I kite?” call `weekend_spots`.
+4. For a named spot call `best_forecast` (advice on by default).
 5. Do not scrape windguru.cz; never invent PRO lat/lon forecasts.
 
 See also: [`WIRE.md`](WIRE.md), `guru instruct --json`, [`skills/guru/SKILL.md`](../skills/guru/SKILL.md).
