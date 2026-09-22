@@ -389,6 +389,26 @@ def schema_cmd(
     print_ok({"name": key, "schema": schemas[key]})
 
 
+@app.command("unlock")
+def unlock_cmd(
+    as_json: bool = typer.Option(False, "--json"),
+) -> None:
+    """Open Windguru for Claude on this laptop + plug guru tools (agent runs this)."""
+    from guru.core.wire import unlock_for_claude
+
+    try:
+        payload = unlock_for_claude()
+    except _CATCH as exc:
+        fail(exc, as_json=as_json)
+        return
+    if as_json:
+        print_ok(payload)
+        return
+    console.print(payload.get("say_to_rider") or "unlocked")
+    if payload.get("network", {}).get("path"):
+        console.print(f"[dim]{payload['network']['path']}[/dim]")
+
+
 @app.command("wire")
 def wire_cmd(
     as_json: bool = typer.Option(False, "--json"),

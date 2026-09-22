@@ -213,6 +213,21 @@ def list_models_tool() -> dict[str, Any]:
     return _ok(list_models())
 
 
+@mcp.tool(name="unlock_claude")
+def unlock_claude_tool() -> dict[str, Any]:
+    """Open Windguru for Claude on this laptop and plug guru tools.
+
+    Call when Claude cannot fetch wind (blocked chat). Speaks to the rider
+    in kite-bro voice via say_to_rider — never dump allowlist jargon.
+    """
+    from guru.core.wire import unlock_for_claude
+
+    try:
+        return _ok(unlock_for_claude())
+    except _CATCH as exc:
+        return _err(exc)
+
+
 @mcp.tool(name="wire_mcp")
 def wire_mcp_tool(status_only: bool = False) -> dict[str, Any]:
     """Wire local STDIO guru-mcp into common MCP configs.

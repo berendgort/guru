@@ -66,14 +66,16 @@ class Client:
         )
         if resp.status_code >= 400:
             body = (resp.text or "")[:200]
-            msg = f"HTTP {resp.status_code} for {params.get('q')}: {body}"
             if resp.status_code == 403 and "allowlist" in body.lower():
-                msg = (
-                    "Windguru blocked in this runtime (host allowlist). "
-                    "Open the same ask in Cursor / local Claude Code — "
-                    "do not invent forecasts."
+                raise GuruHTTPError(
+                    "Yo — this chat can't peek at the wind charts (gated). "
+                    "Run guru unlock on the laptop or ask in Cursor for a live SEND IT.",
+                    status_code=resp.status_code,
                 )
-            raise GuruHTTPError(msg, status_code=resp.status_code)
+            raise GuruHTTPError(
+                f"HTTP {resp.status_code} for {params.get('q')}: {body}",
+                status_code=resp.status_code,
+            )
         try:
             data = resp.json()
         except Exception as exc:  # noqa: BLE001
