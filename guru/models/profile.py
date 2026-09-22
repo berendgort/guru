@@ -171,6 +171,9 @@ class AdviceWindow(BaseModel):
     owned_wetsuit: str | None = None
     accessories: list[str] = Field(default_factory=list)
     verdict: str  # go | marginal | no
+    rating_stars: int = 0
+    rating_cold: bool = False
+    rating: str = "—"
     note: str = ""
 
 
@@ -219,6 +222,9 @@ class ScheduleSlot(BaseModel):
     owned_kite_m2: float | None = None
     owned_wetsuit: str | None = None
     model_agree: int = 1
+    rating_stars: int = 0
+    rating_cold: bool = False
+    rating: str = "—"
     summary: str = ""
 
 

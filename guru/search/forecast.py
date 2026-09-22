@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from guru.core.rating import windguru_rating
 from guru.models.aliases import resolve_model
 from guru.models.forecast import Forecast, ForecastHour, Spot, hour_time, init_to_datetime
 from guru.search.client import IAPI_CZ, get_client
@@ -61,17 +62,23 @@ def decode_forecast(
     rows: list[ForecastHour] = []
     for i, raw_h in enumerate(hour_list):
         h = int(raw_h)
+        wind_kn = _num(wind, i)
+        temp_c = _num(tmp, i)
+        rating = windguru_rating(wind_kn, temp_c)
         rows.append(
             ForecastHour(
                 hour=h,
                 time=hour_time(init, h),
-                wind_kn=_num(wind, i),
+                wind_kn=wind_kn,
                 gust_kn=_num(gust, i),
                 wind_dir_deg=_num(wdir, i),
-                temp_c=_num(tmp, i),
+                temp_c=temp_c,
                 precip_mm=_num(apcp, i),
                 cloud_pct=_num(tcdc, i),
                 rh_pct=_num(rh, i),
+                rating_stars=rating.stars,
+                rating_cold=rating.cold,
+                rating=rating.label,
             )
         )
     if hours is not None:

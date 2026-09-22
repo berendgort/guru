@@ -82,6 +82,7 @@ def print_advice(advice: AdviceReport) -> None:
     table.add_column("UTC")
     table.add_column("kt", justify="right")
     table.add_column("Gust", justify="right")
+    table.add_column("WG")
     table.add_column("Quality")
     table.add_column("Kite")
     table.add_column("Suit")
@@ -102,6 +103,7 @@ def print_advice(advice: AdviceReport) -> None:
             f"{w.start}→{w.end}",
             f"{w.wind_kn:g}",
             "-" if w.gust_kn is None else f"{w.gust_kn:g}",
+            w.rating or "—",
             w.wind_quality or "-",
             kite,
             suit,
@@ -132,6 +134,7 @@ def print_weekend(report: WeekendReport) -> None:
         table.add_column("km", justify="right")
         table.add_column("Window")
         table.add_column("kt / gust")
+        table.add_column("WG")
         table.add_column("Kite")
         table.add_column("Agree")
         table.add_column("Verdict")
@@ -145,6 +148,7 @@ def print_weekend(report: WeekendReport) -> None:
                 "-" if s.drive_km is None else f"{s.drive_km:g}",
                 f"{s.start[11:16]}–{s.end[11:16]}",
                 f"{wind} / {gust}",
+                s.rating or "—",
                 kite,
                 f"{s.model_agree}/3",
                 s.verdict,
@@ -209,6 +213,7 @@ def print_forecast(fc: Forecast) -> None:
     table.add_column("UTC", style="dim")
     table.add_column("kt", justify="right")
     table.add_column("Gust", justify="right")
+    table.add_column("WG")
     table.add_column("Dir")
     table.add_column("°C", justify="right")
     table.add_column("mm", justify="right")
@@ -217,6 +222,7 @@ def print_forecast(fc: Forecast) -> None:
             row.time.strftime("%a %d %H:%M"),
             _fmt(row.wind_kn, 1),
             _fmt(row.gust_kn, 1),
+            row.rating or "—",
             f"{wind_dir_cardinal(row.wind_dir_deg)} {_fmt(row.wind_dir_deg, 0)}".strip(),
             _fmt(row.temp_c, 1),
             _fmt(row.precip_mm, 1),

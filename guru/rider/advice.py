@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from guru.core.rating import windguru_rating
 from guru.models.forecast import Forecast, ForecastHour, Spot
 from guru.models.profile import AdviceReport, AdviceWindow, Level, RiderProfile, Sport
 from guru.rider.sizing import (
@@ -230,6 +231,7 @@ def _collapse_windows(
             session_hours=session_hours,
             level=level,
         )
+        rating = windguru_rating(hour.wind_kn, hour.temp_c)
         windows.append(
             AdviceWindow(
                 start=_iso(first.time),
@@ -245,6 +247,9 @@ def _collapse_windows(
                 owned_wetsuit=suit,
                 accessories=accessories,
                 verdict=verdict,
+                rating_stars=rating.stars,
+                rating_cold=rating.cold,
+                rating=rating.label,
                 note=note,
             )
         )
@@ -294,10 +299,13 @@ def _summary(
         else (f"~{top.kite_m2:g} m²" if top.kite_m2 else "kite n/a")
     )
     suit = top.owned_wetsuit or top.wetsuit or "suit n/a"
+    stars = top.rating if top.rating and top.rating != "—" else ""
+    star_bit = f" · {stars}" if stars else ""
     return (
         f"{overall.upper()}: {top.start}–{top.end} · "
         f"{top.wind_kn:g} kt"
         + (f" gust {top.gust_kn:g}" if top.gust_kn else "")
+        + star_bit
         + f" · {kite} · {suit} · {session_h:g}h"
     )
 

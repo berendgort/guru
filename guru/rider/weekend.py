@@ -167,6 +167,9 @@ def scan_weekend(
                     owned_kite_m2=w.owned_kite_m2,
                     owned_wetsuit=w.owned_wetsuit or w.wetsuit,
                     model_agree=a,
+                    rating_stars=w.rating_stars,
+                    rating_cold=w.rating_cold,
+                    rating=w.rating,
                     summary=_slot_summary(spot.name, w, a),
                 )
                 day_candidates.append((d, slot, _slot_rank(w, drive, a)))
@@ -244,9 +247,10 @@ def _slot_summary(name: str, w: AdviceWindow, agree: int) -> str:
         else (f"~{w.kite_m2:g} m²" if w.kite_m2 else "kite n/a")
     )
     gust = f" gust {w.gust_kn:g}" if w.gust_kn is not None else ""
+    stars = f" · {w.rating}" if w.rating and w.rating != "—" else ""
     return (
-        f"{w.verdict.upper()}: {w.start}–{w.end} · {w.wind_kn:g} kt{gust} · "
-        f"{kite} · {agree}/3 models"
+        f"{w.verdict.upper()}: {w.start}–{w.end} · {w.wind_kn:g} kt{gust}"
+        f"{stars} · {kite} · {agree}/3 models"
     )
 
 

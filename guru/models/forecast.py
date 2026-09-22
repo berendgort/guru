@@ -27,6 +27,10 @@ class ForecastHour(BaseModel):
     precip_mm: float | None = None
     cloud_pct: float | None = None
     rh_pct: float | None = None
+    # Windguru table stars (computed; site defaults 10.6 / 15.6 / 19.4 kt)
+    rating_stars: int = 0
+    rating_cold: bool = False
+    rating: str = "—"  # e.g. "★★" or "★★★ cold"
 
 
 class Forecast(BaseModel):

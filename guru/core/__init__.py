@@ -8,7 +8,6 @@ from guru.core.envelope import (
     success_payload,
 )
 from guru.core.errors import ErrorClassification, classify_error
-from guru.core.instruct import instruct_payload
 
 __all__ = [
     "API_VERSION",
@@ -17,6 +16,5 @@ __all__ = [
     "classify_error",
     "dump_model",
     "error_payload",
-    "instruct_payload",
     "success_payload",
 ]

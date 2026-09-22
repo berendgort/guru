@@ -5,9 +5,15 @@ from __future__ import annotations
 import json
 import urllib.error
 import urllib.request
+from importlib.metadata import PackageNotFoundError, version
 from typing import Any
 
-from guru import __version__
+
+def _installed_version() -> str:
+    try:
+        return version("windguru")
+    except PackageNotFoundError:
+        return "0.0.0"
 
 
 def pypi_latest_version(*, timeout: float = 4.0) -> str | None:
@@ -26,7 +32,7 @@ def pypi_latest_version(*, timeout: float = 4.0) -> str | None:
 def upgrade_status() -> dict[str, Any]:
     """Machine-readable upgrade hint for agents."""
     latest = pypi_latest_version()
-    current = __version__
+    current = _installed_version()
     update = bool(latest and latest != current)
     return {
         "installed": current,
