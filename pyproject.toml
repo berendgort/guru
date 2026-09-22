@@ -1,8 +1,8 @@
 [project]
 name = "windguru"
-version = "0.3.17"
+version = "0.3.18"
 description = "Windguru CLI, MCP server, and Python library — kite spot + gear advice for riders and agents"
-authors = [{ name = "Berend Gort", email = "berend.gort@gmail.com" }]
+authors = [{ name = "Dr. Berend Gort", email = "berend.gort@gmail.com" }]
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"

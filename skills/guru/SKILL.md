@@ -22,7 +22,7 @@ guru instruct --json
 guru profile --json
 ```
 
-**One path every app:** `guru … --json` on a machine that reaches Windguru. If `network.reachable` is false: follow `on_unreachable` — never ask the human to install/run guru; intake in-chat only if needed; one sentence to switch to a local agent host.
+**One path every app:** `guru … --json` on a machine that reaches Windguru. Automate first (`unlock` when gated). Ask the human **only** via `human_fix` recipes (ChatGPT Work / Claude / Codex cloud toggles) — paste `say_to_rider` exactly. Never ask for pipx/shell/MCP JSON.
 
 ## First message (mandatory if profile empty)
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from guru.core.human_fix import human_fix_payload
 from guru.core.path import agent_path_payload, probe_windguru
 from guru.core.upgrade import upgrade_status
 from guru.rider.intake import intake_payload
@@ -20,7 +21,7 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "detail": (
             "EVERY SESSION: if data.upgrade.update_available (PyPI *newer* than "
             "installed), upgrade before briefing. Never downgrade if installed "
-            "is ahead of a stale pypi_latest. Need >= 0.3.12 for kite-bro voice."
+            "is ahead of a stale pypi_latest. Need >= 0.3.17 for unlock+human_fix."
         ),
     },
     {
@@ -29,12 +30,11 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "command": "guru doctor --json   # probe + upgrade; do NOT pass --wire",
         "detail": (
             "ONE PATH FOR EVERY APP: local `guru … --json` on a machine that "
-            "reaches Windguru. YOU run all commands — human_runs is always []. "
-            "If data.network.reachable is false: follow data.on_unreachable "
-            "exactly (intake → you run setup → say_exactly only). NEVER ask the "
-            "human to install/run guru, never 'you'll need to run', never tutor. "
-            "Wire/tunnel ONLY if shell guru is unavailable AND a local "
-            "STDIO MCP host needs guru missing — never by default."
+            "reaches Windguru. YOU run all commands. Automate first — unlock, "
+            "setup, weekend. Ask the human ONLY via data.human_fix recipes "
+            "when you cannot write their app settings (cloud UI / admin lock). "
+            "Wire/tunnel ONLY if shell guru is unavailable AND a local STDIO "
+            "MCP host needs guru missing — never by default."
         ),
     },
     {
@@ -47,8 +47,8 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
             "changes GO wind and sizing). They reply with one key=value line. "
             "Then: guru setup --intake '<paste>' --json. Never drip-feed "
             "questions. Never skip to weekend/best without a ready profile. "
-            "If network unreachable: still intake + YOU run setup; then only "
-            "on_unreachable.say_exactly."
+            "If network unreachable: still intake + YOU run setup; then follow "
+            "on_unreachable (unlock or human_fix)."
         ),
     },
     {
@@ -86,12 +86,12 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
 ]
 
 INSTRUCT_SUMMARY = (
-    "Universal path: local guru CLI on a host that reaches Windguru. "
-    "Voice: kite bro (SEND IT / SOFT CALL / SIT IT OUT) — honest, never hype "
-    "a long haul. Wire/tunnel ONLY if CLI cannot run. Agent runs "
-    "doctor/setup/weekend; never ask humans for config. FIRST MESSAGE: "
-    "collect rider profile once (LEVEL required). Then weekend or best. "
-    "WINDGURU_DEFAULT only. No HTML scrape. No PRO."
+    "Automate first: local guru CLI on a host that reaches Windguru. "
+    "Voice: kite bro (SEND IT / SOFT CALL / SIT IT OUT). Ask the human only "
+    "for rare UI toggles via human_fix recipes (ChatGPT Work / Claude / "
+    "Codex cloud) — paste say_to_rider exactly. FIRST MESSAGE: rider profile "
+    "once (LEVEL required). Then weekend or best. WINDGURU_DEFAULT only. "
+    "No HTML scrape. No PRO."
 )
 
 
@@ -105,6 +105,7 @@ def instruct_payload() -> dict[str, Any]:
 
     network = probe_windguru()
     unreachable = network.get("reachable") is False
+    human_fix = human_fix_payload()
 
     return {
         "summary": INSTRUCT_SUMMARY,
@@ -119,34 +120,34 @@ def instruct_payload() -> dict[str, Any]:
         "intake": intake_payload(needed=need_intake),
         "profile_status": status,
         "steps": INSTRUCT_STEPS,
+        "human_fix": human_fix,
         "on_unreachable": {
             "active": unreachable,
             "do": [
-                "ONLY when network.reachable is false (this block active=true): "
-                "if you have a local shell on the rider's laptop, run "
-                "`guru unlock --json` once, then say data.on_unreachable.say_after_unlock",
-                "Never run unlock when network.reachable is true / on_unreachable.active "
-                "is false — unlock is a fix for gated charts, not a setup step",
-                "If first_pass and still blocked: show ONLY intake.prompt_to_user, "
-                "then YOU run guru setup --intake, then say_exactly",
-                "NEVER run guru weekend/best while network.reachable is false "
-                "unless unlock just succeeded and probe passes",
+                "ONLY when network.reachable is false / active=true",
+                "1) YOU run `guru unlock --json` if you have local shell "
+                "(never ask the human to run it)",
+                "2) If unlock ok: paste unlock.say_to_rider / "
+                "human_fix.recipes.restart_after_unlock.say_to_rider "
+                "(new chat) — that is the only ask",
+                "3) If no local shell OR still blocked after unlock+restart: "
+                "paste EXACTLY one human_fix.recipes[*].say_to_rider for "
+                "this host (chatgpt_work_network / codex_cloud_environment / "
+                "claude_network_settings / fallback_cursor) — do not invent steps",
+                "If first_pass: intake + YOU run setup, then steps above",
+                "NEVER weekend/best while still blocked",
+                "Never unlock when already reachable",
             ],
-            "say_exactly": (
-                "Yo — this chat can't peek at the wind charts yet. "
-                "I can unlock it on your laptop (guru unlock) or call SEND IT "
-                "right here in Cursor. Same quiver, live wind."
-            ),
-            "say_after_unlock": (
-                "Wind's unlocked on your machine — restart this chat once "
-                "and ask where to kite. I'll SEND IT from here."
-            ),
+            "say_exactly": human_fix["recipes"]["fallback_cursor"]["say_to_rider"],
+            "say_after_unlock": human_fix["recipes"]["restart_after_unlock"][
+                "say_to_rider"
+            ],
             "do_not": [
-                "Use words: allowlist, sandbox, egress, CDN, HTTP, traceback, MCP JSON",
-                "Ask the human to install or run guru/pipx",
+                "Ask the human to install/run guru/pipx or edit MCP JSON",
+                "Tutor sandboxes / allowlists / HTTP / tracebacks",
+                "Invent Settings paths — only paste recipe say_to_rider blocks",
                 "Run weekend/best while still blocked",
                 "Run unlock when charts already work",
-                "Tutor how sandboxes work",
                 "Invent forecasts",
             ],
         },
@@ -156,19 +157,14 @@ def instruct_payload() -> dict[str, Any]:
             "human_runs": [],
             "agent_runs": [
                 "pipx upgrade windguru || pipx install --force 'windguru[mcp]'",
-                "guru doctor --json   # need installed >= 0.3.12 for kite-bro voice",
+                "guru doctor --json",
+                "guru unlock --json   # ONLY if network.reachable is false",
                 "guru setup --intake …",
                 "guru weekend --json",
                 "guru best <id> --json",
             ],
-            "never_ask_human": [
-                "install or upgrade windguru/pipx",
-                "run any guru command",
-                "edit any app's MCP config",
-                "run guru-mcp-tunnel / cloudflared",
-                "paste connector URLs or CLI JSON",
-                "run guru wire unless CLI is unavailable",
-            ],
+            "never_ask_human": human_fix["never_ask_human"],
+            "rare_human_ui_only": human_fix["ask_human_only_when"],
         },
         "examples": [
             "pipx install 'windguru[mcp]'",

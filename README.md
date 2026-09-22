@@ -1,8 +1,15 @@
 # guru
 
-<p align="center">
-  <img src="docs/assets/guru-github-banner.png" alt="guru — kite forecast CLI" width="100%">
-</p>
+```
+  ██████╗ ██╗   ██╗██████╗ ██╗   ██╗      ██████╗ ██╗      ██╗
+ ██╔════╝ ██║   ██║██╔══██╗██║   ██║     ██╔════╝ ██║      ██║
+ ██║  ███╗██║   ██║██████╔╝██║   ██║ ███ ██║      ██║      ██║
+ ██║   ██║██║   ██║██╔══██╗██║   ██║ ╚═╝ ██║      ██║      ██║
+ ╚██████╔╝╚██████╔╝██║  ██║╚██████╔╝     ╚██████╗ ███████╗ ██║
+  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝      ╚═════╝ ╚══════╝ ╚═╝
+  GURU-CLI  ·  send it · right spot · thinking offloaded
+  Dr. Berend Gort  ·  www.berendgort.dev
+```
 
 Windguru **CLI + MCP + Python library** for kiters and agents — free named spots, WINDGURU DEFAULT top models, gear advice. No HTML scraping. No PRO.
 
@@ -32,7 +39,7 @@ Onboard the rider on the **first message**, then answer kite questions with gear
    ```
 2. Run `guru doctor --json` — check `network.reachable` and `upgrade.update_available`.
 3. **Immediately check the profile.** If `first_pass` / `ready=false` / `range_ready=false`, your **first reply to the human** must be the intake prompt (include **level**). Do not run weekend/best yet.
-4. **One path for every app:** run `guru … --json` on a host that reaches Windguru. If `network.reachable` is false, follow `on_unreachable`: never ask the human to install/run guru or paste bash — intake in-chat only if needed, then one sentence to continue in a local agent (Cursor / local Claude Code). No wire/tunnel unless shell `guru` is unavailable and a local MCP host needs it.
+4. **One path for every app:** run `guru … --json` on a host that reaches Windguru. Automate first. If `network.reachable` is false: run `guru unlock --json` yourself, then paste `say_to_rider` (new chat). Still blocked / no shell: paste exactly one `human_fix` recipe for ChatGPT Work, Codex cloud, or Claude — never invent Settings paths, never ask for pipx/shell/MCP JSON. No wire/tunnel unless shell `guru` is unavailable and a local MCP host needs it.
 
 Optional MCP (only if the host already uses MCP):
 

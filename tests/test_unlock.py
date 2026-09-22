@@ -53,6 +53,8 @@ def test_unlock_writes_claude_and_codex_when_blocked(monkeypatch, tmp_path: Path
     result = unlock_wind_charts(wire=False)
     assert result["skipped"] is False
     assert result["ok"] is True
+    assert result["human_fix"]["id"] == "restart_after_unlock"
+    assert "new chat" in result["say_to_rider"].lower()
 
     settings = json.loads((home / ".claude" / "settings.json").read_text())
     domains = settings["sandbox"]["network"]["allowedDomains"]

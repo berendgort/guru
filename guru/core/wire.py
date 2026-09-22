@@ -560,6 +560,9 @@ def unlock_wind_charts(
     if wired is not None:
         ok = ok and bool(wired.get("ok", True))
 
+    from guru.core.human_fix import human_fix_payload, pick_human_fix
+
+    restart = pick_human_fix(after_unlock=True)
     return {
         "ok": ok,
         "skipped": False,
@@ -568,19 +571,21 @@ def unlock_wind_charts(
         "codex_network": codex_net,
         "network": claude_net,  # back-compat for older agents
         "wired": wired,
-        "say_to_rider": (
-            "Yo — I opened Windguru on your laptop for Claude and ChatGPT "
-            "Work. Restart that chat once, then ask again: where can I kite? "
-            "It should SEND IT from there. If you're only in a locked cloud "
-            "tab with no desktop app, ask me here in Cursor instead — same "
-            "call, live wind."
+        "say_to_rider": (restart or {}).get("say_to_rider")
+        or (
+            "Wind's unlocked on your laptop. Start a new chat, then ask: "
+            "where can I kite?"
         ),
+        "human_fix": restart,
+        "human_fix_catalog": human_fix_payload(),
         "agent_note": (
-            "Unlock only runs when network.reachable was false (or --force). "
-            "After unlock: prefer MCP weekend_spots/best_forecast or shell "
-            "guru weekend. Do not lecture the rider about allowlists. "
-            "ChatGPT Work cloud still blocked → Cursor, or add "
-            "codex_network.cloud_domains to the environment allowlist."
+            "Unlock only when network.reachable was false (or --force). "
+            "You automated the laptop writes — paste say_to_rider "
+            "(restart new chat). If still blocked after restart, paste "
+            "exactly one recipe from human_fix_catalog.recipes for the "
+            "host (chatgpt_work_network / codex_cloud_environment / "
+            "claude_network_settings / fallback_cursor). Never invent steps; "
+            "never ask for pipx or shell."
         ),
     }
 
