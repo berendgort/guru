@@ -1,0 +1,15 @@
+---
+description: Deploy means PyPI + git push to origin
+alwaysApply: true
+---
+
+# Deploy = publish + push
+
+When the user says **deploy**, **ship**, or **publish** for guru/`windguru`:
+
+1. Commit if there are uncommitted release changes (only if they asked to commit/deploy).
+2. Build and upload to PyPI.
+3. **Also `git push origin HEAD`** — do not leave `main` ahead of `origin`.
+4. Reinstall locally (`pipx install --force` / upgrade) so this PC matches PyPI.
+
+Do not ask separately for push permission when they already said deploy/ship/publish.

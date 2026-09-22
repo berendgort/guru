@@ -85,3 +85,5 @@ pytest -q
 pytest -m live
 ruff check .
 ```
+
+**Deploy / ship / publish:** bump → PyPI upload → **`git push origin HEAD`** (always push with deploy) → reinstall local pipx.
