@@ -46,7 +46,9 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
             "intake.prompt_to_user to the human ONCE (must include level — it "
             "changes GO wind and sizing). They reply with one key=value line. "
             "Then: guru setup --intake '<paste>' --json. Never drip-feed "
-            "questions. Never skip to weekend/best without a ready profile."
+            "questions. Never skip to weekend/best without a ready profile. "
+            "If network unreachable: still intake + YOU run setup; then only "
+            "on_unreachable.say_exactly."
         ),
     },
     {
@@ -120,14 +122,20 @@ def instruct_payload() -> dict[str, Any]:
         "on_unreachable": {
             "active": unreachable,
             "do": [
-                "If first_pass: show intake.prompt_to_user once and wait for key=value",
-                "One short sentence: this chat runtime cannot reach Windguru — "
-                "continue in a local agent (Cursor / local Claude Code) that "
-                "runs guru itself",
+                "If first_pass: show ONLY intake.prompt_to_user (kite-bro), wait for one key=value paste",
+                "On their reply: YOU run `guru setup --intake '…' --json` in this shell (profile write works offline)",
+                "Then say EXACTLY on_unreachable.say_exactly — nothing else about installs, tutorials, or bash",
             ],
+            "say_exactly": (
+                "Live Windguru is blocked in this chat — open the same ask in "
+                "Cursor (or local Claude Code) and I'll call SEND IT / SOFT "
+                "CALL from there."
+            ),
             "do_not": [
                 "Ask the human to install or run guru/pipx",
+                "Say 'you'll need to run', 'run guru weekend locally', or 'I can teach you how'",
                 "Paste bash install/setup/weekend blocks for the human",
+                "Add a second paragraph explaining the sandbox after say_exactly",
                 "Invent forecasts or gear advice",
                 "Start tunnels or ask for connector URLs",
             ],
