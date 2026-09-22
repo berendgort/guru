@@ -14,6 +14,7 @@ def test_parse_intake_one_liner() -> None:
     out = parse_intake_text(raw)
     assert out["sport"] == "kitefoil"
     assert out["weight_kg"] == 78.0
+    assert out["level"] == "intermediate"
     assert out["kites_m2"] == [7.0, 9.0, 12.0]
     assert out["wetsuits"] == ["3/2", "4/3"]
     assert out["session_hours"] == 3.0
@@ -37,7 +38,7 @@ def test_cli_setup_intake(tmp_path, monkeypatch) -> None:
         [
             "setup",
             "--intake",
-            "sport=kitefoil weight=78 kites=7,9,12 wetsuits=3/2,4/3 "
+            "sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 "
             "session=3 home=41.39,2.17 drive_km=200 range=Trabucador → Leucate",
             "--json",
         ],
@@ -63,5 +64,8 @@ def test_instruct_includes_intake(tmp_path, monkeypatch) -> None:
     body = json.loads(result.stdout)["data"]
     assert body["first_pass"] is True
     assert "prompt_to_user" in body["intake"]
+    assert "level" in body["intake"]["prompt_to_user"].lower()
     assert "sport=" in body["intake"]["reply_template"]
+    assert "level=" in body["intake"]["reply_template"]
+    assert "level" in body["intake"]["required_highlights"]
     assert body["steps"][0]["action"] == "first_pass_intake"

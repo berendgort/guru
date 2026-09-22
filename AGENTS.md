@@ -1,45 +1,44 @@
 # AGENTS.md — how to extend `guru`
 
-You are working on **guru**: a Windguru CLI/library/MCP reverse-engineered the same way [`fli`](https://github.com/punitarani/fli) reverse-engineers Google Flights.
+You are working on **guru**: a Windguru CLI / library / MCP that helps kiters pick spots and gear (free named spots + WINDGURU_DEFAULT). Product goal: [`docs/objective_function.md`](docs/objective_function.md).
 
 ## Calling guru from an agent
 
 ```bash
 pipx install 'windguru[mcp]'   # PyPI — do not require a git clone
 guru instruct --json
-guru setup --sport kitefoil --weight 78 --kites 7,9,12 --wetsuits "3/2,4/3" \
-  --home-lat 41.39 --home-lon 2.17 --drive-km 200 \
+guru setup --sport kitefoil --weight 78 --level intermediate --kites 7,9,12 \
+  --wetsuits "3/2,4/3" --home-lat 41.39 --home-lon 2.17 --drive-km 200 \
   --range-label "Trabucador → Leucate" --session-hours 3 --json
 guru weekend --json                  # where can I kite?
 guru best <id_spot> --advise --json  # single spot + gear advice
 ```
 
+- **First message:** if profile incomplete, show `intake.prompt_to_user` once (include **level**) before weekend/best.
 - Prefer **`weekend` / `best --advise`**, not raw GFS.
 - Preset is always **WINDGURU_DEFAULT** (only adaptive Tune preset we support).
-- Onboard once: sport / weight / quiver / wetsuits / home range via `guru setup`.
+- Onboard once: sport / weight / **level** / quiver / wetsuits / home range via `guru setup`.
 - On `error_type: ambiguous`, pick from `candidates` — never silent first-match.
 - Envelope: `ok`, `api_version`, `error_type`, `retryable` (shared CLI + MCP).
 - Do **not** scrape HTML, Tune jBox, or MapLibre. Do **not** require PRO.
 
-## Hard rule: clone methods from fli
+## Architecture patterns
 
-**Strongly prefer copying patterns from fli over inventing new ones.**
+Keep these conventions when extending:
 
-Keep a local checkout of fli (`git clone https://github.com/punitarani/fli /tmp/fli-ref`) and **read their search client before changing ours**.
+| Area | Pattern |
+|------|---------|
+| HTTP | `curl_cffi` impersonation, retries, env timeouts (`guru/search/client.py`) |
+| Errors | Shared CLI/MCP `error_type` vocabulary (`guru/core/errors.py`) |
+| Fixtures | Browser Network → `scripts/capture_fixtures.py` → `fixtures/` + offline parser tests |
+| CLI | Typer + Rich + `--json` |
+| MCP | FastMCP STDIO + HTTP |
+| Models | Pydantic only — no I/O |
+| Wire break | When simple `forecast` dies, use page-derived `rundef` params ([`docs/WIRE.md`](docs/WIRE.md)) |
 
-| fli | guru | Copy this idea |
-|-----|------|----------------|
-| `fli/search/client.py` | `guru/search/client.py` | `curl_cffi` impersonation, retries, env timeouts |
-| `fli/core/errors.py` | `guru/core/errors.py` | Shared CLI/MCP `error_type` vocabulary |
-| capture scripts + fixtures | `scripts/capture_fixtures.py` + `fixtures/` | Browser Network → fixture → offline parser tests |
-| `fli/cli/` | `guru/cli/` | Typer + Rich + `--json` |
-| `fli/mcp/` | `guru/mcp/` | FastMCP STDIO + HTTP |
-| `fli/models/` | `guru/models/` | Pydantic only — no I/O |
-| `_tfs` migration when signed RPC broke | `docs/WIRE.md` SPA `rundef` form | When simple `forecast` dies, use page-derived params |
+## Live capture workflow (required for new models / wire changes)
 
-## Reverse-engineering workflow (required)
-
-1. Open the spot in **Cursor browser** (`https://www.windguru.cz/201`).
+1. Open the spot in a browser (`https://www.windguru.cz/201`).
 2. CDP / Network: list requests matching `iapi.php`.
 3. Note host (`.cz` vs `.net`), `q=`, and params (`id_spot`, `id_model`, `rundef`, `opt=simplemap`, …).
 4. Reproduce with `curl_cffi` + **Referer**.
@@ -51,7 +50,7 @@ Keep a local checkout of fli (`git clone https://github.com/punitarani/fli /tmp/
 
 ```text
 pipx install windguru          # or: pipx install 'windguru[mcp]'
-guru setup --sport … --weight … --kites … --wetsuits …
+guru setup --sport … --weight … --level … --kites … --wetsuits …
 guru spots <query>
 guru near --lat Y --lon X
 guru best <id|name> --advise [--top 3] [--hours N] [--json]

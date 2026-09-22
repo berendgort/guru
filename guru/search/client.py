@@ -1,4 +1,4 @@
-"""HTTP client — clone the fli pattern: curl_cffi + Chrome impersonation."""
+"""HTTP client — curl_cffi + Chrome impersonation, retries, env timeouts."""
 
 from __future__ import annotations
 

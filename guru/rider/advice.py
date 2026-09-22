@@ -33,7 +33,7 @@ def advise_forecast(
         return AdviceReport(
             verdict="incomplete",
             sport=profile.sport.value if profile.sport else None,
-            level=profile.level.value,
+            level=profile.level.value if profile.level else None,
             model=forecast.model,
             missing_profile=missing,
             summary=(
@@ -46,6 +46,7 @@ def advise_forecast(
 
     assert profile.sport is not None
     assert profile.weight_kg is not None
+    assert profile.level is not None
     sport = profile.sport
     level = profile.level
     weight = profile.weight_kg

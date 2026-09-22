@@ -6,6 +6,7 @@ import re
 from typing import Any
 
 # Fields the agent must collect in ONE message (not drip-fed).
+# Level is required: GO thresholds and kite sizing depend on it.
 INTAKE_FIELDS: list[dict[str, str]] = [
     {
         "key": "sport",
@@ -19,8 +20,8 @@ INTAKE_FIELDS: list[dict[str, str]] = [
     },
     {
         "key": "level",
-        "ask": "Level",
-        "hint": "beginner | intermediate | advanced (default intermediate)",
+        "ask": "Level (required)",
+        "hint": "beginner | intermediate | advanced — changes GO wind and sizing",
     },
     {
         "key": "kites_m2",
@@ -62,15 +63,17 @@ INTAKE_FIELDS: list[dict[str, str]] = [
 # Compact reply the user can paste in one message
 REPLY_TEMPLATE = (
     "sport=kitefoil weight=78 level=intermediate kites=7,9,12 "
-    'wetsuits=3/2,4/3 boards=foil 1300,TT 138 session=3 '
+    "wetsuits=3/2,4/3 boards=foil 1300,TT 138 session=3 "
     "home=41.39,2.17 drive_km=200 range=Trabucador → Leucate"
 )
 
 AGENT_PROMPT_TO_USER = """\
-Quick kite profile (one reply — paste or fill):
+Before any forecast: I need your kite profile (one reply — paste or fill).
+Level matters for GO wind and kite size.
 
 • sport: kitesurf / kitefoil / surfkite
-• weight_kg · level (beg/int/adv)
+• weight_kg
+• level: beginner | intermediate | advanced  ← required
 • kites m² you own (e.g. 7,9,12)
 • boards (optional)
 • wetsuits you own (e.g. 3/2,4/3)
@@ -89,16 +92,22 @@ def intake_payload(*, needed: bool = True) -> dict[str, Any]:
     return {
         "needed": needed,
         "rule": (
-            "On first use (profile not ready or not range_ready): show "
-            "prompt_to_user ONCE, wait for one reply, then run guru setup. "
-            "Do NOT ask fields one-by-one."
+            "FIRST USER MESSAGE in a kite session: if profile not ready or not "
+            "range_ready, show prompt_to_user ONCE (must include level), wait for "
+            "one key=value reply, then run guru setup. Do NOT skip intake. Do NOT "
+            "ask fields one-by-one. Do NOT run weekend/best until ready."
         ),
         "prompt_to_user": AGENT_PROMPT_TO_USER.strip(),
         "reply_template": REPLY_TEMPLATE,
         "fields": INTAKE_FIELDS,
-        "setup_from_reply": (
-            "guru setup --intake '<user paste>' --json"
-        ),
+        "required_highlights": [
+            "level",
+            "sport",
+            "weight_kg",
+            "kites_m2",
+            "wetsuits",
+        ],
+        "setup_from_reply": ("guru setup --intake '<user paste>' --json"),
     }
 
 
@@ -137,7 +146,8 @@ def parse_intake_text(raw: str) -> dict[str, Any]:
     # parts: [preamble, key1, val1, key2, val2, ...]
     if len(parts) < 3:
         raise ValueError(
-            "Could not parse intake. Use: sport=kitefoil weight=78 kites=7,9,12 ..."
+            "Could not parse intake. Use: sport=kitefoil weight=78 "
+            "level=intermediate kites=7,9,12 ..."
         )
 
     kv: dict[str, str] = {}
@@ -145,7 +155,6 @@ def parse_intake_text(raw: str) -> dict[str, Any]:
     while i + 1 < len(parts):
         key = parts[i].lower()
         val = parts[i + 1].strip(" ,;")
-        # Trim value at next accidental double-space junk
         kv[key] = val
         i += 2
 
@@ -161,11 +170,15 @@ def parse_intake_text(raw: str) -> dict[str, Any]:
     for src in ("kites_m2", "kites"):
         if src in kv:
             out["kites_m2"] = [
-                float(x) for x in re.split(r"[,;\s]+", kv[src]) if x and _is_float(x)
+                float(x)
+                for x in re.split(r"[,;\s]+", kv[src])
+                if x and _is_float(x)
             ]
             break
     if "boards" in kv:
-        out["boards"] = [b.strip() for b in re.split(r"[,;]+", kv["boards"]) if b.strip()]
+        out["boards"] = [
+            b.strip() for b in re.split(r"[,;]+", kv["boards"]) if b.strip()
+        ]
     if "wetsuits" in kv:
         out["wetsuits"] = [
             w.strip() for w in re.split(r"[,;]+", kv["wetsuits"]) if w.strip()

@@ -70,7 +70,7 @@ class RiderProfile(BaseModel):
 
     sport: Sport | None = None
     weight_kg: float | None = None
-    level: Level = Level.INTERMEDIATE
+    level: Level | None = None  # required for advice — beginner/intermediate/advanced
     kites_m2: list[float] = Field(default_factory=list)
     boards: list[str] = Field(default_factory=list)
     wetsuits: list[str] = Field(default_factory=list)
@@ -125,6 +125,8 @@ class RiderProfile(BaseModel):
             missing.append("sport")
         if self.weight_kg is None:
             missing.append("weight_kg")
+        if self.level is None:
+            missing.append("level")
         if not self.kites_m2:
             missing.append("kites_m2")
         if not self.wetsuits:

@@ -4,7 +4,7 @@
   <img src="docs/assets/guru-github-banner.png" alt="guru — kite forecast CLI" width="100%">
 </p>
 
-Windguru **CLI + MCP + Python library**. Same idea as [`fli`](https://github.com/punitarani/fli): reverse-engineered JSON, zero HTML scraping, agent-first.
+Windguru **CLI + MCP + Python library** for kiters and agents — free named spots, WINDGURU DEFAULT top models, gear advice. No HTML scraping. No PRO.
 
 [![PyPI](https://img.shields.io/pypi/v/windguru.svg)](https://pypi.org/project/windguru/)
 [![Python](https://img.shields.io/pypi/pyversions/windguru.svg)](https://pypi.org/project/windguru/)
@@ -21,7 +21,7 @@ If the user pasted https://github.com/berendgort/guru (or this README), **you mu
 
 ### Goal
 
-Onboard the rider once, then answer kite questions with gear advice using the `windguru` package (`guru` CLI and/or `guru-mcp` tools). Speak to the human like a kiter, not like a JSON dump.
+Onboard the rider on the **first message**, then answer kite questions with gear advice using the `windguru` package (`guru` CLI and/or `guru-mcp` tools). Speak to the human like a kiter, not like a JSON dump.
 
 ### Bootstrap (do this first)
 
@@ -33,7 +33,8 @@ Onboard the rider once, then answer kite questions with gear advice using the `w
    ```
    Fallback: `pip install windguru` / `pip install 'windguru[mcp]'` (activate any existing venv first).
 2. Confirm: `guru doctor` and `guru instruct --json`.
-3. Wire tools for the host you are in:
+3. **Immediately check the profile.** If `first_pass` / `ready=false` / `range_ready=false`, your **first reply to the human** must be the intake prompt (include **level**). Do not run weekend/best yet.
+4. Wire tools for the host you are in:
    - **Cursor / Claude Desktop / local Codex with MCP** → ensure MCP server `guru` runs `guru-mcp` (full path from `which guru-mcp` if needed). Then prefer MCP tools over shell.
    - **Shell-capable agent (Cursor Agent, Codex, Claude with bash)** → run `guru … --json` if MCP is not configured yet.
    - **Claude Cowork / claude.ai** → local STDIO MCP will not work. Either run CLI in a local terminal the user controls, or start `guru-mcp-http` and help them add a **public HTTPS** URL under Customize → Connectors. Do not pretend localhost is reachable from Anthropic’s cloud.
@@ -61,15 +62,15 @@ MCP config (Cursor / Claude Desktop):
 | 3. Named / numeric spot | `guru best <id> --advise --json` | `best_forecast` with `advise=true` |
 | 4. Ambiguous name | use `candidates` → ask user or pass id / `--pick` | same via `resolve_spot` |
 
-**First pass (mandatory when `ready=false` or `range_ready=false` / `first_pass=true`):**
+**First pass (mandatory on the first kite message when `ready=false` or `range_ready=false` / `first_pass=true`):**
 
-1. Show the human **exactly** `data.intake.prompt_to_user` (or the template below) — **one message**.
-2. Wait for **one** reply (key=value paste). Do **not** ask sport, then weight, then kites separately.
+1. Your **first message to the human** must show **exactly** `data.intake.prompt_to_user` (or the template below). Collect sport, weight, **level** (required — changes GO wind and sizing), quiver, wetsuits, home range — **one message**.
+2. Wait for **one** reply (key=value paste). Do **not** ask sport, then weight, then kites separately. Do **not** skip intake.
 3. Run:
    ```bash
    guru setup --intake '<their paste>' --json
    ```
-   or MCP `setup_profile` with the same fields.
+   or MCP `setup_profile` with the same fields (including `level`).
 4. Only then continue with weekend / best.
 
 Template to show if you cannot read `prompt_to_user` yet:

@@ -1,7 +1,7 @@
 [project]
 name = "windguru"
-version = "0.3.1"
-description = "Windguru CLI, MCP server, and Python library — reverse-engineered forecast access (fli-style)"
+version = "0.3.2"
+description = "Windguru CLI, MCP server, and Python library — kite spot + gear advice for riders and agents"
 authors = [{ name = "Berend Gort", email = "berend.gort@gmail.com" }]
 readme = "README.md"
 license = { text = "MIT" }

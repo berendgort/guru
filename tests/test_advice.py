@@ -25,6 +25,7 @@ def test_advice_incomplete_without_profile() -> None:
     assert report.verdict == "incomplete"
     assert "sport" in report.missing_profile
     assert "weight_kg" in report.missing_profile
+    assert "level" in report.missing_profile
 
 
 def test_advice_foil_windows_from_fixture() -> None:
@@ -60,6 +61,8 @@ def test_cli_setup_and_instruct(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
             "kitefoil",
             "--weight",
             "78",
+            "--level",
+            "intermediate",
             "--kites",
             "7,9,12",
             "--wetsuits",

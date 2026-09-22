@@ -13,10 +13,11 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
         "action": "first_pass_intake",
         "command": "guru profile --json   # if ready=false → show data.intake.prompt_to_user",
         "detail": (
-            "FIRST PASS ONLY: if profile not ready or not range_ready, show "
-            "intake.prompt_to_user to the human ONCE. They reply with one "
-            "key=value line. Then: guru setup --intake '<paste>' --json. "
-            "Never drip-feed questions field-by-field."
+            "FIRST USER MESSAGE: if profile not ready or not range_ready, show "
+            "intake.prompt_to_user to the human ONCE (must include level — it "
+            "changes GO wind and sizing). They reply with one key=value line. "
+            "Then: guru setup --intake '<paste>' --json. Never drip-feed "
+            "questions. Never skip to weekend/best without a ready profile."
         ),
     },
     {
@@ -60,8 +61,9 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
 ]
 
 INSTRUCT_SUMMARY = (
-    "First pass: one efficient intake (sport/weight/quiver/suits/home range), "
-    "then weekend or best --advise. WINDGURU_DEFAULT only. Think like a kiter. "
+    "FIRST MESSAGE: collect rider profile once (sport, weight, LEVEL, quiver, "
+    "suits, home range) via intake.prompt_to_user — level is required. Then "
+    "weekend or best --advise. WINDGURU_DEFAULT only. Think like a kiter. "
     "No HTML scrape. No PRO."
 )
 
@@ -85,9 +87,9 @@ def instruct_payload() -> dict[str, Any]:
         "examples": [
             "guru profile --json",
             (
-                "guru setup --intake 'sport=kitefoil weight=78 kites=7,9,12 "
-                "wetsuits=3/2,4/3 session=3 home=41.39,2.17 drive_km=200 "
-                "range=Trabucador → Leucate' --json"
+                "guru setup --intake 'sport=kitefoil weight=78 level=intermediate "
+                "kites=7,9,12 wetsuits=3/2,4/3 session=3 home=41.39,2.17 "
+                "drive_km=200 range=Trabucador → Leucate' --json"
             ),
             "guru weekend --json",
             "guru best 201 --advise --json",

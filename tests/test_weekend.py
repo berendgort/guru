@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from guru.models.profile import RiderProfile, Sport
+from guru.models.profile import Level, RiderProfile, Sport
 from guru.rider.weekend import _score
 
 
@@ -15,6 +15,7 @@ def test_range_ready() -> None:
     p = RiderProfile(
         sport=Sport.KITEFOIL,
         weight_kg=78,
+        level=Level.INTERMEDIATE,
         kites_m2=[9, 12],
         wetsuits=["3/2"],
         home_lat=41.39,
@@ -25,6 +26,15 @@ def test_range_ready() -> None:
     assert p.is_ready()
     assert p.is_range_ready()
     bare = RiderProfile(
-        sport=Sport.KITESURF, weight_kg=70, kites_m2=[10], wetsuits=["3/2"]
+        sport=Sport.KITESURF,
+        weight_kg=70,
+        level=Level.INTERMEDIATE,
+        kites_m2=[10],
+        wetsuits=["3/2"],
     )
     assert bare.missing_range_fields()
+    assert "level" not in bare.missing_fields()
+    no_level = RiderProfile(
+        sport=Sport.KITESURF, weight_kg=70, kites_m2=[10], wetsuits=["3/2"]
+    )
+    assert "level" in no_level.missing_fields()

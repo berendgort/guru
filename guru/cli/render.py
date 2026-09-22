@@ -151,7 +151,7 @@ def print_profile(
     )
     console.print(f"  sport={profile.sport.value if profile.sport else '-'}")
     console.print(f"  weight_kg={profile.weight_kg if profile.weight_kg is not None else '-'}")
-    console.print(f"  level={profile.level.value}")
+    console.print(f"  level={profile.level.value if profile.level else '-'}")
     console.print(f"  session_hours={profile.session_hours}")
     console.print(f"  kites_m2={profile.kites_m2 or '-'}")
     console.print(f"  boards={profile.boards or '-'}")

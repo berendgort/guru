@@ -1,4 +1,4 @@
-"""Shared JSON envelope for CLI and MCP (fli-style agent contract)."""
+"""Shared JSON envelope for CLI and MCP (agent contract)."""
 
 from __future__ import annotations
 

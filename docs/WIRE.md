@@ -62,7 +62,7 @@ GET …/windguru.net/int/iapi.php?q=forecast
   &id_model=3&rundef=…&id_spot=201&WGCACHEABLE=21600&cache_index=…
 ```
 
-Same lesson as fli `_tfs`: params from `forecast_spot` tab rows.
+When simple `forecast` dies: prefer params from `forecast_spot` tab rows (`rundef`, etc.).
 
 ## WINDGURU DEFAULT weights
 

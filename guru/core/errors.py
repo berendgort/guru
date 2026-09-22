@@ -1,4 +1,4 @@
-"""Shared error classification for CLI and MCP (fli-style)."""
+"""Shared error classification for CLI and MCP."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Typer CLI — agent-friendly Windguru client (fli-style)."""
+"""Typer CLI — agent-friendly Windguru client."""
 
 from __future__ import annotations
 

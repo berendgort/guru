@@ -10,7 +10,7 @@ from guru.search.spots import get_spot, resolve_spot, search_spots
 try:
     __version__ = version("windguru")
 except PackageNotFoundError:  # pragma: no cover
-    __version__ = "0.3.1"
+    __version__ = "0.3.2"
 
 __all__ = [
     "BestForecast",
