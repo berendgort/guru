@@ -13,6 +13,7 @@ from typing import Any
 from guru.core.human_fix import human_fix_payload
 from guru.core.path import agent_path_payload, probe_windguru
 from guru.core.upgrade import upgrade_status
+from guru.models.advice import DEFAULT_WHERE_HOURS
 from guru.rider.intake import intake_payload
 from guru.rider.profile_store import load_profile, profile_payload
 from guru.rider.voice import voice_payload
@@ -59,15 +60,16 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
     },
     {
         "step": 2,
-        "action": "weekend_or_best",
-        "command": "guru weekend --json   # or: guru best <id> --json  (advice on by default)",
+        "action": "where_or_best",
+        "command": "guru where --json   # or: guru best <id> --json  (advice on by default)",
         "detail": (
-            "Ask 'where can I kite?' → guru weekend [--day Thu] (top-3 models; "
-            "horizon = what those models return). Narrate data.schedule. "
-            "filter_day / --day for Thursday asks. Beyond horizon: we have not "
-            "hacked time yet. Far trips need clear GO + ≥2h continuous. Soft "
-            "home vs solid far: report both. SST from Open-Meteo Marine for "
-            "suits. Named spot → guru best <id>. Local knowledge: "
+            "Ask 'where can I kite?' → guru where [--day Thu] [--weekend] "
+            "(top-3 models; default ~3-day horizon). Narrate data.schedule. "
+            "`weekend` is an alias; --weekend / --day weekend = Sat/Sun only. "
+            "Beyond horizon: we have not hacked time yet. Far trips need clear "
+            "GO + ≥2h continuous. Soft home vs solid far: report both. SST "
+            "from Open-Meteo Marine for suits. Named spot → guru best <id>. "
+            "Local knowledge: "
             '`guru note <id> "dirs=SW-W offshore=N-NE Bunker dies in NE"`.'
         ),
     },
@@ -103,7 +105,7 @@ INSTRUCT_SUMMARY = (
     "Automate first: local guru CLI -- kite bro who codes, Wind + Guru energy. "
     "Voice: SEND IT / SOFT CALL / SIT IT OUT + light programmer/kiter jokes "
     "(data.voice). Ask the human only for rare UI toggles via human_fix. "
-    "FIRST MESSAGE: rider profile once (LEVEL required). Then weekend or best. "
+    "FIRST MESSAGE: rider profile once (LEVEL required). Then where or best. "
     "WINDGURU_DEFAULT only. No HTML scrape. No PRO."
 )
 
@@ -127,7 +129,8 @@ def instruct_payload() -> dict[str, Any]:
         "network": network,
         "preset": "WINDGURU_DEFAULT",
         "top_models": 3,
-        "weekend_hours": 96,
+        "weekend_hours": DEFAULT_WHERE_HOURS,
+        "where_hours": DEFAULT_WHERE_HOURS,
         "first_pass": need_intake,
         "upgrade": upgrade_status(),
         "intake": intake_payload(needed=need_intake),
@@ -177,7 +180,7 @@ def instruct_payload() -> dict[str, Any]:
                 "guru doctor --json",
                 "guru unlock --json   # ONLY if network.reachable is false",
                 "guru setup --intake …",
-                "guru weekend --json",
+                "guru where --json",
                 "guru best <id> --json",
             ],
             "never_ask_human": human_fix["never_ask_human"],
@@ -192,7 +195,7 @@ def instruct_payload() -> dict[str, Any]:
                 "kites=7,9,12 wetsuits=3/2,4/3 session=3 home=41.39,2.17 "
                 "drive_km=200 range=Trabucador → Leucate' --json"
             ),
-            "guru weekend --json",
+            "guru where --json",
             "guru best 201 --json",
         ],
         "profile": {

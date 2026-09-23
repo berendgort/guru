@@ -185,6 +185,8 @@ def register(app: typer.Typer) -> None:
             "upgrade": upgrade,
             "GURU_TIMEOUT": os.environ.get("GURU_TIMEOUT", "30"),
             "GURU_IMPERSONATE": os.environ.get("GURU_IMPERSONATE", "chrome"),
+            "GURU_MIN_INTERVAL": os.environ.get("GURU_MIN_INTERVAL", "0.85"),
+            "GURU_CACHE_TTL": os.environ.get("GURU_CACHE_TTL", "300"),
             "models": list_models(),
             "profile": payload,
             "mcp_wire": wired,
@@ -215,6 +217,10 @@ def register(app: typer.Typer) -> None:
             )
         console.print(f"GURU_TIMEOUT={info['GURU_TIMEOUT']}")
         console.print(f"GURU_IMPERSONATE={info['GURU_IMPERSONATE']}")
+        console.print(
+            f"GURU_MIN_INTERVAL={info['GURU_MIN_INTERVAL']} "
+            f"GURU_CACHE_TTL={info['GURU_CACHE_TTL']}"
+        )
         console.print(f"{len(info['models'])} known model aliases")
         console.print(
             f"profile ready={payload.get('ready')} path={payload.get('path')}"

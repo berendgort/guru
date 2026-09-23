@@ -61,6 +61,15 @@ def classify_error(exc: BaseException) -> ErrorClassification:
     if isinstance(exc, GuruHTTPError):
         status = getattr(exc, "status_code", None)
         msg = str(exc).lower()
+        if (
+            "ip ban" in msg
+            or "circuit open" in msg
+            or "anti-scrape" in msg
+            or ("forbidden" in msg and status == 403)
+        ):
+            return ErrorClassification(
+                "rate_limited", retryable=False, http_status=status
+            )
         if status == 403 or "allowlist" in msg or "blocked in this runtime" in msg:
             return ErrorClassification(
                 "connection_error", retryable=False, http_status=status

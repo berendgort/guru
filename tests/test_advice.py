@@ -84,7 +84,8 @@ def test_cli_setup_and_instruct(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     assert any(s.get("action") == "first_pass_intake" for s in body["steps"])
     assert "intake" in body
     assert any(
-        s.get("action") == "weekend_or_best"
+        s.get("action") == "where_or_best"
+        or "where" in (s.get("command") or "")
         or "weekend" in (s.get("command") or "")
         for s in body["steps"]
     )

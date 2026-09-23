@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+DEFAULT_WHERE_HOURS = 72  # ~3 days of hourly model steps
+DEFAULT_WEEKEND_HOURS = DEFAULT_WHERE_HOURS  # back-compat
+
 
 class AdviceWindow(BaseModel):
     start: str
@@ -95,7 +98,7 @@ class WeekendReport(BaseModel):
     home_lat: float | None = None
     home_lon: float | None = None
     drive_km: float | None = None
-    hours: int = 96
+    hours: int = DEFAULT_WHERE_HOURS
     top_models: int = 3
     filter_day: str | None = None
     spots: list[WeekendSpotAdvice] = Field(default_factory=list)
@@ -109,6 +112,8 @@ class WeekendReport(BaseModel):
 __all__ = [
     "AdviceReport",
     "AdviceWindow",
+    "DEFAULT_WEEKEND_HOURS",
+    "DEFAULT_WHERE_HOURS",
     "ScheduleSlot",
     "WeekendReport",
     "WeekendSpotAdvice",

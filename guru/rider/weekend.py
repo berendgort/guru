@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from guru.models.advice import ScheduleSlot, WeekendReport, WeekendSpotAdvice
+from guru.models.advice import (
+    DEFAULT_WEEKEND_HOURS,
+    DEFAULT_WHERE_HOURS,
+    ScheduleSlot,
+    WeekendReport,
+    WeekendSpotAdvice,
+)
 from guru.models.profile import RiderProfile
 from guru.rider import voice
 from guru.rider.advice import advise_forecast
@@ -18,29 +24,29 @@ from guru.rider.weekend_rank import (
     weekend_summary_text,
 )
 from guru.rider.weekend_spots import candidate_spots, long_drive_ok, weekday_label
-from guru.search.blend import get_best_forecast
+from guru.search.blend import get_best_forecast, model_info_full
 from guru.search.sst import SST_SOURCE, fetch_sst_many
 
 __all__ = (
     "DEFAULT_TOP_MODELS",
     "DEFAULT_WEEKEND_HOURS",
+    "DEFAULT_WHERE_HOURS",
     "candidate_spots",
     "scan_weekend",
 )
 
-DEFAULT_WEEKEND_HOURS = 96
 DEFAULT_TOP_MODELS = 3
 
 
 def scan_weekend(
     profile: RiderProfile,
     *,
-    hours: int = DEFAULT_WEEKEND_HOURS,
+    hours: int = DEFAULT_WHERE_HOURS,
     limit_spots: int = 8,
     top_models: int = DEFAULT_TOP_MODELS,
     filter_day: str | None = None,
 ) -> WeekendReport:
-    """Rank rideable spots + day-by-day schedule (top WINDGURU_DEFAULT models)."""
+    """Rank rideable spots + day-by-day schedule (next ~3 days by default)."""
     missing = profile.missing_fields() + profile.missing_range_fields()
     thinking = voice.thinking_headers(
         hours=hours,
@@ -70,12 +76,16 @@ def scan_weekend(
         if s.lat is not None and s.lon is not None
     ]
     sst_map = fetch_sst_many(coords) if coords else {}
+    # One model_info_full for the whole scan (was N spots × same payload).
+    shared_models = model_info_full() if candidates else None
 
     results: list[WeekendSpotAdvice] = []
     day_candidates: list[tuple[str, ScheduleSlot, float]] = []
 
     for spot, drive in candidates:
-        best = get_best_forecast(spot.id, top=top_models, hours=hours)
+        best = get_best_forecast(
+            spot.id, top=top_models, hours=hours, model_info=shared_models
+        )
         if not best.forecasts:
             continue
         sst_c = (

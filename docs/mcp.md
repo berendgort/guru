@@ -6,7 +6,7 @@
 ```bash
 pipx install 'windguru[mcp]'
 guru doctor --json          # probe + upgrade (does not wire MCP)
-guru weekend --json         # canonical
+guru where --json           # canonical (~3 days)
 guru-mcp                    # optional STDIO — same tools
 guru wire --json            # ONLY if shell guru unavailable + MCP host needs it
 ```
@@ -40,11 +40,11 @@ Agents use the CLI. Call `guru wire` / `wire_mcp` only when absolutely necessary
 
 | Tool | Args | Returns |
 |------|------|---------|
-| `instruct` | — | Agent recipe (intake → weekend / best) + `path` + `network` |
+| `instruct` | — | Agent recipe (intake → where / best) + `path` + `network` |
 | `wire_mcp` | `status_only?` | Optional local STDIO adapters |
 | `setup_profile` | `intake?`, sport, weight_kg, **level**, kites, wetsuits, home_lat/lon, drive_km, session_hours… | Merged profile |
 | `get_profile` | — | Profile + ready / range_ready / first_pass |
-| `weekend_spots` | `hours?` (default 96), `limit?`, `top?` (default 3) | Day `schedule` + ranked spots |
+| `where_spots` / `weekend_spots` | `hours?` (default 72), `limit?`, `top?`, `weekend?` | Day `schedule` + ranked spots (~3 days) |
 | `search_spots` | `query`, `limit?` | Named spots (no lat/lon) |
 | `near_spots` | `lat`, `lon`, `radius_km?`, `limit?` | Free map markers near a point |
 | `resolve_spot` | `spot`, `pick?` | Spot id/name → spot |
@@ -74,7 +74,7 @@ Client already retries with backoff. On `retryable: true`, wait seconds before a
 
 1. Call `instruct` / `get_profile` / `doctor` — check `network.reachable` and `upgrade.update_available`.
 2. If `first_pass`: show `intake.prompt_to_user` once (include **level**), then `setup_profile`.
-3. For “where can I kite?” call `weekend_spots` and narrate **`schedule`** for the whole horizon.
+3. For “where can I kite?” call `where_spots` (or `weekend_spots`) and narrate **`schedule`** for the ~3-day horizon.
 4. For a named spot call `best_forecast` (advice on by default).
 5. Do not scrape windguru.cz; never invent PRO lat/lon forecasts.
 

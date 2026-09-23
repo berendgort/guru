@@ -10,12 +10,12 @@ guru instruct --json
 guru setup --sport kitefoil --weight 78 --level intermediate --kites 7,9,12 \
   --wetsuits "3/2,4/3" --home-lat 41.39 --home-lon 2.17 --drive-km 200 \
   --range-label "Trabucador → Leucate" --session-hours 3 --json
-guru weekend --json                  # where can I kite?
+guru where --json                    # where can I kite? (~3 days)
 guru best <id_spot> --advise --json  # single spot + gear advice
 ```
 
 - **First message:** if profile incomplete, show `intake.prompt_to_user` once (include **level**) before weekend/best.
-- Prefer **`weekend` / `best --advise`**, not raw GFS.
+- Prefer **`where` / `best --advise`**, not raw GFS.
 - Preset is always **WINDGURU_DEFAULT** (only adaptive Tune preset we support).
 - Onboard once: sport / weight / **level** / quiver / wetsuits / home range via `guru setup`.
 - On `error_type: ambiguous`, pick from `candidates` — never silent first-match.
@@ -51,7 +51,7 @@ Keep these conventions when extending:
 ```text
 pipx install windguru          # or: pipx install 'windguru[mcp]'
 guru setup --sport … --weight … --level … --kites … --wetsuits …
-guru weekend --json            # where can I kite?
+guru where --json              # where can I kite? (~3 days)
 guru best <id|name> [--json]   # spot call + advice (default on)
 guru spots <query>             # resolve id if needed
 guru near --lat Y --lon X
@@ -62,7 +62,7 @@ guru-mcp
 
 - **Do** extend `MODELS` from live Network captures.
 - **Do** keep free vs PRO failures explicit (PRO is out of core).
-- **Do** stay polite on rate limits.
+- **Do** stay polite on rate limits (`GURU_MIN_INTERVAL` spacing, short TTL cache, stop on IP Forbidden).
 - **Don’t** commit cookies / PRO passwords / private nicknames as defaults.
 - **Don’t** ship a worldwide spot dump in the wheel (live `near` / `spots` only).
 - **Don’t** depend on `life-research` — this repo is public and clean-slate.

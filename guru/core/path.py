@@ -102,7 +102,8 @@ def agent_path_payload() -> dict[str, Any]:
         "commands": {
             "doctor": "guru doctor --json",
             "intake": "guru setup --intake '…' --json",
-            "weekend": "guru weekend --json",
+            "weekend": "guru where --json",
+            "where": "guru where --json",
             "best": "guru best <id> --json",
         },
         "mcp_optional": {

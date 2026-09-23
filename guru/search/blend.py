@@ -82,11 +82,12 @@ def get_best_forecast(
     *,
     top: int = 3,
     hours: int | None = 48,
+    model_info: dict[str, Any] | None = None,
 ) -> BestForecast:
-    """One ``forecast_spot`` + ``model_info_full``, then N model forecasts."""
+    """One ``forecast_spot`` + shared ``model_info_full``, then N model forecasts."""
     data = fetch_forecast_spot(spot_id)
     spot = spot_from_forecast_spot(data, spot_id)
-    info = model_info_full()
+    info = model_info if model_info is not None else model_info_full()
     ranked = rank_default_models(
         spot_id, top=top, forecast_spot=data, model_info=info
     )

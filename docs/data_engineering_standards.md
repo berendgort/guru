@@ -226,6 +226,8 @@ Stored facts in this repo: rider profile TOML, SST disk cache
 (`schema_version` = `CACHE_SCHEMA` in `guru/search/sst.py`), and curated
 `guru/data/shore_sectors.json` (`schema_version` at root). Bump schema when
 fields change; old cache entries without matching version are ignored.
+Process-memory Windguru politeness (`guru/search/polite.py`) is ephemeral
+(spacing + short TTL + Forbidden circuit) -- not a durable fact store.
 
 ```bash
 # 1. Architecture DAG, LOC, em-dash, bare print

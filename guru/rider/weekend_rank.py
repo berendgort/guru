@@ -42,13 +42,15 @@ _WEEKDAYS = {
 
 
 def parse_filter_day(raw: str | None) -> tuple[str | None, str | None]:
-    """Return (weekday_abbrev|None, iso_date|None)."""
+    """Return (weekday_abbrev|weekend|None, iso_date|None)."""
     if not raw:
         return None, None
     text = raw.strip()
     if len(text) >= 10 and text[4] == "-" and text[7] == "-":
         return None, text[:10]
     key = text.lower().rstrip(".")
+    if key in {"weekend", "sat-sun", "satsun", "we"}:
+        return "weekend", None
     return _WEEKDAYS.get(key), None
 
 
@@ -60,6 +62,8 @@ def filter_schedule_by_day(
 ) -> list[ScheduleSlot]:
     if iso_day:
         return [s for s in schedule if s.day == iso_day]
+    if weekday == "weekend":
+        return [s for s in schedule if s.weekday in {"Sat", "Sun"}]
     if weekday:
         return [s for s in schedule if s.weekday == weekday]
     return schedule

@@ -63,7 +63,7 @@ Optional MCP (only if the host already uses MCP):
 |------|-----|-----|
 | 0. Recipe / profile | `guru instruct --json` or `guru profile --json` | `instruct` / `get_profile` |
 | 1. First pass if needed | see below | see below |
-| 2. “Where can I kite?” | `guru weekend --json` [`--day Thu`] | `weekend_spots` — narrate **`data.schedule`** (whole horizon) |
+| 2. “Where can I kite?” | `guru where --json` [`--day Thu`] [`--weekend`] | `where_spots` — narrate **`data.schedule`** (~3 days) |
 | Local knowledge | `guru note <id> "dirs=SW-W offshore=N-NE …"` | persists in profile |
 | 3. Named / numeric spot | `guru best <id> --advise --json` | `best_forecast` with `advise=true` |
 | 4. Ambiguous name | use `candidates` → ask user or pass id / `--pick` | same via `resolve_spot` |
@@ -106,6 +106,7 @@ Do **not** dump raw model tables unless they ask.
 - Never require PRO or invent lat/lon click-forecasts.
 - On `error_type: ambiguous`, pick from `candidates` — never silent first-match.
 - Respect `retryable` on errors; don’t hammer rate limits.
+- Windguru calls are spaced (`GURU_MIN_INTERVAL`, default 0.85s), short-TTL cached (`GURU_CACHE_TTL`), and stop after IP Forbidden (circuit).
 - Profile lives at `~/.config/guru/profile.json` (override with `GURU_CONFIG_DIR`).
 
 ### MCP tool map
@@ -114,7 +115,7 @@ Do **not** dump raw model tables unless they ask.
 |------|---------|
 | `instruct` | Load this recipe into context |
 | `get_profile` / `setup_profile` | Onboarding |
-| `weekend_spots` | “Where can I kite?” |
+| `where_spots` / `weekend_spots` | “Where can I kite?” (~3 days; `weekend=true` → Sat/Sun) |
 | `search_spots` / `resolve_spot` / `near_spots` | Find spot ids |
 | `best_forecast` (`advise=true`) | Single spot + gear |
 | `get_forecast` / `list_models` | Escape hatches only |
@@ -143,7 +144,8 @@ PyPI: [`windguru`](https://pypi.org/project/windguru/)
 |---------|------|
 | `guru setup` | Rider + home range (sport / weight / **level** / quiver / drive_km) |
 | `guru profile` | Show profile + missing fields |
-| `guru weekend` | Where can I kite? ~4-day schedule + top-3 model agree (`--day Thu` filter) |
+| `guru where` | Where can I kite? ~3-day schedule + top-3 model agree (`--day Thu`, `--weekend`) |
+| `guru weekend` | Alias for `guru where` |
 | `guru note` | Save local knowledge / wind sectors (`dirs=` `offshore=`) |
 | `guru instruct` | Teach agents the workflow |
 | `guru spots <q>` | Name search (resolve id) |

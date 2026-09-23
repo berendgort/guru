@@ -32,7 +32,7 @@ mcp = FastMCP(
         "pipx. Never unlock when already reachable. wire_mcp ONLY if shell "
         "guru unavailable. Upgrade if update_available. get_profile; if "
         "first_pass show intake.prompt_to_user (level required). "
-        "'where can I kite?' -> weekend_spots + narrate schedule in voice. "
+        "'where can I kite?' -> where_spots + narrate schedule in voice. "
         "Named spot -> best_forecast. Never scrape; never require PRO; "
         "never hype a soft long haul."
     ),

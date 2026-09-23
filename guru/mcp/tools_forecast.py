@@ -1,10 +1,8 @@
-"""MCP tools: weekend scan, spots, and forecasts."""
+"""MCP tools: where scan, spots, and forecasts."""
 
 from __future__ import annotations
 
-__all__ = (
-    "register",
-)
+__all__ = ("register",)
 
 from collections.abc import Callable
 from typing import Any
@@ -15,6 +13,7 @@ from guru.core.envelope import dump_model
 from guru.models.aliases import list_models
 from guru.rider.advice import advise_forecast
 from guru.rider.profile_store import load_profile
+from guru.rider.weekend import DEFAULT_WHERE_HOURS, scan_weekend
 from guru.search.blend import get_best_forecast
 from guru.search.forecast import get_forecast
 from guru.search.near import spots_near
@@ -28,16 +27,14 @@ def register(
     ok: Callable[[Any], dict[str, Any]],
     err: Callable[[BaseException], dict[str, Any]],
 ) -> None:
-    @mcp.tool(name="weekend_spots")
-    def weekend_spots_tool(
-        hours: int = 96,
-        limit: int = 8,
-        top: int = 3,
-        filter_day: str | None = None,
+    def _where(
+        hours: int,
+        limit: int,
+        top: int,
+        filter_day: str | None,
+        weekend: bool,
     ) -> dict[str, Any]:
-        """Where can I kite? Day schedule + ranked spots (top-3 models, ~4 days)."""
-        from guru.rider.weekend import scan_weekend
-
+        day = filter_day or ("weekend" if weekend else None)
         try:
             return ok(
                 dump_model(
@@ -46,12 +43,34 @@ def register(
                         hours=hours,
                         limit_spots=limit,
                         top_models=top,
-                        filter_day=filter_day,
+                        filter_day=day,
                     )
                 )
             )
         except catch as exc:
             return err(exc)
+
+    @mcp.tool(name="where_spots")
+    def where_spots_tool(
+        hours: int = DEFAULT_WHERE_HOURS,
+        limit: int = 8,
+        top: int = 3,
+        filter_day: str | None = None,
+        weekend: bool = False,
+    ) -> dict[str, Any]:
+        """Where can I kite in the next ~3 days? Schedule + ranked spots."""
+        return _where(hours, limit, top, filter_day, weekend)
+
+    @mcp.tool(name="weekend_spots")
+    def weekend_spots_tool(
+        hours: int = DEFAULT_WHERE_HOURS,
+        limit: int = 8,
+        top: int = 3,
+        filter_day: str | None = None,
+        weekend: bool = False,
+    ) -> dict[str, Any]:
+        """Alias for where_spots (next ~3 days; set weekend=true for Sat/Sun)."""
+        return _where(hours, limit, top, filter_day, weekend)
 
     @mcp.tool(name="search_spots")
     def search_spots_tool(query: str, limit: int = 20) -> dict[str, Any]:

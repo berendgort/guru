@@ -58,6 +58,7 @@ def test_parse_filter_day() -> None:
     assert parse_filter_day("Thu") == ("Thu", None)
     assert parse_filter_day("thursday") == ("Thu", None)
     assert parse_filter_day("2026-09-25") == (None, "2026-09-25")
+    assert parse_filter_day("weekend") == ("weekend", None)
 
 
 def test_filter_schedule_by_day() -> None:
@@ -80,6 +81,17 @@ def test_filter_schedule_by_day() -> None:
             name="A",
             verdict="go",
         ),
+        ScheduleSlot(
+            day="2026-09-26",
+            weekday="Sat",
+            start="2026-09-26T11:00:00Z",
+            end="2026-09-26T13:00:00Z",
+            spot_id=1,
+            name="A",
+            verdict="go",
+        ),
     ]
-    out = filter_schedule_by_day(slots, weekday="Thu")
-    assert len(out) == 1 and out[0].weekday == "Thu"
+    thu = filter_schedule_by_day(slots, weekday="Thu")
+    assert len(thu) == 1 and thu[0].weekday == "Thu"
+    we = filter_schedule_by_day(slots, weekday="weekend")
+    assert len(we) == 1 and we[0].weekday == "Sat"

@@ -1,4 +1,4 @@
-"""HTTP client -- curl_cffi + Chrome impersonation, retries, env timeouts."""
+"""HTTP client -- curl_cffi + Chrome impersonation, polite spacing, retries."""
 
 from __future__ import annotations
 
@@ -23,6 +23,15 @@ from tenacity import (
 )
 
 from guru.search.exceptions import GuruHTTPError, GuruParseError
+from guru.search.polite import (
+    cache_get,
+    cache_key,
+    cache_set,
+    check_circuit,
+    is_ip_forbidden,
+    trip_circuit,
+    wait_turn,
+)
 
 DEFAULT_IMPERSONATE = os.environ.get("GURU_IMPERSONATE", "chrome")
 REQUEST_TIMEOUT = float(os.environ.get("GURU_TIMEOUT", "30"))
@@ -32,7 +41,7 @@ IAPI_NET = "https://www.windguru.net/int/iapi.php"
 
 
 def _retryable_http(exc: BaseException) -> bool:
-    """Don't burn retries on allowlist / hard 4xx (except 429)."""
+    """Don't burn retries on allowlist / IP ban / hard 4xx (except 429)."""
     if isinstance(exc, GuruHTTPError):
         status = exc.status_code
         if status is None:
@@ -52,19 +61,40 @@ class Client:
     def close(self) -> None:
         self._session.close()
 
-    @retry(
-        stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=0.5, min=0.5, max=4),
-        retry=retry_if_exception(_retryable_http),
-        reraise=True,
-    )
     def get_json(
         self,
         *,
         params: dict[str, Any],
         referer: str,
         base: str = IAPI_CZ,
+        use_cache: bool = True,
     ) -> Any:
+        check_circuit()
+        key = cache_key(base, params)
+        if use_cache:
+            hit = cache_get(key)
+            if hit is not None:
+                return hit
+        data = self._get_json_live(params=params, referer=referer, base=base)
+        if use_cache:
+            cache_set(key, data)
+        return data
+
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1.0, min=1.0, max=8),
+        retry=retry_if_exception(_retryable_http),
+        reraise=True,
+    )
+    def _get_json_live(
+        self,
+        *,
+        params: dict[str, Any],
+        referer: str,
+        base: str,
+    ) -> Any:
+        check_circuit()
+        wait_turn()
         headers = {
             "Referer": referer,
             "Accept": "application/json, text/javascript, */*; q=0.01",
@@ -74,7 +104,15 @@ class Client:
             base, params=params, headers=headers, timeout=REQUEST_TIMEOUT
         )
         if resp.status_code >= 400:
-            body = (resp.text or "")[:200]
+            body = (resp.text or "")[:400]
+            if is_ip_forbidden(resp.status_code, body):
+                trip_circuit()
+                raise GuruHTTPError(
+                    "Windguru Forbidden (IP ban / anti-scrape). Stop hammering; "
+                    "circuit open. Mail vh@windguru.cz with your IP if personal "
+                    "use. Official API coming.",
+                    status_code=resp.status_code,
+                )
             if resp.status_code == 403 and (
                 "allowlist" in body.lower()
                 or "not allowed" in body.lower()
@@ -88,7 +126,7 @@ class Client:
                     status_code=resp.status_code,
                 )
             raise GuruHTTPError(
-                f"HTTP {resp.status_code} for {params.get('q')}: {body}",
+                f"HTTP {resp.status_code} for {params.get('q')}: {body[:200]}",
                 status_code=resp.status_code,
             )
         try:

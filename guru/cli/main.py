@@ -6,7 +6,7 @@ import click
 import typer
 from typer.core import TyperGroup
 
-from guru.cli import cmd_forecast, cmd_ops, cmd_rider
+from guru.cli import cmd_forecast, cmd_ops, cmd_rider, cmd_where
 from guru.cli.banner import print_banner
 
 __all__ = ("app", "cli")
@@ -28,7 +28,7 @@ app = typer.Typer(
     help=(
         "Kite bro who codes -- spot + gear calls for riders and agents. "
         "Named like Windguru (Wind + Guru): less Tune tabs, more water time. "
-        "Happy path: setup (intake) -> `guru weekend` or `guru best <spot>`. "
+        "Happy path: setup (intake) -> `guru where` or `guru best <spot>`. "
         "Run `guru instruct --json` for the recipe."
     ),
     no_args_is_help=True,
@@ -37,6 +37,7 @@ app = typer.Typer(
 
 cmd_ops.register(app)
 cmd_rider.register(app)
+cmd_where.register(app)
 cmd_forecast.register(app)
 
 

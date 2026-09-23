@@ -2,9 +2,9 @@
 name: guru
 description: >
   When the user pastes github.com/berendgort/guru, wants Windguru forecasts,
-  kite weekend plans, or gear advice: upgrade windguru from PyPI first, ask for
+  kite plans for the next few days, or gear advice: upgrade windguru from PyPI first, ask for
   the full rider profile on the FIRST message (sport, weight, LEVEL, quiver,
-  suits, home range), then guru weekend (schedule) / best. Never scrape
+  suits, home range), then guru where (schedule) / best. Never scrape
   windguru.cz. Never drip-feed onboarding questions.
 license: MIT
 ---
@@ -36,7 +36,7 @@ If `first_pass` / `ready=false` / `range_ready=false`:
 2. Else first reply is `intake.prompt_to_user` (must collect **level**)
 3. Wait for **one** key=value reply — never ask fields one-by-one
 4. `guru setup --intake '<paste>' --json` (or `setup_profile`)
-5. Only then run weekend / best
+5. Only then run where / best
 
 **Level is required** — beginner / intermediate / advanced / expert.
 
@@ -48,7 +48,7 @@ sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 sessio
 
 ## After onboarded
 
-- “Where can I kite?” → `guru weekend --json` / `weekend_spots`
+- “Where can I kite?” → `guru where --json` / `where_spots` (~3 days; `--weekend` for Sat/Sun)
 - Narrate **`data.schedule`** day-by-day (covers ~4 days / top-3 models) — do **not** wait for “what about Thursday?”
 - Named spot → `guru best <id> --json` / `best_forecast`
 - Narrate like a kite bro (`data.voice`): SEND IT / SOFT CALL / SIT IT OUT, plan, kt+gusts, rig, suit, beach 5-min check. Honesty > hype. Optional one-liner from `data.voice.jokes`. Name lore: `data.voice.lore`.

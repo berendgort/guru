@@ -1,4 +1,4 @@
-"""CLI: weekend / spots / near / best / forecast / models."""
+"""CLI: spots / near / best / forecast / models."""
 
 from __future__ import annotations
 
@@ -12,15 +12,12 @@ from guru.cli.render import (
     print_models_table,
     print_near_table,
     print_spots_table,
-    print_weekend,
 )
 from guru.core.envelope import dump_model
 from guru.models.aliases import list_models
 from guru.rider.advice import advise_forecast
 from guru.rider.profile_store import load_profile
-from guru.rider.weekend import scan_weekend
 from guru.search.blend import get_best_forecast
-from guru.search.exceptions import GuruError
 from guru.search.forecast import get_forecast
 from guru.search.near import spots_near
 from guru.search.spots import resolve_spot, search_spots
@@ -29,41 +26,6 @@ __all__ = ("register",)
 
 
 def register(app: typer.Typer) -> None:
-    @app.command("weekend")
-    def weekend_cmd(
-        hours: int = typer.Option(96, "--hours", "-H", help="Forecast horizon steps"),
-        limit: int = typer.Option(8, "--limit", "-n", help="Max spots to scan"),
-        top: int = typer.Option(3, "--top", help="WINDGURU_DEFAULT models"),
-        day: str | None = typer.Option(
-            None, "--day", help="Filter: Thu / Thursday / YYYY-MM-DD"
-        ),
-        as_json: bool = typer.Option(False, "--json"),
-    ) -> None:
-        """Where can I kite? Rank spots + day schedule."""
-        from guru.core.path import probe_windguru
-
-        try:
-            net = probe_windguru()
-            if net.get("reachable") is False:
-                raise GuruError(
-                    net.get("fix")
-                    or "Windguru unreachable -- use a local agent host."
-                )
-            profile = load_profile()
-            report = scan_weekend(
-                profile,
-                hours=hours,
-                limit_spots=limit,
-                top_models=top,
-                filter_day=day,
-            )
-        except CATCH as exc:
-            fail(exc, as_json=as_json)
-        if as_json:
-            print_ok(dump_model(report))
-            return
-        print_weekend(report)
-
     @app.command("spots")
     def spots_cmd(
         query: str = typer.Argument(..., help="Spot name search"),
@@ -75,6 +37,7 @@ def register(app: typer.Typer) -> None:
             spots = search_spots(query, limit=limit)
         except CATCH as exc:
             fail(exc, as_json=as_json)
+            return
         if as_json:
             print_ok([dump_model(s) for s in spots])
             return
@@ -93,6 +56,7 @@ def register(app: typer.Typer) -> None:
             spots = spots_near(lat, lon, radius_km=radius, limit=limit)
         except CATCH as exc:
             fail(exc, as_json=as_json)
+            return
         if as_json:
             print_ok([dump_model(s) for s in spots])
             return
@@ -132,6 +96,7 @@ def register(app: typer.Typer) -> None:
                 advice = advise_forecast(top_fc, profile, drive_km=drive)
         except CATCH as exc:
             fail(exc, as_json=as_json)
+            return
         if as_json:
             payload = dump_model(best)
             if advice is not None:
@@ -154,6 +119,7 @@ def register(app: typer.Typer) -> None:
             fc = get_forecast(resolved.id, model=model, hours=hours)
         except CATCH as exc:
             fail(exc, as_json=as_json)
+            return
         if as_json:
             print_ok(dump_model(fc))
             return
