@@ -2,9 +2,15 @@
 
 from __future__ import annotations
 
-from guru.models.advice import AdviceWindow, ScheduleSlot, WeekendSpotAdvice
+from guru.models.advice import (
+    AdviceReport,
+    AdviceWindow,
+    ScheduleSlot,
+    WeekendSpotAdvice,
+)
 from guru.rider import voice
 from guru.rider.sizing import LONG_DRIVE_KM, NEAR_DRIVE_KM
+from guru.rider.weekend_window import slot_is_kite_weekend_day
 
 __all__ = (
     "filter_schedule_by_day",
@@ -63,13 +69,13 @@ def filter_schedule_by_day(
     if iso_day:
         return [s for s in schedule if s.day == iso_day]
     if weekday == "weekend":
-        return [s for s in schedule if s.weekday in {"Sat", "Sun"}]
+        return [s for s in schedule if slot_is_kite_weekend_day(s)]
     if weekday:
         return [s for s in schedule if s.weekday == weekday]
     return schedule
 
 
-def model_agree_by_day(advices: list) -> dict[str, int]:
+def model_agree_by_day(advices: list[AdviceReport]) -> dict[str, int]:
     """Count how many top models have a GO on each UTC day."""
     counts: dict[str, int] = {}
     for adv in advices:
@@ -99,12 +105,11 @@ def home_vs_far_line(results: list[WeekendSpotAdvice]) -> str | None:
     )
 
 
-def slot_summary(name: str, w: AdviceWindow, agree: int) -> str:
-    _ = name
+def slot_summary(w: AdviceWindow, agree: int) -> str:
     kite = (
-        f"{w.owned_kite_m2:g} m²"
+        f"{w.owned_kite_m2:g} m2"
         if w.owned_kite_m2 is not None
-        else (f"~{w.kite_m2:g} m²" if w.kite_m2 else "kite n/a")
+        else (f"~{w.kite_m2:g} m2" if w.kite_m2 else "kite n/a")
     )
     return voice.slot_line(
         verdict=w.verdict,
@@ -157,7 +162,11 @@ def pick_schedule(
     return [best[d][0] for d in sorted(best.keys())]
 
 
-def weekend_summary_text(overall: str, schedule, results) -> str:
+def weekend_summary_text(
+    overall: str,
+    schedule: list[ScheduleSlot],
+    results: list[WeekendSpotAdvice],
+) -> str:
     if schedule:
         lead = schedule[0]
         days = ", ".join(f"{s.weekday} {s.name}" for s in schedule[:4])
@@ -184,7 +193,7 @@ def weekend_summary_text(overall: str, schedule, results) -> str:
             top_line=top.summary,
         )
     return voice.weekend_summary(
-        overall="no",
+        overall=overall,
         lead_weekday=None,
         lead_name=None,
         lead_drive=None,

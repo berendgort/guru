@@ -44,7 +44,8 @@ Agents use the CLI. Call `guru wire` / `wire_mcp` only when absolutely necessary
 | `wire_mcp` | `status_only?` | Optional local STDIO adapters |
 | `setup_profile` | `intake?`, sport, weight_kg, **level**, kites, wetsuits, home_lat/lon, drive_km, session_hours… | Merged profile |
 | `get_profile` | — | Profile + ready / range_ready / first_pass |
-| `where_spots` / `weekend_spots` | `hours?` (default 72), `limit?`, `top?`, `weekend?` | Day `schedule` + ranked spots (~3 days) |
+| `where_spots` | `hours?` (default 72), `limit?`, `top?` | ~3-day `schedule` + ranked spots |
+| `weekend_spots` | `hours?` (auto to Sunday), `limit?`, `top?` | Fri eve / Sat / Sun; `uncertain` + `coverage` |
 | `search_spots` | `query`, `limit?` | Named spots (no lat/lon) |
 | `near_spots` | `lat`, `lon`, `radius_km?`, `limit?` | Free map markers near a point |
 | `resolve_spot` | `spot`, `pick?` | Spot id/name → spot |
@@ -74,7 +75,7 @@ Client already retries with backoff. On `retryable: true`, wait seconds before a
 
 1. Call `instruct` / `get_profile` / `doctor` — check `network.reachable` and `upgrade.update_available`.
 2. If `first_pass`: show `intake.prompt_to_user` once (include **level**), then `setup_profile`.
-3. For “where can I kite?” call `where_spots` (or `weekend_spots`) and narrate **`schedule`** for the ~3-day horizon.
+3. For “where can I kite?” call `where_spots`. For “this weekend?” call `weekend_spots` and narrate **`schedule`**; if `uncertain`, say high-% models are not in range yet.
 4. For a named spot call `best_forecast` (advice on by default).
 5. Do not scrape windguru.cz; never invent PRO lat/lon forecasts.
 

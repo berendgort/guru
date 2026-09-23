@@ -1,6 +1,6 @@
 [project]
 name = "windguru"
-version = "0.3.25"
+version = "0.3.26"
 description = "Windguru CLI for kiters who code — kite bro / guru voice, spot + gear advice, MCP for agents"
 authors = [{ name = "Dr. Berend Gort", email = "berend.gort@gmail.com" }]
 readme = "README.md"

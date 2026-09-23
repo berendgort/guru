@@ -24,7 +24,7 @@ def register(
 ) -> None:
     @mcp.tool(name="instruct")
     def instruct() -> dict[str, Any]:
-        """Agent recipe: first-pass intake → weekend_spots / best_forecast."""
+        """Agent recipe: first-pass intake → where_spots / weekend_spots / best_forecast."""
         return ok(instruct_payload())
 
     @mcp.tool(name="setup_profile")

@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+from typing import Any, Literal
+
 from pydantic import BaseModel, Field
 
 DEFAULT_WHERE_HOURS = 72  # ~3 days of hourly model steps
-DEFAULT_WEEKEND_HOURS = DEFAULT_WHERE_HOURS  # back-compat
+# Soft cap for weekend horizon (hours_to_cover clamps to this).
+DEFAULT_WEEKEND_HOURS = 168
+
+ScanMode = Literal["where", "weekend"]
 
 
 class AdviceWindow(BaseModel):
@@ -93,7 +98,7 @@ class ScheduleSlot(BaseModel):
 
 
 class WeekendReport(BaseModel):
-    verdict: str  # go | marginal | no | incomplete
+    verdict: str  # go | marginal | no | incomplete | uncertain
     range_label: str | None = None
     home_lat: float | None = None
     home_lon: float | None = None
@@ -101,6 +106,11 @@ class WeekendReport(BaseModel):
     hours: int = DEFAULT_WHERE_HOURS
     top_models: int = 3
     filter_day: str | None = None
+    mode: ScanMode = "where"
+    weekend_start: str | None = None  # ISO Fri evening
+    weekend_end: str | None = None  # ISO Sun end
+    uncertain: bool = False
+    coverage: dict[str, Any] | None = None
     spots: list[WeekendSpotAdvice] = Field(default_factory=list)
     schedule: list[ScheduleSlot] = Field(default_factory=list)
     missing_profile: list[str] = Field(default_factory=list)
@@ -114,6 +124,7 @@ __all__ = [
     "AdviceWindow",
     "DEFAULT_WEEKEND_HOURS",
     "DEFAULT_WHERE_HOURS",
+    "ScanMode",
     "ScheduleSlot",
     "WeekendReport",
     "WeekendSpotAdvice",

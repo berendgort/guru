@@ -48,8 +48,9 @@ sport=kitefoil weight=78 level=intermediate kites=7,9,12 wetsuits=3/2,4/3 sessio
 
 ## After onboarded
 
-- “Where can I kite?” → `guru where --json` / `where_spots` (~3 days; `--weekend` for Sat/Sun)
-- Narrate **`data.schedule`** day-by-day (covers ~4 days / top-3 models) — do **not** wait for “what about Thursday?”
+- “Where can I kite?” → `guru where --json` / `where_spots` (~3 days)
+- “This weekend?” → `guru weekend --json` / `weekend_spots` (Fri eve–Sun; if `uncertain`, say high-% models not in range yet)
+- Narrate **`data.schedule`** day-by-day (`where` ~3 days; `weekend` Fri eve–Sun) — do **not** wait for “what about Thursday?”
 - Named spot → `guru best <id> --json` / `best_forecast`
 - Narrate like a kite bro (`data.voice`): SEND IT / SOFT CALL / SIT IT OUT, plan, kt+gusts, rig, suit, beach 5-min check. Honesty > hype. Optional one-liner from `data.voice.jokes`. Name lore: `data.voice.lore`.
 

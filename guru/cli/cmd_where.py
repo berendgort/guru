@@ -1,4 +1,4 @@
-"""CLI: where / weekend (next ~3 days spot schedule)."""
+"""CLI: where (~3 days) and weekend (next Fri eve / Sat / Sun)."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ from guru.cli.catch import CATCH
 from guru.cli.errors import fail, print_ok
 from guru.cli.render import print_weekend
 from guru.core.envelope import dump_model
+from guru.models.advice import ScanMode
 from guru.rider.profile_store import load_profile
 from guru.rider.weekend import DEFAULT_WHERE_HOURS, scan_weekend
 from guru.search.exceptions import GuruError
@@ -15,20 +16,17 @@ from guru.search.exceptions import GuruError
 __all__ = ("register",)
 
 
-def _run_where(
+def _run(
     *,
-    hours: int,
+    hours: int | None,
     limit: int,
     top: int,
     day: str | None,
-    weekend_only: bool,
+    mode: ScanMode,
     as_json: bool,
 ) -> None:
     from guru.core.path import probe_windguru
 
-    filter_day = day
-    if weekend_only and not day:
-        filter_day = "weekend"
     try:
         net = probe_windguru()
         if net.get("reachable") is False:
@@ -41,7 +39,8 @@ def _run_where(
             hours=hours,
             limit_spots=limit,
             top_models=top,
-            filter_day=filter_day,
+            filter_day=day,
+            mode=mode,
         )
     except CATCH as exc:
         fail(exc, as_json=as_json)
@@ -66,45 +65,36 @@ def register(app: typer.Typer) -> None:
         day: str | None = typer.Option(
             None, "--day", help="Filter: Thu / YYYY-MM-DD / weekend"
         ),
-        weekend_only: bool = typer.Option(
-            False, "--weekend", help="Only Sat/Sun slots"
-        ),
         as_json: bool = typer.Option(False, "--json"),
     ) -> None:
         """Where can I kite in the next ~3 days? Schedule + ranked spots."""
-        _run_where(
+        _run(
             hours=hours,
             limit=limit,
             top=top,
             day=day,
-            weekend_only=weekend_only,
+            mode="where",
             as_json=as_json,
         )
 
     @app.command("weekend")
     def weekend_cmd(
-        hours: int = typer.Option(
-            DEFAULT_WHERE_HOURS,
+        hours: int | None = typer.Option(
+            None,
             "--hours",
             "-H",
-            help="Horizon in forecast steps (~3 days)",
+            help="Override horizon steps (default: enough to reach Sunday)",
         ),
         limit: int = typer.Option(8, "--limit", "-n", help="Max spots to scan"),
         top: int = typer.Option(3, "--top", help="WINDGURU_DEFAULT models"),
-        day: str | None = typer.Option(
-            None, "--day", help="Filter: Thu / YYYY-MM-DD / weekend"
-        ),
-        weekend_only: bool = typer.Option(
-            False, "--weekend", help="Only Sat/Sun slots"
-        ),
         as_json: bool = typer.Option(False, "--json"),
     ) -> None:
-        """Alias for `guru where` (next ~3 days; pass --weekend for Sat/Sun)."""
-        _run_where(
+        """Next kite weekend only: Fri evening / Sat / Sun (WINDGURU_DEFAULT)."""
+        _run(
             hours=hours,
             limit=limit,
             top=top,
-            day=day,
-            weekend_only=weekend_only,
+            day=None,
+            mode="weekend",
             as_json=as_json,
         )

@@ -33,6 +33,8 @@ mcp = FastMCP(
         "guru unavailable. Upgrade if update_available. get_profile; if "
         "first_pass show intake.prompt_to_user (level required). "
         "'where can I kite?' -> where_spots + narrate schedule in voice. "
+        "'this weekend?' -> weekend_spots (Fri eve-Sun); if data.uncertain, "
+        "say high-% models are not in range yet. "
         "Named spot -> best_forecast. Never scrape; never require PRO; "
         "never hype a soft long haul."
     ),

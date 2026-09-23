@@ -10,6 +10,7 @@ from typing import Any
 from fastmcp import FastMCP
 
 from guru.core.envelope import dump_model
+from guru.models.advice import ScanMode
 from guru.models.aliases import list_models
 from guru.rider.advice import advise_forecast
 from guru.rider.profile_store import load_profile
@@ -27,14 +28,13 @@ def register(
     ok: Callable[[Any], dict[str, Any]],
     err: Callable[[BaseException], dict[str, Any]],
 ) -> None:
-    def _where(
-        hours: int,
+    def _scan(
+        hours: int | None,
         limit: int,
         top: int,
         filter_day: str | None,
-        weekend: bool,
+        mode: ScanMode,
     ) -> dict[str, Any]:
-        day = filter_day or ("weekend" if weekend else None)
         try:
             return ok(
                 dump_model(
@@ -43,7 +43,8 @@ def register(
                         hours=hours,
                         limit_spots=limit,
                         top_models=top,
-                        filter_day=day,
+                        filter_day=filter_day,
+                        mode=mode,
                     )
                 )
             )
@@ -56,21 +57,18 @@ def register(
         limit: int = 8,
         top: int = 3,
         filter_day: str | None = None,
-        weekend: bool = False,
     ) -> dict[str, Any]:
         """Where can I kite in the next ~3 days? Schedule + ranked spots."""
-        return _where(hours, limit, top, filter_day, weekend)
+        return _scan(hours, limit, top, filter_day, "where")
 
     @mcp.tool(name="weekend_spots")
     def weekend_spots_tool(
-        hours: int = DEFAULT_WHERE_HOURS,
+        hours: int | None = None,
         limit: int = 8,
         top: int = 3,
-        filter_day: str | None = None,
-        weekend: bool = False,
     ) -> dict[str, Any]:
-        """Alias for where_spots (next ~3 days; set weekend=true for Sat/Sun)."""
-        return _where(hours, limit, top, filter_day, weekend)
+        """Next kite weekend: Fri evening / Sat / Sun (WINDGURU_DEFAULT)."""
+        return _scan(hours, limit, top, None, "weekend")
 
     @mcp.tool(name="search_spots")
     def search_spots_tool(query: str, limit: int = 20) -> dict[str, Any]:

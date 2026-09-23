@@ -50,6 +50,7 @@ CALL: dict[str, str] = {
     "marginal": "SOFT CALL",
     "no": "SIT IT OUT",
     "incomplete": "NEED YOUR SETUP",
+    "uncertain": "EARLY LOOK",
 }
 
 VOICE_ID = "kite_bro"

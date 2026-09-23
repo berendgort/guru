@@ -129,7 +129,7 @@ def test_cloud_instruct_forbids_config_when_unlocked(
     )
     monkeypatch.setattr(
         "guru.rider.instruct.upgrade_status",
-        lambda: {"installed": "0.3.25", "update_available": False},
+        lambda: {"installed": "0.3.26", "update_available": False},
     )
 
     payload = instruct_payload()

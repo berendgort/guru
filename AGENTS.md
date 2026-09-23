@@ -51,7 +51,8 @@ Keep these conventions when extending:
 ```text
 pipx install windguru          # or: pipx install 'windguru[mcp]'
 guru setup --sport … --weight … --level … --kites … --wetsuits …
-guru where --json              # where can I kite? (~3 days)
+guru where --json              # next ~3 days
+guru weekend --json            # next Fri eve / Sat / Sun
 guru best <id|name> [--json]   # spot call + advice (default on)
 guru spots <query>             # resolve id if needed
 guru near --lat Y --lon X

@@ -50,6 +50,17 @@ def test_cache_round_trip() -> None:
     assert cache_get(key) == {"ok": True}
 
 
+def test_cache_evicts_at_cap(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("guru.search.polite.CACHE_MAX", 2)
+    reset_polite()
+    cache_set("a", 1, ttl=60)
+    cache_set("b", 2, ttl=60)
+    cache_set("c", 3, ttl=60)
+    assert cache_get("a") is None
+    assert cache_get("b") == 2
+    assert cache_get("c") == 3
+
+
 def test_circuit_blocks_after_trip() -> None:
     trip_circuit(ttl=60)
     with pytest.raises(GuruHTTPError) as ei:

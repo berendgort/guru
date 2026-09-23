@@ -13,7 +13,7 @@ from typing import Any
 from guru.core.human_fix import human_fix_payload
 from guru.core.path import agent_path_payload, probe_windguru
 from guru.core.upgrade import upgrade_status
-from guru.models.advice import DEFAULT_WHERE_HOURS
+from guru.models.advice import DEFAULT_WEEKEND_HOURS, DEFAULT_WHERE_HOURS
 from guru.rider.intake import intake_payload
 from guru.rider.profile_store import load_profile, profile_payload
 from guru.rider.voice import voice_payload
@@ -61,15 +61,20 @@ INSTRUCT_STEPS: list[dict[str, Any]] = [
     {
         "step": 2,
         "action": "where_or_best",
-        "command": "guru where --json   # or: guru best <id> --json  (advice on by default)",
+        "command": (
+            "guru where --json   # next ~3 days\n"
+            "guru weekend --json # next Fri eve / Sat / Sun only\n"
+            "guru best <id> --json"
+        ),
         "detail": (
-            "Ask 'where can I kite?' → guru where [--day Thu] [--weekend] "
-            "(top-3 models; default ~3-day horizon). Narrate data.schedule. "
-            "`weekend` is an alias; --weekend / --day weekend = Sat/Sun only. "
-            "Beyond horizon: we have not hacked time yet. Far trips need clear "
-            "GO + ≥2h continuous. Soft home vs solid far: report both. SST "
-            "from Open-Meteo Marine for suits. Named spot → guru best <id>. "
-            "Local knowledge: "
+            "Ask 'where can I kite?' → guru where (top-3 models; ~3-day "
+            "horizon). Ask about the weekend → guru weekend (Fri evening + "
+            "Sat + Sun only). If data.uncertain / verdict=uncertain, say so "
+            "clearly: high-% WINDGURU_DEFAULT models not in range yet -- early "
+            "look, re-check closer to Fri. Narrate data.schedule. Far trips "
+            "need clear GO + ≥2h continuous. Soft home vs solid far: report "
+            "both. SST from Open-Meteo Marine for suits. Named spot → "
+            "guru best <id>. Local knowledge: "
             '`guru note <id> "dirs=SW-W offshore=N-NE Bunker dies in NE"`.'
         ),
     },
@@ -129,7 +134,11 @@ def instruct_payload() -> dict[str, Any]:
         "network": network,
         "preset": "WINDGURU_DEFAULT",
         "top_models": 3,
-        "weekend_hours": DEFAULT_WHERE_HOURS,
+        "weekend_hours": DEFAULT_WEEKEND_HOURS,
+        "weekend_hours_note": (
+            "guru weekend auto-sizes hours via hours_to_cover to next Sunday; "
+            f"{DEFAULT_WEEKEND_HOURS} is the soft cap / instruct hint only"
+        ),
         "where_hours": DEFAULT_WHERE_HOURS,
         "first_pass": need_intake,
         "upgrade": upgrade_status(),
@@ -181,6 +190,7 @@ def instruct_payload() -> dict[str, Any]:
                 "guru unlock --json   # ONLY if network.reachable is false",
                 "guru setup --intake …",
                 "guru where --json",
+                "guru weekend --json",
                 "guru best <id> --json",
             ],
             "never_ask_human": human_fix["never_ask_human"],
@@ -196,6 +206,7 @@ def instruct_payload() -> dict[str, Any]:
                 "drive_km=200 range=Trabucador → Leucate' --json"
             ),
             "guru where --json",
+            "guru weekend --json",
             "guru best 201 --json",
         ],
         "profile": {

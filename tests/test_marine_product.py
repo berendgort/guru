@@ -90,8 +90,18 @@ def test_filter_schedule_by_day() -> None:
             name="A",
             verdict="go",
         ),
+        ScheduleSlot(
+            day="2026-09-25",
+            weekday="Fri",
+            start="2026-09-25T17:00:00Z",
+            end="2026-09-25T19:00:00Z",
+            spot_id=1,
+            name="A",
+            verdict="go",
+        ),
     ]
     thu = filter_schedule_by_day(slots, weekday="Thu")
     assert len(thu) == 1 and thu[0].weekday == "Thu"
     we = filter_schedule_by_day(slots, weekday="weekend")
-    assert len(we) == 1 and we[0].weekday == "Sat"
+    assert len(we) == 2
+    assert {s.weekday for s in we} == {"Fri", "Sat"}

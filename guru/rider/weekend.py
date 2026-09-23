@@ -1,30 +1,34 @@
-"""Weekend / drive-range spot scanner -- 'where can I kite?'."""
+"""Drive-range spot scanner -- ``where`` (~3d) and ``weekend`` (Fri eve-Sun)."""
 
 from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from guru.models.advice import (
     DEFAULT_WEEKEND_HOURS,
     DEFAULT_WHERE_HOURS,
+    ScanMode,
     ScheduleSlot,
     WeekendReport,
     WeekendSpotAdvice,
 )
 from guru.models.profile import RiderProfile
 from guru.rider import voice
-from guru.rider.advice import advise_forecast
+from guru.rider.weekend_collect import collect_scan_rows
 from guru.rider.weekend_rank import (
     filter_schedule_by_day,
     home_vs_far_line,
-    model_agree_by_day,
     parse_filter_day,
     pick_schedule,
-    score_spot,
-    slot_rank,
-    slot_summary,
     weekend_summary_text,
 )
-from guru.rider.weekend_spots import candidate_spots, long_drive_ok, weekday_label
-from guru.search.blend import get_best_forecast, model_info_full
+from guru.rider.weekend_spots import candidate_spots
+from guru.rider.weekend_window import (
+    filter_day_candidates_to_window,
+    hours_to_cover,
+    next_kite_weekend,
+)
+from guru.search.blend import model_info_full
 from guru.search.sst import SST_SOURCE, fetch_sst_many
 
 __all__ = (
@@ -41,19 +45,39 @@ DEFAULT_TOP_MODELS = 3
 def scan_weekend(
     profile: RiderProfile,
     *,
-    hours: int = DEFAULT_WHERE_HOURS,
+    hours: int | None = None,
     limit_spots: int = 8,
     top_models: int = DEFAULT_TOP_MODELS,
     filter_day: str | None = None,
+    mode: ScanMode = "where",
+    now: datetime | None = None,
 ) -> WeekendReport:
-    """Rank rideable spots + day-by-day schedule (next ~3 days by default)."""
-    missing = profile.missing_fields() + profile.missing_range_fields()
+    """Rank spots + schedule. ``mode=weekend`` -> next Fri eve / Sat / Sun."""
+    if mode not in ("where", "weekend"):
+        raise ValueError(f"mode must be 'where' or 'weekend', got {mode!r}")
+    now = now or datetime.now(tz=timezone.utc)
+    weekend_start = weekend_end = None
+    if mode == "weekend":
+        weekend_start, weekend_end = next_kite_weekend(now)
+        if hours is None:
+            hours = hours_to_cover(now, weekend_end)
+        filter_day = filter_day or "weekend"
+    elif hours is None:
+        hours = DEFAULT_WHERE_HOURS
+
     thinking = voice.thinking_headers(
         hours=hours,
         top_models=top_models,
         range_label=profile.range_label,
     ) + voice.checklist(gusty=False, drive_km=profile.drive_km)
+    if mode == "weekend" and weekend_start and weekend_end:
+        thinking.insert(
+            0,
+            f"Next kite weekend: Fri eve {weekend_start.date()} -> "
+            f"Sun {weekend_end.date()} (WINDGURU_DEFAULT)",
+        )
 
+    missing = profile.missing_fields() + profile.missing_range_fields()
     if missing:
         return WeekendReport(
             verdict="incomplete",
@@ -64,6 +88,9 @@ def scan_weekend(
             hours=hours,
             top_models=top_models,
             filter_day=filter_day,
+            mode=mode,
+            weekend_start=weekend_start.isoformat() if weekend_start else None,
+            weekend_end=weekend_end.isoformat() if weekend_end else None,
             missing_profile=missing,
             summary=voice.weekend_incomplete(missing),
             thinking=thinking,
@@ -76,101 +103,51 @@ def scan_weekend(
         if s.lat is not None and s.lon is not None
     ]
     sst_map = fetch_sst_many(coords) if coords else {}
-    # One model_info_full for the whole scan (was N spots × same payload).
     shared_models = model_info_full() if candidates else None
 
-    results: list[WeekendSpotAdvice] = []
-    day_candidates: list[tuple[str, ScheduleSlot, float]] = []
-
-    for spot, drive in candidates:
-        best = get_best_forecast(
-            spot.id, top=top_models, hours=hours, model_info=shared_models
-        )
-        if not best.forecasts:
-            continue
-        sst_c = (
-            sst_map.get((float(spot.lat), float(spot.lon)))
-            if spot.lat is not None and spot.lon is not None
-            else None
-        )
-        model_advices = [
-            advise_forecast(fc, profile, drive_km=drive, max_windows=12, sst_c=sst_c)
-            for fc in best.forecasts
-        ]
-        primary = model_advices[0]
-        if primary.verdict in {"no", "incomplete"}:
-            continue
-        if not long_drive_ok(
-            drive, verdict=primary.verdict, windows=primary.windows
-        ):
-            continue
-
-        agree_by_day = model_agree_by_day(model_advices)
-        window = primary.windows[0] if primary.windows else None
-        day_key = window.start[:10] if window else ""
-        agree = agree_by_day.get(day_key, 1) if day_key else 1
-        score = score_spot(primary.verdict, drive, model_agree=agree)
-        drive_r = round(drive, 1) if drive is not None else None
-
-        results.append(
-            WeekendSpotAdvice(
-                spot_id=spot.id,
-                name=spot.name,
-                lat=spot.lat,
-                lon=spot.lon,
-                drive_km=drive_r,
-                verdict=primary.verdict,
-                summary=primary.summary,
-                best_window=window,
-                model=primary.model,
-                model_agree=agree,
-                score=score,
-                sst_c=sst_c,
-            )
-        )
-
-        for w in primary.windows:
-            if w.verdict not in {"go", "marginal"}:
-                continue
-            if not long_drive_ok(drive, window=w):
-                continue
-            d = w.start[:10]
-            a = agree_by_day.get(d, 1)
-            slot = ScheduleSlot(
-                day=d,
-                weekday=weekday_label(w.start),
-                start=w.start,
-                end=w.end,
-                spot_id=spot.id,
-                name=spot.name,
-                drive_km=drive_r,
-                verdict=w.verdict,
-                wind_kn=w.wind_kn,
-                gust_kn=w.gust_kn,
-                wind_dir_deg=w.wind_dir_deg,
-                owned_kite_m2=w.owned_kite_m2,
-                owned_wetsuit=w.owned_wetsuit or w.wetsuit,
-                model_agree=a,
-                rating_stars=w.rating_stars,
-                rating_cold=w.rating_cold,
-                rating=w.rating,
-                summary=slot_summary(spot.name, w, a),
-                hours_usable=w.hours_usable,
-            )
-            day_candidates.append((d, slot, slot_rank(w, drive, a)))
-
-    results.sort(
-        key=lambda r: (-r.score, r.drive_km if r.drive_km is not None else 999)
+    results, day_candidates, coverage, uncertain = collect_scan_rows(
+        candidates,
+        profile,
+        hours=hours,
+        top_models=top_models,
+        shared_models=shared_models,
+        sst_map=sst_map,
+        mode=mode,
+        weekend_start=weekend_start,
+        weekend_end=weekend_end,
+        thinking=thinking,
     )
+    # Filter BEFORE pick_schedule so a strong Fri morning cannot eclipse Fri eve.
+    if mode == "weekend" and weekend_start and weekend_end:
+        day_candidates = filter_day_candidates_to_window(
+            day_candidates, weekend_start, weekend_end
+        )
     schedule = pick_schedule(day_candidates)
-    schedule, results, thinking = _apply_day_filter(
-        filter_day, schedule, results, thinking
-    )
+    if mode == "weekend" and weekend_start and weekend_end:
+        if schedule:
+            keep = {s.spot_id for s in schedule}
+            results = [r for r in results if r.spot_id in keep] or results
+        else:
+            results = []
+            thinking.append(
+                "No Fri-eve/Sat/Sun windows in range yet "
+                "(high-% models may not reach the weekend)."
+            )
+    else:
+        schedule, results, thinking = _apply_day_filter(
+            filter_day, schedule, results, thinking
+        )
 
     overall = results[0].verdict if results else "no"
+    if uncertain and (overall in {"go", "marginal"} or not schedule):
+        overall = "uncertain"
     compare = home_vs_far_line(results)
     if compare:
         thinking.append(compare)
+
+    summary = weekend_summary_text(overall, schedule, results)
+    if uncertain and coverage and coverage.get("note"):
+        summary = f"{summary} -- {coverage['note']}"
 
     return WeekendReport(
         verdict=overall,
@@ -181,10 +158,15 @@ def scan_weekend(
         hours=hours,
         top_models=top_models,
         filter_day=filter_day,
+        mode=mode,
+        weekend_start=weekend_start.isoformat() if weekend_start else None,
+        weekend_end=weekend_end.isoformat() if weekend_end else None,
+        uncertain=uncertain,
+        coverage=coverage,
         spots=results,
         schedule=schedule,
         missing_profile=[],
-        summary=weekend_summary_text(overall, schedule, results),
+        summary=summary,
         thinking=thinking,
         sst_source=SST_SOURCE if sst_map else None,
     )
