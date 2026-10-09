@@ -88,3 +88,7 @@ ruff check .
 ```
 
 **Deploy / ship / publish:** bump → PyPI upload → **`git push origin HEAD`** (always push with deploy) → reinstall local pipx.
+
+## Playbook
+
+- [`docs/cli_playbook.md`](docs/cli_playbook.md) — how this stack was built; rate limits and stop rules
